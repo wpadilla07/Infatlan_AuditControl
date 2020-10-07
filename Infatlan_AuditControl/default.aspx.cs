@@ -16,6 +16,8 @@ namespace Infatlan_AuditControl
         {
             if (!Page.IsPostBack)
             {
+                //classes.SmtpService vSmtp = new SmtpService();
+                //vSmtp.EnviarMensaje("dehenriquez@bancatlan.hn", "Hola esto es una prueba", "test");
                 ObtenerDashboard();
             }
         }

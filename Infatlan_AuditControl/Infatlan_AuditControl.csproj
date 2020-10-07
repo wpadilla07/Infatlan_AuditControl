@@ -144,12 +144,15 @@
     <Content Include="assets\css\bootstrap-timepicker.min.css" />
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\calendar.css" />
+    <Content Include="assets\css\checkboxes.css" />
     <Content Include="assets\css\chosen.min.css" />
     <Content Include="assets\css\colorbox.min.css" />
     <Content Include="assets\css\daterangepicker.min.css" />
     <Content Include="assets\css\dropzone.min.css" />
     <Content Include="assets\css\font-awesome.min.css" />
     <Content Include="assets\css\fonts.googleapis.com.css" />
+    <Content Include="assets\css\fstdropdown.css" />
+    <Content Include="assets\css\fstdropdown.min.css" />
     <Content Include="assets\css\fullcalendar.min.css" />
     <Content Include="assets\css\GridStyle.css" />
     <Content Include="assets\css\images\meteorshower2.jpg" />
@@ -228,6 +231,8 @@
     <Content Include="assets\js\daterangepicker.min.js" />
     <Content Include="assets\js\dropzone.min.js" />
     <Content Include="assets\js\excanvas.min.js" />
+    <Content Include="assets\js\fstdropdown.js" />
+    <Content Include="assets\js\fstdropdown.min.js" />
     <Content Include="assets\js\fullcalendar.min.js" />
     <Content Include="assets\js\fullcanlendar.min.js" />
     <Content Include="assets\js\grid.locale-en.js" />
@@ -270,6 +275,7 @@
     <Content Include="assets\js\wizard.min.js" />
     <Content Include="assets\swf\flashExport.swf" />
     <Content Include="default.aspx" />
+    <Content Include="Global.asax" />
     <Content Include="login.aspx" />
     <Content Include="logout.aspx" />
     <Content Include="pages\calendar.aspx" />
@@ -303,6 +309,9 @@
     </Compile>
     <Compile Include="default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="login.aspx.cs">
       <DependentUpon>login.aspx</DependentUpon>
@@ -411,6 +420,7 @@
     <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="main.Master" />
+    <Content Include="classes\AuditoriaInforme.pdf" />
     <None Include="packages.config" />
     <Content Include="pages\JsonResponse.ashx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />

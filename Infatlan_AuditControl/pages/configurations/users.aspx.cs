@@ -13,14 +13,10 @@ namespace Infatlan_AuditControl.pages.configurations
     public partial class users : System.Web.UI.Page
     {
         db vConexion = new db();
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!Page.IsPostBack)
-            {
-                if (Session["AUTH"] != null)
-                {
-                    switch (Convert.ToInt32(Session["TIPOUSUARIO"]))
-                    {
+        protected void Page_Load(object sender, EventArgs e){
+            if (!Page.IsPostBack){
+                if (Session["AUTH"] != null){
+                    switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                         case 3:
                         case 4:
                         case 5:
@@ -28,24 +24,22 @@ namespace Infatlan_AuditControl.pages.configurations
                             break;
                     }
                 }
-
-
                 ObtenerUsuarios();
                 GetUsuariosJefaturas();
+                getEmpresas();
             }
         }
-        public void Mensaje(string vMensaje, WarningType type)
-        {
+
+        public void Mensaje(string vMensaje, WarningType type){
             ScriptManager.RegisterStartupScript(this.Page, typeof(Page), "text", "infatlan.showNotification('top','center','" + vMensaje + "','" + type.ToString().ToLower() + "')", true);
         }
-        public void CerrarModal(String vModal)
-        {
+
+        public void CerrarModal(String vModal){
             ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "Pop", "$('#" + vModal + "').modal('hide');", true);
         }
-        void ObtenerUsuarios()
-        {
-            try
-            {
+        
+        void ObtenerUsuarios(){
+            try{
                 String vQuery = "[ACSP_ObtenerUsuarios] 3";
                 DataTable vDatosUsuarios = vConexion.obtenerDataTable(vQuery);
 
@@ -56,22 +50,33 @@ namespace Infatlan_AuditControl.pages.configurations
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
-        void GetUsuariosJefaturas()
-        {
-            try
-            { 
+        void GetUsuariosJefaturas(){
+            try{ 
                 String vQuery = "[ACSP_ObtenerUsuarios] 6,2";
                 DataTable vDatosDB = vConexion.obtenerDataTable(vQuery);
 
                 DDLUsuarioJefatura.Items.Add(new ListItem { Value = "0", Text = "Seleccione un usuario" });
-                foreach (DataRow item in vDatosDB.Rows)
-                {
+                foreach (DataRow item in vDatosDB.Rows){
                     DDLUsuarioJefatura.Items.Add(new ListItem { Value = item["idUsuario"].ToString(), Text = vConexion.GetNombreUsuario(item["idUsuario"].ToString()) });
                 }
-
                 DDLUsuarioJefatura.DataBind();
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
+        }
+
+        void getEmpresas(){
+            try{
+                String vQuery = "[ACSP_ObtenerUsuarios] 9";
+                DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                DDLEmpresa.Items.Clear();
+                DDLEmpresa.Items.Add(new ListItem { Value = "0", Text = "Seleccione una empresa" });
+                foreach (DataRow item in vDatos.Rows){
+                    DDLEmpresa.Items.Add(new ListItem { Value = item["idEmpresa"].ToString(), Text = item["nombre"].ToString() });
+                }
+                DDLEmpresa.DataBind();
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
+            }
         }
 
         protected void BtnBuscarUsuario_Click(object sender, EventArgs e)
@@ -102,13 +107,15 @@ namespace Infatlan_AuditControl.pages.configurations
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
-        protected void BtnCrearUsuario_Click(object sender, EventArgs e)
-        {
-            try
-            {
+        protected void BtnCrearUsuario_Click(object sender, EventArgs e){
+            try{
                 if (DDLCargo.SelectedIndex.Equals(0))
                     throw new Exception("Por favor seleccione un cargo para crear el usuario");
-
+                if (DDLCargo.SelectedValue == "4"){
+                    if (DDLEmpresa.SelectedValue == "0"){
+                        throw new Exception("Por favor seleccione la empresa.");
+                    }
+                }
                 if (TxUsuario.Text.Equals(""))
                     throw new Exception("Por favor escriba un usuario y presione el boton buscar");
 
@@ -116,12 +123,16 @@ namespace Infatlan_AuditControl.pages.configurations
                 if (!DDLUsuarioJefatura.SelectedValue.Equals("0"))
                     vJefeAuditoria = DDLUsuarioJefatura.SelectedValue;
 
+                String vEmpresa = DDLCargo.SelectedValue == "4" ? DDLEmpresa.SelectedValue : "0" ;
+                String vQuery = "[ACSP_Usuarios] 1" + 
+                    ",'" + TxUsuario.Text + "'" + 
+                    "," + DDLCargo.SelectedValue + 
+                    ",'" + TxCorreo.Text + "'" + 
+                    ",0,'" + vJefeAuditoria + "'" + 
+                    "," + vEmpresa;
 
-                String vQuery = "[ACSP_Usuarios] 1, '" + TxUsuario.Text + "'," + DDLCargo.SelectedValue + ",'" + TxCorreo.Text + "',0,'" + vJefeAuditoria + "'";
-                try
-                {
-                    if (vConexion.ejecutarSql(vQuery).Equals(1))
-                    {
+                try{
+                    if (vConexion.ejecutarSql(vQuery).Equals(1)){
                         ObtenerUsuarios();
                         LimpiarForma();
                         Mensaje("Usuario creado con Exito!", WarningType.Success);
@@ -195,12 +206,12 @@ namespace Infatlan_AuditControl.pages.configurations
             catch (Exception Ex) { LbErrorUsuario.Text = Ex.Message; UpdateUsuarioMensaje.Update(); }
         }
 
-        protected void DDLCargo_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (DDLCargo.SelectedValue.Equals("3"))            
+        protected void DDLCargo_SelectedIndexChanged(object sender, EventArgs e){
+            try{
+                if (DDLCargo.SelectedValue.Equals("3"))
                     DIVUsuarioJefatura.Visible = true;
+                else if (DDLCargo.SelectedValue == "4")
+                    DivEmpresas.Visible = true;
                 else
                     DIVUsuarioJefatura.Visible = false;
             }

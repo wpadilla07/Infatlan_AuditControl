@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Infatlan_AuditControl.pages {
-    
-    
-    public partial class upload {
-        
+namespace Infatlan_AuditControl.pages
+{
+
+
+    public partial class upload
+    {
+
         /// <summary>
         /// Control ScriptManager1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.ScriptManager ScriptManager1;
-        
+
         /// <summary>
         /// Control UpdateProgress1.
         /// </summary>
@@ -29,7 +31,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress UpdateProgress1;
-        
+
         /// <summary>
         /// Control UpdateForma.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateForma;
-        
+
         /// <summary>
         /// Control FUInforme.
         /// </summary>
@@ -47,7 +49,16 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.FileUpload FUInforme;
-        
+
+        /// <summary>
+        /// Control FUAdjunto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload FUAdjunto;
+
         /// <summary>
         /// Control LabelMensaje.
         /// </summary>
@@ -56,7 +67,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LabelMensaje;
-        
+
         /// <summary>
         /// Control UpdateBotones.
         /// </summary>
@@ -65,7 +76,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateBotones;
-        
+
         /// <summary>
         /// Control BtnCrearInforme.
         /// </summary>

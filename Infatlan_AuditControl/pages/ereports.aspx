@@ -39,8 +39,8 @@
             $('#HallazgosModificacionCreacionModal').modal('show');
         }
     </script>
-    
-
+    <link href="/assets/css/fstdropdown.css" rel="stylesheet" />
+    <link href="../assets/css/select2.min.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -130,8 +130,6 @@
                             PageSize="10" OnPageIndexChanging="GVBusqueda_PageIndexChanging" OnRowCommand="GVBusqueda_RowCommand">
                             <Columns>
                                 <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
-                                    <HeaderTemplate>
-                                    </HeaderTemplate>
                                     <ItemTemplate>
                                         <asp:LinkButton ID="BtnEntrar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-success" CommandArgument='<%# Eval("idInforme") %>' CommandName="EntrarInforme">
                                             <i class="fa fa-search"></i>
@@ -139,8 +137,6 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
-                                    <HeaderTemplate>
-                                    </HeaderTemplate>
                                     <ItemTemplate>
                                         <asp:UpdatePanel ID="UpdateForma" runat="server">
                                             <ContentTemplate>
@@ -243,8 +239,6 @@
                             </h4>
                         </ContentTemplate>
                     </asp:UpdatePanel>
-
-
                 </div>
                 <div class="modal-body">
                     <asp:UpdatePanel ID="UpdateHallazgosMain" runat="server" UpdateMode="Conditional">
@@ -318,10 +312,8 @@
         </div>
     </div>
 
-
-
     <!-- MODAL CREACIÓN DE HALLAZGOS -->
-    <div class="modal fade" id="HallazgosCreacionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="HallazgosCreacionModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 1000px; top: 350px; left: 50%; transform: translate(-50%, -50%);">
                 <div class="modal-header">
@@ -336,8 +328,6 @@
                             </h4>
                         </ContentTemplate>
                     </asp:UpdatePanel>
-
-
                 </div>
                 <div class="modal-body">
                     <asp:UpdatePanel ID="UpdateHallazgosCreacionMain" runat="server" UpdateMode="Conditional">
@@ -351,14 +341,31 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group row">
+                                <label class="col-sm-2 control-label no-padding-right" for="DDLHallazgoArea">Area </label>
+                                <div class="col-sm-6">
+                                    <asp:DropDownList ID="DDLHallazgoArea" class="select2 form-control custom-select" style="width: 100%" runat="server"></asp:DropDownList>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <asp:UpdatePanel ID="UpdateHallazgosCreacionMain2" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group row">
-                                        <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Area </label>
+                                        <label class="col-sm-2 control-label no-padding-right" for="DDLEmpresa">Empresa</label>
                                         <div class="col-sm-6">
-                                            <asp:DropDownList ID="DDLHallazgoArea" class="form-control" runat="server"></asp:DropDownList>
+                                            <asp:DropDownList ID="DDLEmpresa" class="form-control" style="width: 100%" runat="server"></asp:DropDownList>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-xs-12">
                                     <div class="form-group row">
                                         <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Nivel Riesgo </label>
@@ -409,7 +416,6 @@
                                         <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Documento</label>
                                         <div class="col-sm-6">
                                             <asp:FileUpload ID="FUHallazgos" runat="server" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
-
                                         </div>
                                         <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir archivos relacionados al hallazgo">?</span>
                                     </div>
@@ -594,9 +600,9 @@
                                         <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Documento</label>
                                         <div class="col-sm-6">
                                             <asp:FileUpload ID="FUModificarHallazgos" runat="server" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-
                                         </div>
                                         <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir archivos relacionados al hallazgo">?</span>
+                                        <asp:Label Text="" style="color:cornflowerblue" ID="TxFileName" runat="server" />
                                     </div>
                                 </div>
                             </div>
@@ -615,7 +621,7 @@
                     <asp:UpdatePanel ID="UpdatePanel9" runat="server">
                         <ContentTemplate>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <asp:LinkButton ID="BtnModificarHallazgos" runat="server" class="btn btn-primary" OnClick="BtnModificarHallazgos_Click">Crear Hallazgo</asp:LinkButton>
+                            <asp:LinkButton ID="BtnModificarHallazgos" runat="server" class="btn btn-primary" OnClick="BtnModificarHallazgos_Click">Modificar Hallazgo</asp:LinkButton>
                         </ContentTemplate>
                         <Triggers>
                             <asp:PostBackTrigger ControlID="BtnModificarHallazgos" />
@@ -630,4 +636,44 @@
     <script src="/assets/js/jquery.dataTables.min.js"></script>
     <script src="/assets/js/jquery.dataTables.bootstrap.min.js"></script>
     <script src="/assets/js/dataTables.select.min.js"></script>
+    <script src="/assets/js/fstdropdown.js"></script>
+    <link href="../assets/css/select2.min.css" rel="stylesheet" />
+    <script src="../assets/js/select2.min.js"></script>
+    <style>
+        .select2-selection__rendered {line-height: 31px !important;}
+        .select2-container .select2-selection--single {height: 35px !important;}
+        .select2-selection__arrow {height: 34px !important;}
+    </style>
+    <script>
+        $(function () {
+            $(".select2").select2();
+            $(".ajax").select2({
+                ajax: {
+                    url: "https://api.github.com/search/repositories",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.items,
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+            });
+        });
+    </script>
 </asp:Content>

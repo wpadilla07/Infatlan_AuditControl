@@ -11,6 +11,10 @@
             return true;
         }
     </script>
+    <script type="text/javascript">
+        function openModal() { $('#ModificacionesModal').modal('show'); }
+        function closeModal() { $('#ModificacionesModal').modal('hide'); }
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -49,7 +53,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <!-- PAGE CONTENT BEGINS -->
-                <asp:UpdatePanel ID="UpdateForma" runat="server">
+                <asp:UpdatePanel ID="UpdateForma" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
 
 
@@ -103,6 +107,12 @@
                             </div>
                             <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Descargar archivo del hallazgo">?</span>
                         </div>
+                        <div runat="server" id="DivAmpliacion" visible="false" class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right">Ampliación</label>
+                            <div class="col-sm-8">
+                                <asp:Button Text="Solicitar" ID="BtnAmpliacion" CssClass="btn btn-success" runat="server" OnClick="BtnAmpliacion_Click" />
+                            </div>
+                        </div>
                     </ContentTemplate>
                     <Triggers>
                         <asp:PostBackTrigger ControlID="BtnDescargarAnexo" />
@@ -126,6 +136,177 @@
                             </ContentTemplate>
                         </asp:UpdatePanel>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%--MODAL AMPLIACION--%>
+    <div class="modal fade" id="ModalAmpliacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="ModalLabel">
+                        <asp:Label CssClass=" text-white" ID="Label1" runat="server" Text="Solicitar Ampliación"></asp:Label>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <asp:UpdatePanel ID="UpdatePanel9" runat="server">
+                        <ContentTemplate>
+                            <div class="page-header">
+                                <h1>Finalizar Hallazgo
+                                    <small>
+                                        <i class="ace-icon fa fa-angle-double-right"></i>Estas finalizando el hallazgo 
+                                    </small>
+                                </h1>
+                            </div>
+                            <div class="col-xs-12">
+                                <asp:UpdatePanel ID="UpdateComentario" runat="server">
+                                    <ContentTemplate>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
+                                                Comentario
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <asp:TextBox ID="TxFinalizarHallazgoComentario" runat="server" class="form-control" TextMode="MultiLine" Style="height: 50px"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+
+                <%--<div class="modal-body">
+                    <asp:UpdatePanel runat="server" ID="UpdatePanel9">
+                        <ContentTemplate>
+                            <div class="page-header">
+                                <h1>Modificar Hallazgo
+                                    <small>
+                                        <i class="ace-icon fa fa-angle-double-right"></i>Ampliacion de fecha de resolución
+                                    </small>
+                                </h1>
+                            </div>
+                            <div class="col-xs-12">
+                                <asp:UpdatePanel ID="UpdateComentario" runat="server">
+                                    <ContentTemplate>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
+                                                Comentario
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <asp:TextBox ID="TxFinalizarHallazgoComentario" runat="server" class="form-control" TextMode="MultiLine" Style="height: 50px"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Documento</label>
+                                    <div class="col-sm-6">
+                                        <asp:FileUpload ID="FUHallazgos" runat="server" class="form-control" />
+
+                                    </div>
+                                    <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir archivos relacionados a la finalización del hallazgo">?</span>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12">
+                                <div class="col-sm-10">
+                                    <label>Motivo</label>
+                                    <div class="col-sm-12">
+                                        <asp:TextBox runat="server" ID="TxMotivo" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Fecha</label>
+                                    <div class="col-md-9">
+                                        <asp:TextBox runat="server" ID="TxFechaAmpliacion" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>--%>
+                <div class="modal-footer">
+                    <asp:UpdatePanel ID="UpdatePanel123123" runat="server">
+                        <ContentTemplate>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL MODIFICACIONES INFORME -->
+    <div class="modal fade" id="ModificacionesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <asp:UpdatePanel ID="UpdateModificacionesLabel" runat="server">
+                        <ContentTemplate>
+                            <h4 class="modal-title" id="ModalLabelModificaciones">Solicitar Ampliación</h4>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-body">
+                    <asp:UpdatePanel ID="UpdateModificacionesMain" runat="server">
+                        <ContentTemplate>
+                            <div class="page-header">
+                                <h1>Modificar Hallazgo
+                                    <small>
+                                        <i class="ace-icon fa fa-angle-double-right"></i>Ampliacion de fecha de resolución
+                                    </small>
+                                </h1>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label" for="DDLUserResponsable">Motivo</label>
+                                    <div class="col-sm-10">
+                                        <asp:TextBox runat="server" ID="TxMotivo" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label" for="DDLUserResponsable">Nueva Fecha</label>
+                                    <div class="col-sm-10">
+                                        <asp:TextBox runat="server" ID="TxFechaAmpliacion" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label" for="DDLUserResponsable">Documento</label>
+                                    <div class="col-sm-10">
+                                        <asp:FileUpload runat="server" CssClass="form-control" ID="FUDocAmpliacion" />
+                                    </div>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+
+                    <asp:UpdatePanel ID="UpdateModificacionesMensaje" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <div class="form-group row">
+                                <asp:Label ID="LbModificacionesMensaje" runat="server" Text="" Class="col-sm-12" Style="color: indianred; text-align: center;"></asp:Label>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-footer">
+                    <asp:UpdatePanel ID="UpdateModificacionesBotones" runat="server">
+                        <ContentTemplate>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <asp:Button ID="BtnSolicitar" runat="server" Text="Aceptar" class="btn btn-success" OnClick="BtnSolicitar_Click"/>
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="BtnSolicitar"/>
+                        </Triggers>
+                    </asp:UpdatePanel>
                 </div>
             </div>
         </div>

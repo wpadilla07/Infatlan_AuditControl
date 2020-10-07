@@ -10,13 +10,10 @@ namespace Infatlan_AuditControl.classes
 {
     public class Cargar
     {
-        public int? cargarArchivo(String DireccionCarga, ref int vSuccess, ref int vError, String vUsuario)
-        {
+        public int? cargarArchivo(String DireccionCarga, ref int vSuccess, ref int vError, String vUsuario){
             int? vResultado = null;
-            try
-            {
+            try{
                 FileStream stream = File.Open(DireccionCarga, FileMode.Open, FileAccess.Read);
-
                 IExcelDataReader excelReader;
                 if (DireccionCarga.Contains("xlsx"))
                     //2007
@@ -30,52 +27,40 @@ namespace Infatlan_AuditControl.classes
                 excelReader.Close();
 
                 DataSet vDatosVerificacion = vDatosExcel.Copy();
-                for (int i = 0; i < vDatosVerificacion.Tables[0].Rows.Count; i++)
-                {
+                for (int i = 0; i < vDatosVerificacion.Tables[0].Rows.Count; i++){
                     if (verificarRow(vDatosVerificacion.Tables[0].Rows[i]))
                         vDatosExcel.Tables[0].Rows[i].Delete();
                 }
                 vDatosExcel.Tables[0].AcceptChanges();
-
                 vResultado = procesarArchivo(vDatosExcel, ref vSuccess, ref vError, vUsuario);
 
-            }
-            catch (Exception)
-            {
+            }catch (Exception){
                 throw;
             }
             return vResultado;
         }
 
-        public int? procesarArchivo(DataSet vArchivo, ref int vSuccess, ref int vError, String vUsuario)
-        {
+        public int? procesarArchivo(DataSet vArchivo, ref int vSuccess, ref int vError, String vUsuario){
             int? vInforme = null;
-            try
-            {
+            try{
                 db vConexion = new db();
                 log vLog = new log();
-                if (vArchivo.Tables.Count > 0)
-                {
+                if (vArchivo.Tables.Count > 0){
                     
-                    if (vArchivo.Tables[0].Rows.Count > 0)
-                    {
+                    if (vArchivo.Tables[0].Rows.Count > 0){
                         DataTable vDatosInforme = vArchivo.Tables[0];
-                        foreach (DataRow item in vDatosInforme.Rows)
-                        {
-                            if (!item["NombreInforme"].ToString().Equals(""))
-                            {
+                        foreach (DataRow item in vDatosInforme.Rows){
+                            if (!item["NombreInforme"].ToString().Equals("")){
                                 String vQuery = "[ACSP_Informes] 1,0,1,'" + vUsuario + "'," +
                                 "'" + item["NombreInforme"].ToString() + "'," +
                                 "'" + item["DescripcionInforme"].ToString() + "'," +
                                 "'',0," +
                                 "'" + DateTime.Parse(item["FechaRespuesta"].ToString()).ToString("yyyy-MM-dd HH:mm:ss") + "'";
                                 vInforme = vConexion.ejecutarSQLGetValue(vQuery);
-                                if (vInforme != null)
-                                {
+                                if (vInforme != null){
                                     vQuery = "[ACSP_Informes] 3," + vInforme + ",0,'','','','" + item["Responsable"].ToString() + "',1";
                                     vConexion.ejecutarSql(vQuery);
-                                    if (!item["Copia"].ToString().Equals(""))
-                                    {
+                                    if (!item["Copia"].ToString().Equals("")){
                                         vQuery = "[ACSP_Informes] 3," + vInforme + ",0,'','','','" + item["Copia"].ToString() + "',2";
                                         vConexion.ejecutarSql(vQuery);
                                     }
@@ -83,13 +68,11 @@ namespace Infatlan_AuditControl.classes
                             }
                         }
                     }
-                    if (vArchivo.Tables[1].Rows.Count > 0)
-                    {
+
+                    if (vArchivo.Tables[1].Rows.Count > 0){
                         DataTable vDatosHallazgos = vArchivo.Tables[1];
-                        foreach (DataRow item in vDatosHallazgos.Rows)
-                        {
-                            if (!item["responsable"].ToString().Equals(""))
-                            {
+                        foreach (DataRow item in vDatosHallazgos.Rows){
+                            if (!item["responsable"].ToString().Equals("")){
                                 String vQuery = "[ACSP_Hallazgos] 1,0,0," +
                                     "'" + vUsuario + "'," +
                                     "'" + item["Hallazgo"].ToString() + "'," +
@@ -103,8 +86,7 @@ namespace Infatlan_AuditControl.classes
                                     "" + item["NivelRiesgo"].ToString() + ",'',''," +
                                     "'" + item["Responsable"].ToString() + "'";
                                 int? vIdHallazgo = vConexion.ejecutarSQLGetValue(vQuery);
-                                if (vIdHallazgo != null)
-                                {
+                                if (vIdHallazgo != null){
                                     vQuery = "[ACSP_Hallazgos] 3," + vIdHallazgo + "," + vInforme + "";
                                     vConexion.ejecutarSql(vQuery);
                                 }
@@ -114,14 +96,13 @@ namespace Infatlan_AuditControl.classes
                 }
                 else
                     throw new Exception("No contiene ninguna hoja de excel.");
-            }
-            catch (Exception Ex)
-            {
+            }catch (Exception Ex){
                 String vErrorMessage = Ex.Message;
                 throw;
             }
             return vInforme;
         }
+
         private bool verificarRow(DataRow dr)
         {
             int contador = 0;

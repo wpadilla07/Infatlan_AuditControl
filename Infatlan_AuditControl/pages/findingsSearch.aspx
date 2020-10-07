@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="/assets/css/GridStyle.css" rel="stylesheet" />
     <link href="/assets/css/pager.css" rel="stylesheet" />
+    <link href="/assets/css/fstdropdown.css" rel="stylesheet" />
     <script type="text/javascript">
         var updateProgress = null;
 
@@ -12,7 +13,6 @@
             return true;
         }
     </script>
-
 
     <script type="text/javascript">
         function openModalHallazgos() {
@@ -34,6 +34,7 @@
             $('#FinalizarHallazgoModal').modal('show');
         }
     </script>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -52,9 +53,7 @@
                 <a href="/default.aspx">Home</a>
             </li>
 
-            <li>
-                <a href="#">Pages</a>
-            </li>
+            <li><a href="#">Pages</a></li>
             <li class="active">Buscar / Modificar Hallazgos</li>
         </ul>
     </div>
@@ -69,16 +68,17 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
+
                 <!-- PAGE CONTENT BEGINS -->
+                <div class="form-group ">
+                    <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">No.Informe</label>
+                    <div class="col-sm-6">
+                        <asp:DropDownList ID="DDLBuscarInforme" runat="server" class="fstdropdown-select form-control"></asp:DropDownList>
+                        <%--<asp:TextBox ID="TxBuscarIdInforme" runat="server" class=" form-control"></asp:TextBox>--%>
+                    </div>
+                </div>
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
-                        <div class="form-group ">
-                            <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">No.Informe</label>
-                            <div class="col-sm-6">
-                                <asp:TextBox ID="TxBuscarIdInforme" runat="server" class="form-control"></asp:TextBox>
-                            </div>
-                        </div>
-
                         <div class="form-group" runat="server" visible="false">
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserRevision">Nombre </label>
                             <div class="col-sm-6">
@@ -86,13 +86,12 @@
                             </div>
                         </div>
 
-
                         <div class="form-group">
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable"></label>
                             <div class="col-md-8">
                                 <asp:UpdatePanel ID="UpdatePanel3" runat="server">
                                     <ContentTemplate>
-                                        <asp:LinkButton ID="BtnBuscarHallazgo" runat="server" style="border-radius: 4px;" class="btn btn-success" OnClick="BtnBuscarHallazgo_Click">
+                                        <asp:LinkButton ID="BtnBuscarHallazgo" runat="server" Style="border-radius: 4px;" class="btn btn-success" OnClick="BtnBuscarHallazgo_Click">
                                             <i class="ace-icon fa fa-search bigger-110"></i>
                                             Buscar Hallazgos
                                         </asp:LinkButton>
@@ -121,11 +120,9 @@
                             PageSize="50" OnPageIndexChanging="GVBusqueda_PageIndexChanging" OnRowCommand="GVBusqueda_RowCommand">
                             <Columns>
                                 <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px" ShowHeader="true">
-                                    <HeaderTemplate>
-                                        Auth
-                                    </HeaderTemplate>
+                                    <HeaderTemplate>Auth</HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:LinkButton ID="BtnAutorizarInforme" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-info2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="AutorizarEstadoHallazgo">
+                                        <asp:LinkButton ID="BtnAutorizarInforme" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-info2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="AutorizarEstadoHallazgo">
                                             <i class="fa fa-check"></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
@@ -134,7 +131,7 @@
                                     <HeaderTemplate>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:LinkButton ID="BtnModificar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-yellow" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="ModificarEstadoHallazgo">
+                                        <asp:LinkButton ID="BtnModificar" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-yellow" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="ModificarEstadoHallazgo">
                                             <i class=" fa fa-cogs "></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
@@ -143,7 +140,7 @@
                                     <HeaderTemplate>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:LinkButton ID="BtnFinalizarHallazgo" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-yellow" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="FinalizarHallazgo">
+                                        <asp:LinkButton ID="BtnFinalizarHallazgo" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-yellow" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="FinalizarHallazgo">
                                             <i class=" fa fa-check "> Cerrar Hallazgo</i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
@@ -158,8 +155,8 @@
                                     <HeaderTemplate>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:LinkButton ID="BtnEntrar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-success" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EntrarHallazgo">
-                                            <i class="fa fa-search"></i>
+                                        <asp:LinkButton ID="BtnEntrar" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-success" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EntrarHallazgo">
+                                            <i class="fa fa-pencil"></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
@@ -167,7 +164,7 @@
                                     <HeaderTemplate>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:LinkButton ID="BtnAsignar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-info" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="AsignarUsuario">
+                                        <asp:LinkButton ID="BtnAsignar" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-info" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="AsignarUsuario">
                                             <i class="fa fa-user-plus "></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
@@ -216,7 +213,7 @@
                                 <h1>Modificar Hallazgo
                             <small>
                                 <i class="ace-icon fa fa-angle-double-right"></i>
-                                Asignacion de Usuario a Hallazgo                            </small>
+                                Asignacion de Usuario a Hallazgo</small>
                                 </h1>
                             </div>
                             <div class="col-xs-12">
@@ -243,13 +240,14 @@
                     <asp:UpdatePanel ID="UpdateModificacionesBotones" runat="server">
                         <ContentTemplate>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <asp:Button ID="BtnModificarHallazgo" runat="server" Text="Asignar" style="border-radius: 4px;" class="btn btn-primary" OnClick="BtnModificarHallazgo_Click" />
+                            <asp:Button ID="BtnModificarHallazgo" runat="server" Text="Asignar" Style="border-radius: 4px;" class="btn btn-primary" OnClick="BtnModificarHallazgo_Click" />
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- MODAL MODIFICACIONES HALLAZGO -->
     <div class="modal fade" id="ModificacionesEstadoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -304,13 +302,14 @@
                     <asp:UpdatePanel ID="UpdatePanel6" runat="server">
                         <ContentTemplate>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <asp:Button ID="BtnModificarEstadoHallazgo" runat="server" Text="Cambiar Estado" style="border-radius: 4px;" class="btn btn-primary" OnClick="BtnModificarEstadoHallazgo_Click" />
+                            <asp:Button ID="BtnModificarEstadoHallazgo" runat="server" Text="Cambiar Estado" Style="border-radius: 4px;" class="btn btn-primary" OnClick="BtnModificarEstadoHallazgo_Click" />
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- MODAL MODIFICACIONES HALLAZGO FINALIZACION-->
     <div class="modal fade" id="FinalizarHallazgoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -333,21 +332,25 @@
                         <ContentTemplate>
                             <div class="page-header">
                                 <h1>Finalizar Hallazgo
-                            <small>
-                                <i class="ace-icon fa fa-angle-double-right"></i>
-                                Estas finalizando el hallazgo 
-                            </small>
+                                    <small>
+                                        <i class="ace-icon fa fa-angle-double-right"></i>Estas finalizando el hallazgo 
+                                    </small>
                                 </h1>
                             </div>
                             <div class="col-xs-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
-                                        Comentario
-                                    </label>
-                                    <div class="col-sm-10">
-                                        <asp:TextBox ID="TxFinalizarHallazgoComentario" runat="server" class="form-control" TextMode="MultiLine" Style="height: 50px"></asp:TextBox>
-                                    </div>
-                                </div>
+                                <asp:UpdatePanel ID="UpdateComentario" runat="server">
+                                    <ContentTemplate>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
+                                                Comentario
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <asp:TextBox ID="TxFinalizarHallazgoComentario" runat="server" class="form-control" TextMode="MultiLine" Style="height: 50px"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+
                                 <div class="form-group row">
                                     <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Documento</label>
                                     <div class="col-sm-6">
@@ -373,13 +376,14 @@
                     <asp:UpdatePanel ID="UpdatePanel11" runat="server">
                         <ContentTemplate>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            <asp:Button ID="BtnFinalizarHallazgo" runat="server" Text="Finalizar Hallazgo" style="border-radius: 4px;" class="btn btn-success" OnClick="BtnFinalizarHallazgo_Click"  />
+                            <asp:Button ID="BtnFinalizarHallazgo" runat="server" Text="Finalizar Hallazgo" Style="border-radius: 4px;" class="btn btn-success" OnClick="BtnFinalizarHallazgo_Click" />
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
             </div>
         </div>
     </div>
+    
     <%--MODAL DE AUTORIZACION--%>
     <div class="modal fade" id="AutorizacionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -399,12 +403,19 @@
                 </div>
                 <div class="modal-body">
                     <label class="control-label">¿Estas seguro de autorizar este cambio de estado?</label>
+                    <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            Estado solicitado: <b>
+                                <asp:Label ID="LbEstadoTemporal" runat="server" Text=""></asp:Label></b>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                 </div>
                 <div class="modal-footer">
                     <asp:UpdatePanel ID="UpdatePanel14" runat="server">
                         <ContentTemplate>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            <asp:Button ID="BtnEnviarAutorizacion" runat="server" Text="Enviar" style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnEnviarAutorizacion_Click" />
+                            <%--<button type="button" class="btn btn-danger" Style="border-radius: 4px;" data-dismiss="modal">Rechazar</button>--%>
+                            <asp:Button ID="BtnRechazarAutorizacion" runat="server" Text="Rechazar" Style="border-radius: 4px;" class="btn btn-danger" OnClientClick="ShowProgress();" OnClick="BtnRechazarAutorizacion_Click" />
+                            <asp:Button ID="BtnEnviarAutorizacion" runat="server" Text="Aprobar" Style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnEnviarAutorizacion_Click" />
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
@@ -413,4 +424,5 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="Scripts" runat="server">
+    <script src="/assets/js/fstdropdown.js"></script>
 </asp:Content>

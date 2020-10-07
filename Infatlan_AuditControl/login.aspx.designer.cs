@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Infatlan_AuditControl {
-    
-    
-    public partial class login {
-        
+namespace Infatlan_AuditControl
+{
+
+
+    public partial class login
+    {
+
         /// <summary>
         /// Control form1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Infatlan_AuditControl {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// Control TxUsername.
         /// </summary>
@@ -29,7 +31,7 @@ namespace Infatlan_AuditControl {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxUsername;
-        
+
         /// <summary>
         /// Control TxPassword.
         /// </summary>
@@ -38,7 +40,7 @@ namespace Infatlan_AuditControl {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxPassword;
-        
+
         /// <summary>
         /// Control BtnLogin.
         /// </summary>
@@ -47,7 +49,7 @@ namespace Infatlan_AuditControl {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton BtnLogin;
-        
+
         /// <summary>
         /// Control LbMensaje.
         /// </summary>

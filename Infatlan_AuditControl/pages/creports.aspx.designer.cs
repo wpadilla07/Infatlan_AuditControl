@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Infatlan_AuditControl.pages {
-    
-    
-    public partial class creports {
-        
+namespace Infatlan_AuditControl.pages
+{
+
+
+    public partial class creports
+    {
+
         /// <summary>
         /// Control ScriptManager1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.ScriptManager ScriptManager1;
-        
+
         /// <summary>
         /// Control UpdateProgress1.
         /// </summary>
@@ -29,16 +31,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress UpdateProgress1;
-        
-        /// <summary>
-        /// Control UpdateForma.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel UpdateForma;
-        
+
         /// <summary>
         /// Control DDLUserResponsable.
         /// </summary>
@@ -47,7 +40,16 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList DDLUserResponsable;
-        
+
+        /// <summary>
+        /// Control UpdateForma.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdateForma;
+
         /// <summary>
         /// Control DDLTipoResponsable.
         /// </summary>
@@ -56,7 +58,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList DDLTipoResponsable;
-        
+
         /// <summary>
         /// Control UpdatePanel1.
         /// </summary>
@@ -65,7 +67,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-        
+
         /// <summary>
         /// Control BtnAgregarResponsable.
         /// </summary>
@@ -74,7 +76,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton BtnAgregarResponsable;
-        
+
         /// <summary>
         /// Control GVResponsables.
         /// </summary>
@@ -83,7 +85,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GVResponsables;
-        
+
         /// <summary>
         /// Control TxNombreInforme.
         /// </summary>
@@ -92,7 +94,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxNombreInforme;
-        
+
         /// <summary>
         /// Control TxFechaRespuesta.
         /// </summary>
@@ -101,7 +103,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxFechaRespuesta;
-        
+
         /// <summary>
         /// Control FUInforme.
         /// </summary>
@@ -110,7 +112,16 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.FileUpload FUInforme;
-        
+
+        /// <summary>
+        /// Control CBEstadoCerrado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputCheckBox CBEstadoCerrado;
+
         /// <summary>
         /// Control LbMensajeCrearInforme.
         /// </summary>
@@ -119,7 +130,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbMensajeCrearInforme;
-        
+
         /// <summary>
         /// Control TxDescripcionInforme.
         /// </summary>
@@ -128,7 +139,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxDescripcionInforme;
-        
+
         /// <summary>
         /// Control UpdateBotones.
         /// </summary>
@@ -137,7 +148,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateBotones;
-        
+
         /// <summary>
         /// Control BtnCrearInforme.
         /// </summary>

@@ -7,11 +7,13 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace Infatlan_AuditControl.pages {
-    
-    
-    public partial class findingsSearch {
-        
+namespace Infatlan_AuditControl.pages
+{
+
+
+    public partial class findingsSearch
+    {
+
         /// <summary>
         /// Control ScriptManager1.
         /// </summary>
@@ -20,7 +22,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.ScriptManager ScriptManager1;
-        
+
         /// <summary>
         /// Control UpdateProgress1.
         /// </summary>
@@ -29,7 +31,16 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdateProgress UpdateProgress1;
-        
+
+        /// <summary>
+        /// Control DDLBuscarInforme.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DDLBuscarInforme;
+
         /// <summary>
         /// Control UpdatePanel1.
         /// </summary>
@@ -38,16 +49,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-        
-        /// <summary>
-        /// Control TxBuscarIdInforme.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TxBuscarIdInforme;
-        
+
         /// <summary>
         /// Control TxBuscarNombre.
         /// </summary>
@@ -56,7 +58,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxBuscarNombre;
-        
+
         /// <summary>
         /// Control UpdatePanel3.
         /// </summary>
@@ -65,7 +67,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel3;
-        
+
         /// <summary>
         /// Control BtnBuscarHallazgo.
         /// </summary>
@@ -74,7 +76,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton BtnBuscarHallazgo;
-        
+
         /// <summary>
         /// Control UpdateForma.
         /// </summary>
@@ -83,7 +85,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateForma;
-        
+
         /// <summary>
         /// Control GVBusqueda.
         /// </summary>
@@ -92,7 +94,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GVBusqueda;
-        
+
         /// <summary>
         /// Control UpdateBotones.
         /// </summary>
@@ -101,7 +103,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateBotones;
-        
+
         /// <summary>
         /// Control UpdateModificacionesLabel.
         /// </summary>
@@ -110,7 +112,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateModificacionesLabel;
-        
+
         /// <summary>
         /// Control LbNumeroHallazgoModificaciones.
         /// </summary>
@@ -119,7 +121,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbNumeroHallazgoModificaciones;
-        
+
         /// <summary>
         /// Control UpdateModificacionesMain.
         /// </summary>
@@ -128,7 +130,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateModificacionesMain;
-        
+
         /// <summary>
         /// Control DDLUsuariosAsignacionHallazgo.
         /// </summary>
@@ -137,7 +139,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList DDLUsuariosAsignacionHallazgo;
-        
+
         /// <summary>
         /// Control UpdateModificacionesMensaje.
         /// </summary>
@@ -146,7 +148,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateModificacionesMensaje;
-        
+
         /// <summary>
         /// Control LbModificacionesMensaje.
         /// </summary>
@@ -155,7 +157,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbModificacionesMensaje;
-        
+
         /// <summary>
         /// Control UpdateModificacionesBotones.
         /// </summary>
@@ -164,7 +166,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdateModificacionesBotones;
-        
+
         /// <summary>
         /// Control BtnModificarHallazgo.
         /// </summary>
@@ -173,7 +175,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnModificarHallazgo;
-        
+
         /// <summary>
         /// Control UpdatePanel2.
         /// </summary>
@@ -182,7 +184,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel2;
-        
+
         /// <summary>
         /// Control LbNumeroHallazgoModificacionesEstado.
         /// </summary>
@@ -191,7 +193,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbNumeroHallazgoModificacionesEstado;
-        
+
         /// <summary>
         /// Control UpdatePanel4.
         /// </summary>
@@ -200,7 +202,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel4;
-        
+
         /// <summary>
         /// Control DDLModificarHallazgoEstado.
         /// </summary>
@@ -209,7 +211,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList DDLModificarHallazgoEstado;
-        
+
         /// <summary>
         /// Control UpdatePanel5.
         /// </summary>
@@ -218,7 +220,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel5;
-        
+
         /// <summary>
         /// Control LbHallazgoEstadoMensaje.
         /// </summary>
@@ -227,7 +229,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbHallazgoEstadoMensaje;
-        
+
         /// <summary>
         /// Control UpdatePanel6.
         /// </summary>
@@ -236,7 +238,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel6;
-        
+
         /// <summary>
         /// Control BtnModificarEstadoHallazgo.
         /// </summary>
@@ -245,7 +247,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnModificarEstadoHallazgo;
-        
+
         /// <summary>
         /// Control UpdatePanel8.
         /// </summary>
@@ -254,7 +256,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel8;
-        
+
         /// <summary>
         /// Control LbFinalizarHallazgo.
         /// </summary>
@@ -263,7 +265,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbFinalizarHallazgo;
-        
+
         /// <summary>
         /// Control UpdatePanel9.
         /// </summary>
@@ -272,7 +274,16 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel9;
-        
+
+        /// <summary>
+        /// Control UpdateComentario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdateComentario;
+
         /// <summary>
         /// Control TxFinalizarHallazgoComentario.
         /// </summary>
@@ -281,7 +292,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TxFinalizarHallazgoComentario;
-        
+
         /// <summary>
         /// Control FUHallazgos.
         /// </summary>
@@ -290,7 +301,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.FileUpload FUHallazgos;
-        
+
         /// <summary>
         /// Control UpdatePanel10.
         /// </summary>
@@ -299,7 +310,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel10;
-        
+
         /// <summary>
         /// Control LbMensajeCierreHallazgo.
         /// </summary>
@@ -308,7 +319,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbMensajeCierreHallazgo;
-        
+
         /// <summary>
         /// Control UpdatePanel11.
         /// </summary>
@@ -317,7 +328,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel11;
-        
+
         /// <summary>
         /// Control BtnFinalizarHallazgo.
         /// </summary>
@@ -326,7 +337,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button BtnFinalizarHallazgo;
-        
+
         /// <summary>
         /// Control UpdatePanel7.
         /// </summary>
@@ -335,7 +346,7 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel7;
-        
+
         /// <summary>
         /// Control LbAutorizacionHallazgo.
         /// </summary>
@@ -344,7 +355,25 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbAutorizacionHallazgo;
-        
+
+        /// <summary>
+        /// Control UpdatePanel12.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel UpdatePanel12;
+
+        /// <summary>
+        /// Control LbEstadoTemporal.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LbEstadoTemporal;
+
         /// <summary>
         /// Control UpdatePanel14.
         /// </summary>
@@ -353,7 +382,16 @@ namespace Infatlan_AuditControl.pages {
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel UpdatePanel14;
-        
+
+        /// <summary>
+        /// Control BtnRechazarAutorizacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnRechazarAutorizacion;
+
         /// <summary>
         /// Control BtnEnviarAutorizacion.
         /// </summary>

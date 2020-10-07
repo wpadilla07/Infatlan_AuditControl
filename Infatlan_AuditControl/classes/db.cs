@@ -144,20 +144,17 @@ namespace Infatlan_AuditControl.classes
             return vResultado;
         }
 
-        public String GetNombreUsuario(String vUsuario)
-        {
+        public String GetNombreUsuario(String vUsuario){
             String vResultado = String.Empty;
-            try
-            {
+            try{
                 LdapService vLdap = new LdapService();
                 DataTable vDatos = vLdap.GetDatosUsuario(ConfigurationManager.AppSettings["ADHOST"], vUsuario);
-                foreach (DataRow item in vDatos.Rows)
-                {
+                foreach (DataRow item in vDatos.Rows){
                     vResultado = item["givenName"].ToString() + " " + item["sn"].ToString();
                 }
-            }
-            catch (Exception Ex)
-            {
+                //DataTable vDatosJefatura = obtenerDataTable("ACSP_Login '" + vUsuario + "'");
+                //vResultado = vDatosJefatura.Rows[0]["nombre"].ToString();
+            }catch (Exception Ex){
                 String vError = Ex.Message;
                 vConexion.Close();
                 throw;
@@ -165,11 +162,9 @@ namespace Infatlan_AuditControl.classes
             return vResultado;
         }
 
-        public String ValidarEstadoHallazgo(String vHallazgo)
-        {
+        public String ValidarEstadoHallazgo(String vHallazgo){
             String vResultado = String.Empty;
-            try
-            {
+            try{
                 String vQuery = "[ACSP_ObtenerTipos] 5," + vHallazgo;
                 SqlCommand vSqlCommand = new SqlCommand(vQuery, vConexion);
                 vSqlCommand.CommandType = CommandType.Text;
@@ -177,9 +172,7 @@ namespace Infatlan_AuditControl.classes
                 vConexion.Open();
                 vResultado = (String)vSqlCommand.ExecuteScalar();
                 vConexion.Close();
-            }
-            catch (Exception Ex)
-            {
+            }catch (Exception Ex){
                 String vError = Ex.Message;
                 vConexion.Close();
                 throw;
@@ -187,17 +180,35 @@ namespace Infatlan_AuditControl.classes
             return vResultado;
         }
 
-        public String ActualizarEstadoHallazgo(String vHallazgo, String vPaso)
-        {
+        public String ActualizarEstadoHallazgo(String vHallazgo, String vPaso){
             String vResultado = String.Empty;
-            try
-            {
+            try{
                 String vQuery = "[ACSP_Hallazgos] 8," + vHallazgo + "," + vPaso;
                 SqlCommand vSqlCommand = new SqlCommand(vQuery, vConexion);
                 vSqlCommand.CommandType = CommandType.Text;
 
                 vConexion.Open();
-                vResultado = (String)vSqlCommand.ExecuteScalar();
+                vResultado = Convert.ToString((int)vSqlCommand.ExecuteScalar());
+                vConexion.Close();
+            }catch (Exception Ex){
+                String vError = Ex.Message;
+                vConexion.Close();
+                throw;
+            }
+            return vResultado;
+        }
+
+        public String ValidarAutorizacionHallazgo(String vHallazgo)
+        {
+            String vResultado = String.Empty;
+            try
+            {
+                String vQuery = "[ACSP_ObtenerHallazgos] 8," + vHallazgo;
+                SqlCommand vSqlCommand = new SqlCommand(vQuery, vConexion);
+                vSqlCommand.CommandType = CommandType.Text;
+
+                vConexion.Open();
+                vResultado = Convert.ToString((int)vSqlCommand.ExecuteScalar());
                 vConexion.Close();
             }
             catch (Exception Ex)

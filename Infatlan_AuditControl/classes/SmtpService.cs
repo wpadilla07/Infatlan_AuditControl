@@ -23,11 +23,9 @@ namespace Infatlan_AuditControl.classes
     {
         public SmtpService() { }
 
-        public Boolean EnviarMensaje(String To, typeBody Body, String UsuarioPara, String NombreAccion, String Copy)
-        {
+        public Boolean EnviarMensaje(String To, typeBody Body, String UsuarioPara, String NombreAccion, String Copy){
             Boolean vRespuesta = false;
-            try
-            {
+            try{
                 MailMessage mail = new MailMessage("Auditoria Interna<" + ConfigurationManager.AppSettings["SmtpFrom"] + ">", To);
                 SmtpClient client = new SmtpClient();
                 client.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SmtpPort"]);
@@ -38,8 +36,7 @@ namespace Infatlan_AuditControl.classes
                 mail.Subject = "Auditoria - Sistema de informes";
                 mail.IsBodyHtml = true;
 
-                switch (Body)
-                {
+                switch (Body){
                     case typeBody.Informe:
                         mail.AlternateViews.Add(CreateHtmlMessage(PopulateBody(
                             UsuarioPara,
@@ -52,7 +49,7 @@ namespace Infatlan_AuditControl.classes
                     case typeBody.HallazgoAsignacion:
                         mail.AlternateViews.Add(CreateHtmlMessage(PopulateBody(
                             UsuarioPara,
-                             NombreAccion,
+                            NombreAccion,
                             ConfigurationManager.AppSettings["Host"] + "/pages/findingsSearch.aspx",
                             "Cualquier consultar o comentario ponte en contacto con auditoria o por favor entrar al portal."
                             ), Server.MapPath("/assets/images/logored.png")));
@@ -60,7 +57,7 @@ namespace Infatlan_AuditControl.classes
                     case typeBody.General:
                         mail.AlternateViews.Add(CreateHtmlMessage(PopulateBody(
                             UsuarioPara,
-                             NombreAccion,
+                            NombreAccion,
                             ConfigurationManager.AppSettings["Host"] + "/pages/findingsSearch.aspx",
                             "Cualquier consultar o comentario ponte en contacto con auditoria o por favor entrar al portal."
                             ), Server.MapPath("/assets/images/logored.png")));
@@ -68,18 +65,37 @@ namespace Infatlan_AuditControl.classes
                 }
                 client.Send(mail);
                 vRespuesta = true;
-            }
-            catch (System.Net.Mail.SmtpException Ex)
-            {
+            }catch (System.Net.Mail.SmtpException Ex){
                 String vError = Ex.Message;
                 throw;
-            }
-            catch (Exception Ex)
-            {
+            }catch (Exception Ex){
                 throw;
             }
             return vRespuesta;
         }
+
+        public Boolean EnviarMensaje(String To, String Body, String Asunto){
+            Boolean vRespuesta = false;
+            try{
+                MailMessage mail = new MailMessage("Correo test<" + ConfigurationManager.AppSettings["SmtpFrom"] + ">", To);
+                SmtpClient client = new SmtpClient();
+                client.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SmtpPort"]);
+                client.UseDefaultCredentials = false;
+                client.Host = ConfigurationManager.AppSettings["SmtpServer"];
+                mail.Subject = Asunto;
+                mail.IsBodyHtml = true;
+                mail.Body = Body;
+
+                client.Send(mail);
+            }catch (System.Net.Mail.SmtpException Ex){
+                String vError = Ex.Message;
+                throw;
+            }catch (Exception Ex){
+                throw;
+            }
+            return vRespuesta;
+        }
+
         private AlternateView CreateHtmlMessage(string message, string logoPath)
         {
             var inline = new LinkedResource(logoPath, "image/png");
@@ -94,11 +110,9 @@ namespace Infatlan_AuditControl.classes
             return alternateView;
         }
 
-        public string PopulateBody(string vNombre, string vTitulo, string vUrl, string vDescripcion)
-        {
+        public string PopulateBody(string vNombre, string vTitulo, string vUrl, string vDescripcion){
             string body = string.Empty;
-            using (StreamReader reader = new StreamReader(Server.MapPath("/pages/mail/TemplateMail.html")))
-            {
+            using (StreamReader reader = new StreamReader(Server.MapPath("/pages/mail/TemplateMail.html"))){
                 body = reader.ReadToEnd();
             }
             body = body.Replace("{Host}", ConfigurationManager.AppSettings["Host"]);

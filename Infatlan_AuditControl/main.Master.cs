@@ -12,79 +12,68 @@ namespace Infatlan_AuditControl
     public partial class main : System.Web.UI.MasterPage
     {
         db vConexion = new db();
-        protected void Page_Load(object sender, EventArgs e)
-        {
+        protected void Page_Load(object sender, EventArgs e){
             if (!Convert.ToBoolean(Session["AUTH"]))
-            {
                 Response.Redirect("/login.aspx");
-            }
-
-            if (!Page.IsPostBack)
-            {
+            
+            if (!Page.IsPostBack){
                 String vError = "";
-                try
-                {
+                try{
                     DataTable vDatos = (DataTable)Session["AUTHCLASS"];
-                    LbUsuarioNombre.Text = ((DataRow)vDatos.Rows[0])["givenName"].ToString();
+                    LbUsuarioNombre.Text = Session["USUARIO"].ToString();
 
-                    switch (Convert.ToInt32(Session["TIPOUSUARIO"]))
-                    {
+                    switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                         case 1:
+                            LbPerfil.Text = "Administrador";
                             break;
                         case 2:
+                            LbPerfil.Text = "Auditor Jefatura";
                             break;
                         case 3:
+                            LbPerfil.Text = "Auditor";
                             break;
                         case 4:
+                            LbPerfil.Text = "Responsable";
                             LI1.Visible = false;
                             LICrearInforme.Visible = false;
                             break;
                         case 5:
+                            LbPerfil.Text = "Consultas";
                             LI1.Visible = false;
                             LIInformes.Visible = false;
                             break;
                     }
 
-                    if (Convert.ToInt32(Session["AUTH"]).Equals(1))
-                    {
+                    if (Convert.ToInt32(Session["AUTH"]).Equals(1)){
 
                     }
                     //OWNER
-                    else if (Convert.ToInt32(Session["AUTH"]).Equals(2))
-                    {
+                    else if (Convert.ToInt32(Session["AUTH"]).Equals(2)){
 
                     }
                     //CONSULTAS
-                    else if (Convert.ToInt32(Session["AUTH"]).Equals(3))
-                    {
+                    else if (Convert.ToInt32(Session["AUTH"]).Equals(3)){
 
                     }
                     //REPORTES
-                    else if (Convert.ToInt32(Session["AUTH"]).Equals(4))
-                    {
+                    else if (Convert.ToInt32(Session["AUTH"]).Equals(4)){
 
                     }
 
                     cargarInformes();
                     cargarHallazgos();
-                }
-                catch (Exception Ex)
-                {
+                }catch (Exception Ex){
                     vError = Ex.Message;
                 }
             }
 
-
-            void cargarInformes()
-            {
-                try
-                {
+            void cargarInformes(){
+                try{
                     String vQuery = "[ACSP_MensajesMasterPage] 1";
                     DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
                     String vLiteralFinal = String.Empty;
-                    foreach (DataRow item in vDatos.Rows)
-                    {
+                    foreach (DataRow item in vDatos.Rows){
                         vLiteralFinal += 
                             "<li>" + Environment.NewLine +
                             "   <a href=\"/pages/ereports.aspx?id=" + item["idInforme"].ToString() + "\" class=\"clearfix\">" + Environment.NewLine +
@@ -109,16 +98,13 @@ namespace Infatlan_AuditControl
                 catch { }
             }
 
-            void cargarHallazgos()
-            {
-                try
-                {
+            void cargarHallazgos(){
+                try{
                     String vQuery = "[ACSP_MensajesMasterPage] 2";
                     DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
                     String vLiteralFinal = String.Empty;
-                    foreach (DataRow item in vDatos.Rows)
-                    {
+                    foreach (DataRow item in vDatos.Rows){
                         vLiteralFinal +=
                             "<li>" + Environment.NewLine +
                             "   <a href=\"/pages/findings.aspx?id=" + item["idHallazgo"].ToString() + "\" class=\"clearfix\">" + Environment.NewLine +

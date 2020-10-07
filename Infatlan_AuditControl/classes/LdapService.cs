@@ -22,11 +22,10 @@ namespace Infatlan_AuditControl.classes
                 return context.ValidateCredentials(username, password);
             }
         }
-        public DataTable GetDatosUsuario(string domain, string username)
-        {
+
+        public DataTable GetDatosUsuario(string domain, string username){
             DataTable vDatosAD = new DataTable();
-            try
-            {
+            try{
                 DirectorySearcher search = new DirectorySearcher(domain);
                 search.Filter = "(&(objectClass=user)(anr=" + username + "))";
                 search.PropertiesToLoad.Add("givenName");
@@ -38,21 +37,19 @@ namespace Infatlan_AuditControl.classes
                 vDatosAD.Columns.Add("sn");
                 vDatosAD.Columns.Add("mail");
 
-                if (result != null)
-                {
+                if (result != null){
                     vDatosAD.Rows.Add(
                         result.Properties["givenName"][0].ToString(),
                         result.Properties["sn"][0].ToString(),
                         result.Properties["mail"][0].ToString()
                     );
                 }
-            }
-            catch
-            {
+            }catch{
                 throw;
             }
             return vDatosAD;
         }
+
         public bool IsUserInAdGroup(string domain, string username, string adGroupName)
         {
             bool result = false;

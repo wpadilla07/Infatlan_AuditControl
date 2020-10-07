@@ -52,7 +52,7 @@
 
             <div class="navbar-header pull-left">
                 <a href="/default.aspx" class="navbar-brand">                  
-                    <img src="/assets/images/logo.png" class="img"/>
+                    <img src="/assets/images/logo.png" class="img" style="width: 100px;"/>
                 </a>
             </div>
 
@@ -72,6 +72,7 @@
 
                             <li class="dropdown-content">
                                 <ul class="dropdown-menu dropdown-navbar">
+                                    
                                    <asp:Literal ID="LitInformes" runat="server"></asp:Literal>
                                 </ul>
                             </li>
@@ -122,6 +123,12 @@
                                 </a>
                             </li>
                             <li class="divider"></li>--%>
+                            <li>
+                                <a href="#">
+                                    <i class="ace-icon fa fa-user"></i>
+                                    <asp:Label ID="LbPerfil" runat="server" Text=""></asp:Label>                                    
+                                </a>
+                            </li>
                             <li>
                                 <a href="/logout.aspx">
                                     <i class="ace-icon fa fa-power-off"></i>

@@ -52,12 +52,18 @@
                 <asp:UpdatePanel ID="UpdateForma" runat="server">
                     <ContentTemplate>
                         <div class="form-group row">
-                            <label class="col-sm-2 control-label no-padding-right" for="FUInforme">Adjuntar Informe</label>
+                            <label class="col-sm-2 control-label no-padding-right" for="FUInforme">Informe</label>
                             <div class="col-sm-4">
                                 <asp:FileUpload ID="FUInforme" runat="server" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-
                             </div>
                             <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir informe con hallazgos">?</span>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label no-padding-right" for="FUInforme">Adjunto</label>
+                            <div class="col-sm-4">
+                                <asp:FileUpload ID="FUAdjunto" runat="server" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                            </div>
+                            <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir archivo de adjunto del informe">?</span>
                         </div>
                     </ContentTemplate>
                 </asp:UpdatePanel>

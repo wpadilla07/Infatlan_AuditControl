@@ -92,6 +92,16 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="col-md-6" runat="server" visible="false" id="DivEmpresas">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 control-label no-padding-right">Empresa</label>
+                                                <div class="col-sm-9">
+                                                    <asp:DropDownList ID="DDLEmpresa" runat="server" class="form-control" AutoPostBack="True"></asp:DropDownList>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-6" runat="server" visible="false" id="DIVUsuarioJefatura">
                                             <div class="form-group row">
                                                 <label class="col-sm-3 control-label no-padding-right">Supervisor</label>
