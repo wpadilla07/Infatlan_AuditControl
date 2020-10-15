@@ -497,7 +497,7 @@ namespace Infatlan_AuditControl.pages
                             }
 
                             String vDeposito = Convert.ToBase64String(vFileDeposito1);
-                            vQuery = "[ACSP_Archivos] 1,'" + vNombreDeposito + "','" + vDeposito + "'";
+                            vQuery = "[ACSP_Archivos] 1,'" + vNombreDeposito + "','" + vDeposito + "',0";
                             int? vIdArchivo = vConexion.ejecutarSQLGetValue(vQuery);
                             if (vIdArchivo != null){
                                 vQuery = "[ACSP_Archivos] 2,'',''," + vIdHallazgo + "," + vIdArchivo ;
@@ -713,7 +713,7 @@ namespace Infatlan_AuditControl.pages
                         }
 
                         String vDeposito = Convert.ToBase64String(vFileDeposito1);
-                        vQuery = "[ACSP_Archivos] 1,'" + vNombreDeposito + "','" + vDeposito + "'";
+                        vQuery = "[ACSP_Archivos] 1,'" + vNombreDeposito + "','" + vDeposito + "',0";
                         int? vIdArchivo = vConexion.ejecutarSQLGetValue(vQuery);
                         if (vIdArchivo != null){
                             vQuery = "[ACSP_Archivos] 2,'',''," + LbModificarHallazgoLabel.Text + "," + vIdArchivo;

@@ -53,15 +53,16 @@ namespace Infatlan_AuditControl.pages
                             }
                             break;
                         case 4:
-                            DivAmpliacion.Visible = true;
+                            vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
+                            DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+
+                            DivAmpliacion.Visible = vDatos.Rows[0]["usuarioResponsable"].ToString() == Session["USUARIO"].ToString() ? true : false;
                             if (!TxHallazgoAccion.Text.Equals("")){
                                 TxHallazgoAccion.ReadOnly = true;
                                 TxHallazgoFechaResolucion.ReadOnly = true;
                                 BtnModificarHallazgo.Visible = false;
                             }
 
-                            vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
-                            DataTable vDatos = vConexion.obtenerDataTable(vQuery);
                             if (vDatos.Rows[0]["asignado"].ToString() != "" && vDatos.Rows[0]["asignado"].ToString() == Session["USUARIO"].ToString()){
                                 TxHallazgoFechaResolucion.ReadOnly = true;
                                 BtnModificarHallazgo.Visible = false;

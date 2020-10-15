@@ -131,7 +131,7 @@
                             <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir archivos relacionados al hallazgo">?</span>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 control-label no-padding-right" for="CBEstadoCerrado">Estado Cerrado</label>
+                            <label class="col-sm-2 control-label no-padding-right" for="CBEstadoCerrado">Informe sin hallazgo</label>
                             <div class="col-sm-4">
                                 <label class="container">
                                     <input type="checkbox" runat="server" id="CBEstadoCerrado"><span class="checkmark"></span>

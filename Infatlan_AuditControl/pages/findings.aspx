@@ -32,10 +32,7 @@
                 <i class="ace-icon fa fa-home home-icon"></i>
                 <a href="/default.aspx">Home</a>
             </li>
-
-            <li>
-                <a href="#">Pages</a>
-            </li>
+            <li><a href="#">Pages</a></li>
             <li class="active">Hallazgos</li>
         </ul>
     </div>
@@ -55,8 +52,6 @@
                 <!-- PAGE CONTENT BEGINS -->
                 <asp:UpdatePanel ID="UpdateForma" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
-
-
                         <div class="form-group">
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Detalle </label>
                             <div class="col-sm-8">

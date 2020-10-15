@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -29,7 +30,11 @@ namespace Infatlan_AuditControl.pages
         public void Mensaje(string vMensaje, WarningType type){
             ScriptManager.RegisterStartupScript(this.Page, typeof(Page), "text", "infatlan.showNotification('top','center','" + vMensaje + "','" + type.ToString().ToLower() + "')", true);
         }
-        
+
+        public void MensajeLoad(string vMensaje, WarningType type){
+            ScriptManager.RegisterStartupScript(this.Page, typeof(Page), "text", " document.addEventListener(\"DOMContentLoaded\", function (event) { infatlan.showNotification('top','center','" + vMensaje + "','" + type.ToString().ToLower() + "'); });", true);
+        }
+
         public void CerrarModal(String vModal){
             ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "Pop", "$('#" + vModal + "').modal('hide');", true);
         }
@@ -100,6 +105,14 @@ namespace Infatlan_AuditControl.pages
         protected void GVBusqueda_RowCommand(object sender, GridViewCommandEventArgs e){
             try{
                 string vIdHallazgo = e.CommandArgument.ToString();
+                DivCierre.Visible = false;
+                DivFile.Visible = false;
+                DivComentario.Visible = false;
+                DivComentarioResponsable.Visible = false;
+                TxComentarioAuditor.Text = string.Empty;
+                TxComentarioResp.Text = string.Empty;
+                UpdatePanel4.Update();
+
                 if (e.CommandName == "EntrarHallazgo"){
                     Response.Redirect("/pages/findings.aspx?id=" + vIdHallazgo + "&i=" + DDLBuscarInforme.SelectedValue);  //TxBuscarIdInforme.Text);
                 }
@@ -116,13 +129,37 @@ namespace Infatlan_AuditControl.pages
                 if (e.CommandName == "AutorizarEstadoHallazgo"){
                     LbAutorizacionHallazgo.Text = vIdHallazgo;
                     String vQuery = "[ACSP_ObtenerHallazgos] 10, " + vIdHallazgo;
-                    String vEstadoTemporal = vConexion.ejecutarSQLGetValueString(vQuery);
-                    LbEstadoTemporal.Text = vEstadoTemporal;
+                    DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                    if (vDatos.Rows.Count > 0){
+                        LbEstadoTemporal.Text = vDatos.Rows[0]["nombre"].ToString();
+                        TxComentario.Text = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? vDatos.Rows[0]["comentarioAuditor"].ToString() : "";
+                        TxComentarioResp.Text = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? vDatos.Rows[0]["comentarios"].ToString() : "";
+                        TxComentarioResp.Text = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "3" ? vDatos.Rows[0]["comentarios"].ToString() : TxComentarioResp.Text;
+                        DivComentarioAuditor.Visible = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? true : false;
+                        DivComentarioResponsable.Visible = vDatos.Rows[0]["comentarios"].ToString() != "" ? true : false;
+                    }
+                    
                     UpdatePanel12.Update();
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openAutorizacionEstadoModal();", true);
                 }
-                
-                if (e.CommandName == "ModificarEstadoHallazgo"){
+
+                if (e.CommandName == "ModificarEstadoHallazgo") {
+                    String vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
+                    DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                    if (vDatos.Rows.Count > 0) {
+                        if (vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "8") {
+                            TxComentarioCierre.Text = vDatos.Rows[0]["comentarios"].ToString();
+                            DivCierre.Visible = true;
+                        }
+                    }
+
+                    vQuery = "[ACSP_ObtenerHallazgos] 11," + vIdHallazgo;
+                    vDatos = vConexion.obtenerDataTable(vQuery);
+                    if (vDatos.Rows.Count > 0){
+                        LBArchivo.Text = vDatos.Rows[0]["nombre"].ToString();
+                        DivFile.Visible = true;
+                    } 
+
                     DDLModificarHallazgoEstado.SelectedValue = "0";
                     UpdatePanel4.Update();
                     LbNumeroHallazgoModificacionesEstado.Text = vIdHallazgo;
@@ -360,6 +397,12 @@ namespace Infatlan_AuditControl.pages
                     vBtnCogs.Enabled = false;
                     vBtnCogs.CssClass = "btn btn-grey";
                 }
+
+                if (Session["TIPOUSUARIO"].ToString() == "2"){
+                    LinkButton vBtnCogs = row.Cells[2].FindControl("BtnModificar") as LinkButton;
+                    vBtnCogs.Enabled = true;
+                    vBtnCogs.CssClass = "btn btn-yellow";
+                }
             }
         }
 
@@ -417,9 +460,10 @@ namespace Infatlan_AuditControl.pages
 
         protected void BtnModificarEstadoHallazgo_Click(object sender, EventArgs e){
             try{
-                String vQuery = "[ACSP_Hallazgos] 4," +
-                    "" + LbNumeroHallazgoModificacionesEstado.Text + "," +
-                    "" + DDLModificarHallazgoEstado.SelectedValue;
+                String vQuery = "[ACSP_Hallazgos] 4" +
+                    "," + LbNumeroHallazgoModificacionesEstado.Text +
+                    "," + DDLModificarHallazgoEstado.SelectedValue + 
+                    ",0,0,0,'" + TxComentarioAuditor.Text + "'";
 
                 if (vConexion.ejecutarSql(vQuery).Equals(1)){
                     try{
@@ -445,7 +489,7 @@ namespace Infatlan_AuditControl.pages
                     }
                     catch { }
 
-                    Mensaje("Hallazgo modificado con exito", WarningType.Success);
+                    MensajeLoad("Hallazgo modificado con exito", WarningType.Success);
                     DDLModificarHallazgoEstado.SelectedIndex = -1;
                     CerrarModal("ModificacionesEstadoModal");
                 }else
@@ -454,7 +498,7 @@ namespace Infatlan_AuditControl.pages
                 DDLModificarHallazgoEstado.SelectedIndex = -1;
                 BuscarHallazgo();
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
+            catch (Exception Ex) { MensajeLoad(Ex.Message, WarningType.Danger); }
         }
 
         protected void BtnEnviarAutorizacion_Click(object sender, EventArgs e){
@@ -467,6 +511,7 @@ namespace Infatlan_AuditControl.pages
                         vQuery = "[ACSP_ObtenerHallazgos] 1,'" + LbAutorizacionHallazgo.Text + "'";
                         DataTable vDatosHallazgo = vConexion.obtenerDataTable(vQuery);
 
+                        String vComent = LbEstadoTemporal.Text == "No aprobado" ? "El comentario del Auditor fue: <b>" + TxComentario.Text + "</b>" : "";
                         String vUsuarioResponsable = String.Empty;
                         foreach (DataRow item in vDatosHallazgo.Rows){
                             vUsuarioResponsable = item["usuarioResponsable"].ToString();
@@ -487,7 +532,7 @@ namespace Infatlan_AuditControl.pages
                             vCorreo.Para,
                             typeBody.General,
                             vCorreo.Usuario,
-                            "Se ha realizado un cambio en el estado del hallazgo no." + LbAutorizacionHallazgo.Text + @", por favor revisar <br \><br \>" +
+                            "Se ha realizado un cambio en el estado del hallazgo no." + LbAutorizacionHallazgo.Text + @", por favor revisar <br \>" + vComent + @"<br \>" + 
                             "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
                             vCorreo.Copia
                             );
@@ -524,9 +569,28 @@ namespace Infatlan_AuditControl.pages
                 vConexion = new db();
                 String vQuery = "[ACSP_Hallazgos] 6," + LbFinalizarHallazgo.Text + ",0,'','" + TxFinalizarHallazgoComentario.Text + "'";
                 if (vConexion.ejecutarSql(vQuery).Equals(1)){
+                    if (FUHallazgos.HasFile){
+                        String vNombreDeposito = String.Empty;
+                        HttpPostedFile bufferDeposito1T = FUHallazgos.PostedFile;
+                        byte[] vFileDeposito1 = null;
+                        if (bufferDeposito1T != null){
+                            vNombreDeposito = FUHallazgos.FileName;
+                            Stream vStream = bufferDeposito1T.InputStream;
+                            BinaryReader vReader = new BinaryReader(vStream);
+                            vFileDeposito1 = vReader.ReadBytes((int)vStream.Length);
+                        }
+                        String vDeposito = Convert.ToBase64String(vFileDeposito1);
+
+                        vQuery = "[ACSP_Archivos] 1,'" + vNombreDeposito + "','" + vDeposito + "',1";
+                        int? vInfo = vConexion.ejecutarSQLGetValue(vQuery);
+                        if (vInfo != null){
+                            vQuery = "[ACSP_Archivos] 2,'',''," + LbFinalizarHallazgo.Text + "," + vInfo;
+                            vConexion.ejecutarSql(vQuery);
+                        }
+                    }
+
                     vQuery = "[ACSP_ObtenerHallazgos] 6,'" + LbFinalizarHallazgo.Text + "'";
                     DataTable vDatosHallazgo = vConexion.obtenerDataTable(vQuery);
-
                     String vUsuarioCreacion = String.Empty;
                     foreach (DataRow item in vDatosHallazgo.Rows){
                         vUsuarioCreacion = item["usuarioCreacion"].ToString();
@@ -557,7 +621,7 @@ namespace Infatlan_AuditControl.pages
                     else
                         BuscarHallazgo(DDLBuscarInforme.SelectedValue);//TxBuscarIdInforme.Text);
 
-                    Mensaje("Hallazgo actualizado con exito", WarningType.Success);
+                    MensajeLoad("Hallazgo actualizado con exito", WarningType.Success);
                     CerrarModal("FinalizarHallazgoModal");
 
                     TxFinalizarHallazgoComentario.Text = "";
@@ -599,6 +663,86 @@ namespace Infatlan_AuditControl.pages
                 BuscarHallazgo();
             }catch (Exception ex){
                 Mensaje(ex.Message,WarningType.Danger);
+            }
+        }
+
+        protected void DDLModificarHallazgoEstado_SelectedIndexChanged(object sender, EventArgs e){
+            try{
+                DivComentario.Visible = DDLModificarHallazgoEstado.SelectedValue == "7" ? true : false;
+            }catch (Exception ex){
+                Mensaje(ex.Message, WarningType.Danger);
+            }
+        }
+
+        protected void LBArchivo_Click(object sender, EventArgs e){
+            try{
+                String vIdArchivo = LbNumeroHallazgoModificacionesEstado.Text;
+                String vQuery = "[ACSP_ObtenerHallazgos] 11, " + vIdArchivo;
+                DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                
+                String vArchivo = vDatos.Rows[0]["archivo"].ToString();
+
+                if (vArchivo != ""){
+                    byte[] fileData = null;
+
+                    if (!vArchivo.Equals(""))
+                        fileData = Convert.FromBase64String(vArchivo);
+                    
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.AppendHeader("Content-Type", GetExtension(vDatos.Rows[0]["nombre"].ToString()));
+                    byte[] bytFile = fileData;
+                    Response.OutputStream.Write(bytFile, 0, bytFile.Length);
+                    Response.AddHeader("Content-disposition", "attachment;filename=" + LBArchivo.Text);
+                    Response.End();
+                }else
+                    throw new Exception("No existe archivo");
+            }catch (Exception ex){
+                Mensaje(ex.Message, WarningType.Danger);
+            }
+        }
+
+        private string GetExtension(string Extension){
+            switch (Extension){
+                case ".doc":
+                    return "application/ms-word";
+                case ".xls":
+                    return "application/vnd.ms-excel";
+                case ".ppt":
+                    return "application/mspowerpoint";
+                case "jpeg":
+                    return "image/jpeg";
+                case ".bmp":
+                    return "image/bmp";
+                case ".zip":
+                    return "application/zip";
+                case ".log":
+                    return "text/HTML";
+                case ".txt":
+                    return "text/plain";
+                case ".tiff":
+                case ".tif":
+                    return "image/tiff";
+                case ".asf":
+                    return "video/x-ms-asf";
+                case ".avi":
+                    return "video/avi";
+                case ".gif":
+                    return "image/gif";
+                case ".jpg":
+                case ".wav":
+                    return "audio/wav";
+                case ".pdf":
+                    return "application/pdf";
+                case ".fdf":
+                    return "application/vnd.fdf";
+                case ".dwg":
+                    return "image/vnd.dwg";
+                case ".msg":
+                    return "application/msoutlook";
+                case ".xml":
+                    return "application/xml";
+                default:
+                    return "application/octet-stream";
             }
         }
     }

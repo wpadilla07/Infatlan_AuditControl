@@ -250,14 +250,13 @@
 
     <!-- MODAL MODIFICACIONES HALLAZGO -->
     <div class="modal fade" id="ModificacionesEstadoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="width: 800px; top: 320px; left: 50%; transform: translate(-50%, -50%);">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server">
                         <ContentTemplate>
                             <h4 class="modal-title" id="ModalLabelModificacionesEstado">Modificar - Hallazgo No.
-                                    <asp:Label ID="LbNumeroHallazgoModificacionesEstado" runat="server" Text=""></asp:Label>
-
+                                <asp:Label ID="LbNumeroHallazgoModificacionesEstado" runat="server" Text=""></asp:Label>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -270,19 +269,57 @@
                         <ContentTemplate>
                             <div class="page-header">
                                 <h1>Modificar Hallazgo
-                            <small>
-                                <i class="ace-icon fa fa-angle-double-right"></i>
-                                Estado del informe (Ten cuidado seleccionando los estados) 
-                            </small>
+                                <small>
+                                    <i class="ace-icon fa fa-angle-double-right"></i>Estado del informe (Ten cuidado seleccionando los estados) 
+                                </small>
                                 </h1>
                             </div>
+
+                            <div runat="server" id="DivCierre" visible="false">
+                                <div class="col-xs-12">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
+                                            Comentario
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <asp:Label Text="" runat="server" ID="TxComentarioCierre" CssClass="control-label"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div runat="server" id="DivFile" visible="false">
+                                <div class="col-xs-12">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
+                                            Descargar
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <asp:LinkButton Text="" ID="LBArchivo" runat="server" OnClick="LBArchivo_Click" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-xs-12">
                                 <div class="form-group row">
                                     <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
                                         Estado Hallazgo
                                     </label>
                                     <div class="col-sm-10">
-                                        <asp:DropDownList ID="DDLModificarHallazgoEstado" class="form-control" runat="server"></asp:DropDownList>
+                                        <asp:DropDownList ID="DDLModificarHallazgoEstado" class="form-control" AutoPostBack="true" runat="server" OnSelectedIndexChanged="DDLModificarHallazgoEstado_SelectedIndexChanged"></asp:DropDownList>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div runat="server" visible="false" id="DivComentario">
+                                <div class="col-xs-12">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
+                                            Comentario
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <asp:TextBox runat="server" ID="TxComentarioAuditor" CssClass="form-control" TextMode="MultiLine" Rows="3"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -291,7 +328,6 @@
 
                     <asp:UpdatePanel ID="UpdatePanel5" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-
                             <div class="form-group row">
                                 <asp:Label ID="LbHallazgoEstadoMensaje" runat="server" Text="" Class="col-sm-12" Style="color: indianred; text-align: center;"></asp:Label>
                             </div>
@@ -304,6 +340,9 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                             <asp:Button ID="BtnModificarEstadoHallazgo" runat="server" Text="Cambiar Estado" Style="border-radius: 4px;" class="btn btn-primary" OnClick="BtnModificarEstadoHallazgo_Click" />
                         </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="LBArchivo" />
+                        </Triggers>
                     </asp:UpdatePanel>
                 </div>
             </div>
@@ -378,6 +417,9 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                             <asp:Button ID="BtnFinalizarHallazgo" runat="server" Text="Finalizar Hallazgo" Style="border-radius: 4px;" class="btn btn-success" OnClick="BtnFinalizarHallazgo_Click" />
                         </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="BtnFinalizarHallazgo" />
+                        </Triggers>
                     </asp:UpdatePanel>
                 </div>
             </div>
@@ -405,8 +447,31 @@
                     <label class="control-label">¿Estas seguro de autorizar este cambio de estado?</label>
                     <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            Estado solicitado: <b>
-                                <asp:Label ID="LbEstadoTemporal" runat="server" Text=""></asp:Label></b>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <asp:Label Text="Estado solicitado:" runat="server" CssClass="col-lg-4"/>
+                                        <b><asp:Label ID="LbEstadoTemporal" runat="server" Text="" CssClass="col-lg-8"></asp:Label></b>
+                                    </div>
+                                </div>
+
+                                <div id="DivComentarioAuditor" runat="server" visible="false">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <asp:Label Text="Comentario Auditor:" runat="server" CssClass="col-lg-4"/>
+                                            <b><asp:Label Text="" ID="TxComentario" runat="server" CssClass="col-lg-8"/></b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="DivComentarioResponsable" runat="server" visible="false">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <asp:Label Text="Comentario Responsable:" runat="server" CssClass="col-lg-4"/>
+                                            <b><asp:Label Text="" ID="TxComentarioResp" runat="server" CssClass="col-lg-8"/></b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>

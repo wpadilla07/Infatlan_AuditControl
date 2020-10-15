@@ -80,20 +80,16 @@ namespace Infatlan_AuditControl.classes
             return vResultado;
         }
 
-        public String ejecutarSQLGetValueString(String vQuery)
-        {
+        public String ejecutarSQLGetValueString(String vQuery){
             String vResultado = String.Empty;
-            try
-            {
+            try{
                 SqlCommand vSqlCommand = new SqlCommand(vQuery, vConexion);
                 vSqlCommand.CommandType = CommandType.Text;
 
                 vConexion.Open();
                 vResultado = (String)vSqlCommand.ExecuteScalar();
                 vConexion.Close();
-            }
-            catch (Exception Ex)
-            {
+            }catch (Exception Ex){
                 String vError = Ex.Message;
                 vConexion.Close();
                 throw;
