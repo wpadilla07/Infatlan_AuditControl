@@ -102,6 +102,10 @@ namespace Infatlan_AuditControl.pages
                         vBtnResponsables.Enabled = false;
                         vBtnResponsables.CssClass = "btn btn-grey";
 
+                        LinkButton vBtnRevision = row.Cells[10].FindControl("BtnEnviarRevision") as LinkButton;
+                        vBtnRevision.Enabled = false;
+                        vBtnRevision.CssClass = "btn btn-grey";
+
                         LinkButton vBtnAgregar = row.Cells[10].FindControl("BtnAsignar") as LinkButton;
                         vBtnAgregar.Enabled = false;
                         vBtnAgregar.CssClass = "btn btn-grey";
@@ -111,6 +115,12 @@ namespace Infatlan_AuditControl.pages
                         LinkButton vBtnAsignar = row.Cells[9].FindControl("BtnAsignar") as LinkButton;
                         vBtnAsignar.Enabled = false;
                         vBtnAsignar.CssClass = "btn btn-grey";
+                    }
+
+                    if (!Convert.ToBoolean(item["envioJefatura"].ToString()) && row.Cells[6].Text == Convert.ToString(Session["USUARIO"]) && !Convert.ToBoolean(item["envioResponsables"].ToString())){
+                        LinkButton vBtnJefatura = row.Cells[9].FindControl("BtnEnviarResponsable") as LinkButton;
+                        vBtnJefatura.Enabled = true;
+                        vBtnJefatura.CssClass = "btn btn-info";
                     }
                 }
 

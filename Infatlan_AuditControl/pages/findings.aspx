@@ -80,7 +80,7 @@
                         <div class="form-group" runat="server" visible="true" >
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Comentarios </label>
                             <div class="col-sm-8">
-                                <asp:TextBox ID="TxHallazgoComentarios" runat="server" class="form-control" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>
+                                <asp:TextBox ID="TxHallazgoComentarios" runat="server" class="form-control" Rows="3" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>
                             </div>
                             <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Comentarios finales del hallazgos">?</span>
                         </div>

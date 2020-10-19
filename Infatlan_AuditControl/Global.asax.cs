@@ -39,8 +39,8 @@ namespace Infatlan_AuditControl
         }
 
         protected void Application_PreSendRequestHeaders(object sender, EventArgs e){
-            //HttpContext.Current.Response.Headers.Remove("X-AspNet-Version");
-            //HttpContext.Current.Response.Headers.Remove("X-Powered-By");
+            HttpContext.Current.Response.Headers.Remove("X-AspNet-Version");
+            HttpContext.Current.Response.Headers.Remove("X-Powered-By");
         }
     }
 }

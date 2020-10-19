@@ -256,7 +256,7 @@
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server">
                         <ContentTemplate>
                             <h4 class="modal-title" id="ModalLabelModificacionesEstado">Modificar - Hallazgo No.
-                                <asp:Label ID="LbNumeroHallazgoModificacionesEstado" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="LbHallazgo" runat="server" Text=""></asp:Label>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>

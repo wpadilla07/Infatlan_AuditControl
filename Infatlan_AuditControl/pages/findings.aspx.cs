@@ -105,6 +105,18 @@ namespace Infatlan_AuditControl.pages
                         BtnAmpliacion.CssClass = "btn btn-default";
                     }
                 }
+                vQuery = "[ACSP_Logs] 4," + vInformeQuery + "," + vIdHallazgo;
+                vDatos = vConexion.obtenerDataTable(vQuery);
+                if (vDatos.Rows.Count > 0){
+                    String vComentarios = "";
+                    for (int i = 0; i < vDatos.Rows.Count; i++){
+                        vComentarios += vDatos.Rows[i]["Accion"].ToString() + " " + vDatos.Rows[i]["valorActual"].ToString() + "\r\n";
+                    }
+
+                    TxHallazgoComentarios.Text = vComentarios;
+                }
+
+
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
@@ -117,6 +129,9 @@ namespace Infatlan_AuditControl.pages
                     throw new Exception("Por favor ingrese una fecha de resolución.");
                 if (Convert.ToDateTime(TxHallazgoFechaResolucion.Text) < DateTime.Now)
                     throw new Exception("Por favor ingrese una fecha de resolución mayor a hoy.");
+
+                String vConsul = "[ACSP_Logs] 1," + vInformeQuery + "," + vIdHallazgo + ",'accion','" + TxHallazgoAccion.Text.Replace("'", "") + "','" + Session["USUARIO"].ToString() + "'";
+                vConexion.ejecutarSql(vConsul);
 
                 String vQuery = "[ACSP_Hallazgos] 2," + vIdHallazgo + ",0,'','','','','" + TxHallazgoAccion.Text.Replace("'","") + "','','','',0,0,'" + TxHallazgoFechaResolucion.Text + "','" + TxHallazgoComentarios.Text.Replace("'", "") + "'";
                 if (vConexion.ejecutarSql(vQuery).Equals(1)){

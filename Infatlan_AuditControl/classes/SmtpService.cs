@@ -11,16 +11,16 @@ using System.Web.UI;
 
 namespace Infatlan_AuditControl.classes
 {
-    public enum typeBody
-    {
+    public enum typeBody{
         Informe,
         HallazgoCreado,
         HallazgoAsignacion,
         Solicitud,
         General
     }
-    public class SmtpService : Page
-    {
+
+    public class SmtpService : Page{
+
         public SmtpService() { }
 
         public Boolean EnviarMensaje(String To, typeBody Body, String UsuarioPara, String NombreAccion, String Copy){
@@ -124,11 +124,9 @@ namespace Infatlan_AuditControl.classes
         }
     }
 
-    public class Correo
-    {
+    public class Correo{
         public String Usuario { get; set; }
         public String Para { get; set; }
         public String Copia { get; set; }
-
     }
 }
