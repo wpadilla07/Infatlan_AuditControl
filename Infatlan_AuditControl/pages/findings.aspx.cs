@@ -56,7 +56,7 @@ namespace Infatlan_AuditControl.pages
                             vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
                             DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
-                            DivAmpliacion.Visible = vDatos.Rows[0]["usuarioResponsable"].ToString() == Session["USUARIO"].ToString() ? true : false;
+                            BtnAmpliacion.Visible = vDatos.Rows[0]["usuarioResponsable"].ToString() == Session["USUARIO"].ToString() ? true : false;
                             if (!TxHallazgoAccion.Text.Equals("")){
                                 TxHallazgoAccion.ReadOnly = true;
                                 TxHallazgoFechaResolucion.ReadOnly = true;
@@ -93,6 +93,10 @@ namespace Infatlan_AuditControl.pages
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
                 foreach (DataRow item in vDatos.Rows){
+
+                    String vAmpliacion = item["idAmpliacion"].ToString();
+                    String vAmpliacion2 = item["tipoEstadoHallazgo"].ToString();
+
                     TxHallazgoDetalle.Text = item["detalle"].ToString();
                     TxHallazgoRiesgo.Text = item["riesgo"].ToString();
                     TxHallazgoRecomendaciones.Text = item["recomendaciones"].ToString();
@@ -100,11 +104,12 @@ namespace Infatlan_AuditControl.pages
                     TxHallazgoComentarios.Text = item["comentarios"].ToString();
                     if (!item["fechaResolucion"].ToString().Equals(""))
                         TxHallazgoFechaResolucion.Text = Convert.ToDateTime(item["fechaResolucion"].ToString()).ToString("yyyy-MM-dd");
-                    if (!item["fechaAmpliacion"].ToString().Equals("") || !item["tipoEstadoHallazgo"].ToString().Equals("2")){
+                    if (item["idAmpliacion"].ToString() != "" || !item["tipoEstadoHallazgo"].ToString().Equals("2")){
                         BtnAmpliacion.Enabled = false;
                         BtnAmpliacion.CssClass = "btn btn-default";
                     }
                 }
+
                 vQuery = "[ACSP_Logs] 4," + vInformeQuery + "," + vIdHallazgo;
                 vDatos = vConexion.obtenerDataTable(vQuery);
                 if (vDatos.Rows.Count > 0){
@@ -112,13 +117,11 @@ namespace Infatlan_AuditControl.pages
                     for (int i = 0; i < vDatos.Rows.Count; i++){
                         vComentarios += vDatos.Rows[i]["Accion"].ToString() + " " + vDatos.Rows[i]["valorActual"].ToString() + "\r\n";
                     }
-
                     TxHallazgoComentarios.Text = vComentarios;
                 }
-
-
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
         protected void BtnModificarHallazgo_Click(object sender, EventArgs e){
@@ -204,8 +207,6 @@ namespace Infatlan_AuditControl.pages
 
         protected void BtnAmpliacion_Click(object sender, EventArgs e){
             try{
-                LbModificacionesMensaje.Text = string.Empty;
-                UpdateModificacionesMensaje.Update();
                 TxMotivo.Text = string.Empty;
                 TxFechaAmpliacion.Text = string.Empty;
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModal();", true);
@@ -225,8 +226,7 @@ namespace Infatlan_AuditControl.pages
                 if (Convert.ToDateTime(TxFechaAmpliacion.Text) < DateTime.Now)
                     throw new Exception("La fecha de ampliación debe ser mayor a la fecha actual.");
 
-
-                String vArchivo = "";
+                String vQuery = "", vArchivo = "", vIdArchivo = "NULL";
                 if (FUDocAmpliacion.HasFile){
                     HttpPostedFile bufferDepositoT = FUDocAmpliacion.PostedFile;
                     String vNombreDepot = String.Empty;
@@ -240,37 +240,69 @@ namespace Infatlan_AuditControl.pages
                     }
                     if (vFileDeposito != null)
                         vArchivo = Convert.ToBase64String(vFileDeposito);
-                }
 
-                String vQuery = "[ACSP_Hallazgos] 10," + vIdHallazgo + ",0,0,'" + TxMotivo.Text + "','" + TxFechaAmpliacion.Text + "','" + vArchivo + "'";
-                int vInfo = vConexion.ejecutarSql(vQuery);
-                if (vInfo == 1){
-                    vQuery = "[ACSP_ObtenerUsuarios] 7," + vIdHallazgo;
-                    DataTable vDatosResponsables = vConexion.obtenerDataTable(vQuery);
-
-                    Correo vCorreo = new Correo();
-                    foreach (DataRow item in vDatosResponsables.Rows){
-                        vCorreo.Usuario = item["idUsuario"].ToString();
-                        vCorreo.Para = item["correo"].ToString();
-                        vCorreo.Copia = "";
+                    vQuery = "[ACSP_Archivos] 1,'" + FUDocAmpliacion.FileName + "','" + vArchivo + "',2";
+                    int vRes = vConexion.ejecutarSQLGetValue(vQuery);
+                    vIdArchivo = vRes.ToString();
+                    if (vRes > 0){
+                        vQuery = "[ACSP_Archivos] 2,0,0," + vIdHallazgo + "," + vIdArchivo;
+                        vConexion.ejecutarSql(vQuery);
                     }
+                }
+                vQuery = "[ACSP_Ampliaciones] 1," + vIdHallazgo + "," + vIdArchivo + ",'" + TxMotivo.Text + "','" + TxFechaAmpliacion.Text + "','" + Session["USUARIO"].ToString() + "'";
+                int vId = vConexion.ejecutarSQLGetValue(vQuery);
 
-                    SmtpService vSmtpService = new SmtpService();
-                    vSmtpService.EnviarMensaje(
-                        vCorreo.Para,
-                        typeBody.General,
-                        vCorreo.Usuario,
-                        "Se ha solicitado una ampliacion para el hallazgo (No." + vIdHallazgo + ") " + @"<br \><br \>" +
-                        "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
-                        vCorreo.Copia
-                        );
-                    MensajeLoad("Solicitud realizada con éxito",WarningType.Success);
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "closeModal();", true);
+                if (vId > 0){
+                    vQuery = "[ACSP_Hallazgos] 10," + vIdHallazgo + "," + vId;
+                    int vInfo = vConexion.ejecutarSql(vQuery);
+                    if (vInfo == 1){
+                        vQuery = "[ACSP_ObtenerUsuarios] 7," + vIdHallazgo;
+                        DataTable vDatosResponsables = vConexion.obtenerDataTable(vQuery);
+
+                        Correo vCorreo = new Correo();
+                        foreach (DataRow item in vDatosResponsables.Rows){
+                            vCorreo.Usuario = item["idUsuario"].ToString();
+                            vCorreo.Para = item["correo"].ToString();
+                            vCorreo.Copia = "";
+                        }
+
+                        SmtpService vSmtpService = new SmtpService();
+                        vSmtpService.EnviarMensaje(
+                            vCorreo.Para,
+                            typeBody.General,
+                            vCorreo.Usuario,
+                            "Se ha solicitado una ampliacion para el hallazgo (No." + vIdHallazgo + ") " + @"<br \><br \>" +
+                            "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
+                            vCorreo.Copia
+                            );
+                        MensajeLoad("Solicitud realizada con éxito",WarningType.Success);
+
+                        BtnAmpliacion.Enabled = false;
+                        BtnAmpliacion.CssClass = "btn btn-default";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "closeModal();", true);
+                    }
                 }
 
             }catch (Exception ex){
-                LbModificacionesMensaje.Text = ex.Message;
-                UpdateModificacionesMensaje.Update();
+                MensajeLoad(ex.Message, WarningType.Danger);
+            }
+        }
+
+        protected void GVBusqueda_PageIndexChanging(object sender, GridViewPageEventArgs e){
+
+        }
+
+        protected void BtnHistorico_Click(object sender, EventArgs e){
+            try{
+                String vQuery = "[ACSP_Logs] 4," + vInformeQuery + "," + vIdHallazgo;
+                DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+
+                GVBusqueda.DataSource = vDatos;
+                GVBusqueda.DataBind();
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModalComments();", true);
+            }catch (Exception ex){
+                Mensaje(ex.Message, WarningType.Danger);
             }
         }
     }

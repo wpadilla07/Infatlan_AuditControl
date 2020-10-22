@@ -15,24 +15,11 @@
     </script>
 
     <script type="text/javascript">
-        function openModalHallazgos() {
-            $('#ModificacionesModal').modal('show');
-        }
-    </script>
-    <script type="text/javascript">
-        function openModificacionesEstadoModal() {
-            $('#ModificacionesEstadoModal').modal('show');
-        }
-    </script>
-    <script type="text/javascript">
-        function openAutorizacionEstadoModal() {
-            $('#AutorizacionModal').modal('show');
-        }
-    </script>
-    <script type="text/javascript">
-        function openFinalizarHallazgoModal() {
-            $('#FinalizarHallazgoModal').modal('show');
-        }
+        function openModalHallazgos() {$('#ModificacionesModal').modal('show');}
+        function openModificacionesEstadoModal() {$('#ModificacionesEstadoModal').modal('show');}
+        function openAutorizacionEstadoModal() {$('#AutorizacionModal').modal('show');}
+        function openFinalizarHallazgoModal() {$('#FinalizarHallazgoModal').modal('show');}
+        function openAmpliacionModal() { $('#AmpliacionModal').modal('show');}
     </script>
 
 </asp:Content>
@@ -119,26 +106,21 @@
                             GridLines="None"
                             PageSize="50" OnPageIndexChanging="GVBusqueda_PageIndexChanging" OnRowCommand="GVBusqueda_RowCommand">
                             <Columns>
-                                <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px" ShowHeader="true">
-                                    <HeaderTemplate>Auth</HeaderTemplate>
+                                <asp:TemplateField HeaderStyle-Width="60px" ShowHeader="true">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="BtnAutorizarInforme" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-info2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="AutorizarEstadoHallazgo">
                                             <i class="fa fa-check"></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
-                                    <HeaderTemplate>
-                                    </HeaderTemplate>
+                                <asp:TemplateField HeaderStyle-Width="60px">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="BtnModificar" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-yellow" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="ModificarEstadoHallazgo">
                                             <i class=" fa fa-cogs "></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
-                                    <HeaderTemplate>
-                                    </HeaderTemplate>
+                                <asp:TemplateField HeaderStyle-Width="60px">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="BtnFinalizarHallazgo" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-yellow" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="FinalizarHallazgo">
                                             <i class=" fa fa-check "> Cerrar Hallazgo</i>
@@ -151,21 +133,24 @@
                                 <asp:BoundField DataField="tipoRiesgo" HeaderText="Riesgo" />
                                 <asp:BoundField DataField="detalle" HeaderText="Detalle" />
                                 <asp:BoundField DataField="tipoEstadoHallazgo" HeaderText="Estado" />
-                                <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
-                                    <HeaderTemplate>
-                                    </HeaderTemplate>
+                                <asp:TemplateField HeaderStyle-Width="60px">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="BtnEntrar" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-success" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EntrarHallazgo">
                                             <i class="fa fa-pencil"></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
-                                    <HeaderTemplate>
-                                    </HeaderTemplate>
+                                <asp:TemplateField HeaderStyle-Width="60px">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="BtnAsignar" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-info" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="AsignarUsuario">
                                             <i class="fa fa-user-plus "></i>
+                                        </asp:LinkButton>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderStyle-Width="60px">
+                                    <ItemTemplate>
+                                        <asp:LinkButton ID="BtnAmpliacion" runat="server" Text="Entrar" Style="border-radius: 4px;" class="btn btn-danger" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="AmpliarFecha">
+                                            <i class="fa fa-calendar-check-o"></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
@@ -482,6 +467,76 @@
                             <asp:Button ID="BtnRechazarAutorizacion" runat="server" Text="Rechazar" Style="border-radius: 4px;" class="btn btn-danger" OnClientClick="ShowProgress();" OnClick="BtnRechazarAutorizacion_Click" />
                             <asp:Button ID="BtnEnviarAutorizacion" runat="server" Text="Aprobar" Style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnEnviarAutorizacion_Click" />
                         </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%--MODAL DE AMPLIACION--%>
+    <div class="modal fade" id="AmpliacionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <asp:UpdatePanel ID="UpdatePanel13" runat="server">
+                        <ContentTemplate>
+                            <h4 class="modal-title">Revisión de Hallazgo No.
+                                <asp:Label ID="LbHallazgoAmpliacion" runat="server" Text=""></asp:Label>
+
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </h4>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-body">
+                    <label class="control-label">¿Estas seguro de autorizar esta ampliación de tiempo?</label>
+                    <asp:UpdatePanel ID="UpdatePanel15" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <asp:Label Text="Fecha límite:" runat="server" CssClass="col-lg-4"/>
+                                        <b><asp:Label ID="LbFechaActual" runat="server" Text="" CssClass="col-lg-8"></asp:Label></b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <asp:Label Text="Fecha solicitada:" runat="server" CssClass="col-lg-4"/>
+                                        <b><asp:Label ID="LbFecha" runat="server" Text="" CssClass="col-lg-8"></asp:Label></b>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <asp:Label Text="Comentario:" runat="server" CssClass="col-lg-4"/>
+                                        <b><asp:Label Text="" ID="LbComentarioAmpliacion" runat="server" CssClass="col-lg-8"/></b>
+                                    </div>
+                                </div>
+
+                                <div runat="server" id="DivDocumento" visible="false">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <asp:Label Text="Descargar:" runat="server" CssClass="col-lg-4"/>
+                                            <%--<asp:LinkButton Text="" ID="LinkButton1" runat="server" OnClick="LBDocumentoAmpliacion_Click" />--%>
+                                            <asp:LinkButton Text="" ID="LBDocumentoAmpliacion" runat="server" CssClass="col-lg-8" OnClick="LBDocumentoAmpliacion_Click" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-footer">
+                    <asp:UpdatePanel ID="UpdatePanel16" runat="server">
+                        <ContentTemplate>
+                            <asp:Button ID="Button1" runat="server" Text="Rechazar" Style="border-radius: 4px;" class="btn btn-danger" OnClientClick="ShowProgress();" OnClick="BtnRechazarAutorizacion_Click" />
+                            <asp:Button ID="Button2" runat="server" Text="Aprobar" Style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnEnviarAutorizacion_Click" />
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="LBDocumentoAmpliacion"/>
+                        </Triggers>
                     </asp:UpdatePanel>
                 </div>
             </div>

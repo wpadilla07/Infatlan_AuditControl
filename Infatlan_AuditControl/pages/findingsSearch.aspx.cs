@@ -19,7 +19,6 @@ namespace Infatlan_AuditControl.pages
             vInformeQuery = Request.QueryString["i"];
             if (!Page.IsPostBack){
                 getResponsables();
-                getEstados();
                 getInformes();
                 if (vInformeQuery != null){
                     BuscarHallazgo(vInformeQuery);
@@ -39,11 +38,11 @@ namespace Infatlan_AuditControl.pages
             ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "Pop", "$('#" + vModal + "').modal('hide');", true);
         }
         
-        void getEstados(){
+        void getEstados(String vIdHallazgo){
             try{
-                String vQuery = "[ACSP_ObtenerTipos] 4";
+                String vQuery = "[ACSP_ObtenerTipos] 4," + vIdHallazgo;
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
-
+                DDLModificarHallazgoEstado.Items.Clear();
                 DDLModificarHallazgoEstado.Items.Add(new ListItem { Value = "0", Text = "Seleccione un estado" });
                 foreach (DataRow item in vDatos.Rows){
                     DDLModificarHallazgoEstado.Items.Add(new ListItem { Value = item["tipoEstadoHallazgo"].ToString(), Text = item["nombre"].ToString() });
@@ -133,7 +132,8 @@ namespace Infatlan_AuditControl.pages
                     String vQuery = "[ACSP_ObtenerHallazgos] 10, " + vIdHallazgo;
                     DataTable vDatos = vConexion.obtenerDataTable(vQuery);
                     if (vDatos.Rows.Count > 0){
-                        BtnRechazarAutorizacion.Visible = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? false : true;
+                        //BtnRechazarAutorizacion.Visible = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? false : true;
+                        BtnRechazarAutorizacion.Visible = false;
                         LbEstadoTemporal.Text = vDatos.Rows[0]["nombre"].ToString();
                         TxComentario.Text = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? vDatos.Rows[0]["comentarioAuditor"].ToString() : "";
                         TxComentarioResp.Text = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? vDatos.Rows[0]["comentarios"].ToString() : "";
@@ -147,6 +147,7 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 if (e.CommandName == "ModificarEstadoHallazgo") {
+                    getEstados(vIdHallazgo);
                     String vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
                     DataTable vDatos = vConexion.obtenerDataTable(vQuery);
                     Session["HALLAZGO_INFO"] = vDatos;
@@ -174,6 +175,20 @@ namespace Infatlan_AuditControl.pages
                     TxFinalizarHallazgoComentario.Text = string.Empty;
                     LbFinalizarHallazgo.Text = vIdHallazgo;
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openFinalizarHallazgoModal();", true);
+                }
+
+                if (e.CommandName == "AmpliarFecha"){
+                    String vQuery = "[ACSP_ObtenerHallazgos] 12," + vIdHallazgo;
+                    DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+
+                    LbFecha.Text = Convert.ToDateTime(vDatos.Rows[0]["fechaAmpliacion"]).ToString("dd-MM-yyyy");
+                    LbFechaActual.Text = Convert.ToDateTime(vDatos.Rows[0]["fechaResolucion"]).ToString("dd-MM-yyyy");
+                    LbComentarioAmpliacion.Text = vDatos.Rows[0]["comentario"].ToString();
+                    DivDocumento.Visible = vDatos.Rows[0]["nombre"].ToString() != "" ? true : false;
+                    LBDocumentoAmpliacion.Text = vDatos.Rows[0]["nombre"].ToString();
+                    LbHallazgoAmpliacion.Text = vIdHallazgo;
+                    UpdatePanel15.Update();
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openAmpliacionModal();", true);
                 }
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
@@ -330,11 +345,13 @@ namespace Infatlan_AuditControl.pages
                 case 4:
                     GVBusqueda.Columns[0].Visible = false;
                     GVBusqueda.Columns[1].Visible = false;
+                    GVBusqueda.Columns[11].Visible = false;
                     break;
                 case 5:
                     GVBusqueda.Columns[0].Visible = false;
                     GVBusqueda.Columns[1].Visible = false;
                     GVBusqueda.Columns[2].Visible = false;
+                    GVBusqueda.Columns[11].Visible = false;
                     break;
             }
             GVBusqueda.DataBind();
@@ -350,6 +367,10 @@ namespace Infatlan_AuditControl.pages
                     LinkButton vBtnCogs = row.Cells[2].FindControl("BtnModificar") as LinkButton;
                     vBtnCogs.Enabled = false;
                     vBtnCogs.CssClass = "btn btn-grey";
+
+                    LinkButton vBtnClock = row.Cells[2].FindControl("BtnAmpliacion") as LinkButton;
+                    vBtnClock.Enabled = false;
+                    vBtnClock.CssClass = "btn btn-grey";
                 }
 
                 if (vDataEstados.Rows[0]["tipoEstadoHallazgo"].ToString() == "1" || vDataEstados.Rows[0]["tipoEstadoHallazgo"].ToString() == "2"){
@@ -406,6 +427,12 @@ namespace Infatlan_AuditControl.pages
                     LinkButton vBtnCogs = row.Cells[2].FindControl("BtnModificar") as LinkButton;
                     vBtnCogs.Enabled = true;
                     vBtnCogs.CssClass = "btn btn-yellow";
+                }                
+                
+                if (vDataEstados.Rows[0]["idAmpliacion"].ToString() == ""){
+                    LinkButton vBtnAmpliacion = row.Cells[2].FindControl("BtnAmpliacion") as LinkButton;
+                    vBtnAmpliacion.Enabled = false;
+                    vBtnAmpliacion.CssClass = "btn btn-grey";
                 }
             }
         }
@@ -584,8 +611,6 @@ namespace Infatlan_AuditControl.pages
             try{
                 if (TxFinalizarHallazgoComentario.Text.Equals(""))
                     throw new Exception("Por favor ingrese un comentario.");
-
-                vConexion = new db();
 
                 String vConsul = "[ACSP_Logs] 3," + DDLBuscarInforme.SelectedValue + "," + LbFinalizarHallazgo.Text + ",'comentarios','" + TxFinalizarHallazgoComentario.Text + "','" + Session["USUARIO"].ToString() + "'";
                 vConexion.ejecutarSql(vConsul);
@@ -773,6 +798,10 @@ namespace Infatlan_AuditControl.pages
                 default:
                     return "application/octet-stream";
             }
+        }
+
+        protected void LBDocumentoAmpliacion_Click(object sender, EventArgs e){
+
         }
     }
 }

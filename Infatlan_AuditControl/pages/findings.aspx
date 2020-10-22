@@ -14,6 +14,7 @@
     <script type="text/javascript">
         function openModal() { $('#ModificacionesModal').modal('show'); }
         function closeModal() { $('#ModificacionesModal').modal('hide'); }
+        function openModalComments() { $('#ComentariosModal').modal('show'); }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="server">
@@ -77,13 +78,6 @@
                             </div>
                             <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Ingresar acción a ejecutar para resolver el hallazgo">?</span>
                         </div>
-                        <div class="form-group" runat="server" visible="true" >
-                            <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Comentarios </label>
-                            <div class="col-sm-8">
-                                <asp:TextBox ID="TxHallazgoComentarios" runat="server" class="form-control" Rows="3" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>
-                            </div>
-                            <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Comentarios finales del hallazgos">?</span>
-                        </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Fecha Resolución </label>
                             <div class="col-sm-8">
@@ -93,20 +87,29 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Anexo </label>
+                            <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Opciones</label>
                             <div class="col-sm-8">
                                 <asp:LinkButton ID="BtnDescargarAnexo" runat="server" class="btn btn-info" OnClick="BtnDescargarAnexo_Click" >
-                                        <i class="ace-icon fa fa-check bigger-110"></i>
-                                        Descargar
+                                        <i class="ace-icon fa fa-download bigger-110"></i>Anexo
+                                </asp:LinkButton>
+                                
+                                <asp:LinkButton ID="BtnHistorico" runat="server" class="btn btn-warning" OnClick="BtnHistorico_Click" >
+                                        <i class="ace-icon fa fa-comments bigger-110"></i>Comentarios
+                                </asp:LinkButton>
+
+                                <asp:LinkButton ID="BtnAmpliacion" runat="server" Visible="false" class="btn btn-success" OnClick="BtnAmpliacion_Click" >
+                                        <i class="ace-icon fa fa-calendar-plus-o bigger-110"></i>Ampliación
                                 </asp:LinkButton>
                             </div>
                             <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Descargar archivo del hallazgo">?</span>
                         </div>
-                        <div runat="server" id="DivAmpliacion" visible="false" class="form-group">
-                            <label class="col-sm-2 control-label no-padding-right">Ampliación</label>
+                        
+                        <div class="form-group" runat="server" visible="true" >
+                            <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Comentarios </label>
                             <div class="col-sm-8">
-                                <asp:Button Text="Solicitar" ID="BtnAmpliacion" CssClass="btn btn-success" runat="server" OnClick="BtnAmpliacion_Click" />
+                                <asp:TextBox ID="TxHallazgoComentarios" runat="server" class="form-control" Rows="3" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>
                             </div>
+                            <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Comentarios finales del hallazgos">?</span>
                         </div>
                     </ContentTemplate>
                     <Triggers>
@@ -172,59 +175,6 @@
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
-
-                <%--<div class="modal-body">
-                    <asp:UpdatePanel runat="server" ID="UpdatePanel9">
-                        <ContentTemplate>
-                            <div class="page-header">
-                                <h1>Modificar Hallazgo
-                                    <small>
-                                        <i class="ace-icon fa fa-angle-double-right"></i>Ampliacion de fecha de resolución
-                                    </small>
-                                </h1>
-                            </div>
-                            <div class="col-xs-12">
-                                <asp:UpdatePanel ID="UpdateComentario" runat="server">
-                                    <ContentTemplate>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 control-label no-padding-right" for="DDLModificarHallazgoEstado">
-                                                Comentario
-                                            </label>
-                                            <div class="col-sm-10">
-                                                <asp:TextBox ID="TxFinalizarHallazgoComentario" runat="server" class="form-control" TextMode="MultiLine" Style="height: 50px"></asp:TextBox>
-                                            </div>
-                                        </div>
-                                    </ContentTemplate>
-                                </asp:UpdatePanel>
-
-                                <div class="form-group row">
-                                    <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Documento</label>
-                                    <div class="col-sm-6">
-                                        <asp:FileUpload ID="FUHallazgos" runat="server" class="form-control" />
-
-                                    </div>
-                                    <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir archivos relacionados a la finalización del hallazgo">?</span>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12">
-                                <div class="col-sm-10">
-                                    <label>Motivo</label>
-                                    <div class="col-sm-12">
-                                        <asp:TextBox runat="server" ID="TxMotivo" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <label>Fecha</label>
-                                    <div class="col-md-9">
-                                        <asp:TextBox runat="server" ID="TxFechaAmpliacion" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                                    </div>
-                                </div>
-                            </div>
-                        
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>--%>
                 <div class="modal-footer">
                     <asp:UpdatePanel ID="UpdatePanel123123" runat="server">
                         <ContentTemplate>
@@ -284,7 +234,7 @@
                         </ContentTemplate>
                     </asp:UpdatePanel>
 
-                    <asp:UpdatePanel ID="UpdateModificacionesMensaje" runat="server" UpdateMode="Conditional">
+                    <asp:UpdatePanel ID="UpdateModificacionesMensaje" runat="server">
                         <ContentTemplate>
                             <div class="form-group row">
                                 <asp:Label ID="LbModificacionesMensaje" runat="server" Text="" Class="col-sm-12" Style="color: indianred; text-align: center;"></asp:Label>
@@ -301,6 +251,57 @@
                         <Triggers>
                             <asp:PostBackTrigger ControlID="BtnSolicitar"/>
                         </Triggers>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <%--MODAL COMENTARIOS--%>
+    <div class="modal fade" id="ComentariosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        <asp:Label CssClass=" text-white" ID="Label2" runat="server" Text="Histórico de comentarios"></asp:Label>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                        <ContentTemplate>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <asp:UpdatePanel ID="UpdatePanel2" runat="server">
+                                        <ContentTemplate>
+                                            <asp:GridView ID="GVBusqueda" runat="server"
+                                                CssClass="mydatagrid"
+                                                PagerStyle-CssClass="pgr"
+                                                HeaderStyle-CssClass="header"
+                                                RowStyle-CssClass="rows"
+                                                AutoGenerateColumns="false"
+                                                AllowPaging="true"
+                                                GridLines="None"
+                                                PageSize="50" OnPageIndexChanging="GVBusqueda_PageIndexChanging">
+                                                <Columns>
+                                                    <asp:BoundField DataField="usuarioCreacion" HeaderText="Usuario" />
+                                                    <asp:BoundField DataField="valorActual" HeaderText="Comentario" />
+                                                    <asp:BoundField DataField="descripcion" HeaderText="Movimiento" />
+                                                    <asp:BoundField DataField="fechaCreacion" HeaderText="Fecha" />
+                                                </Columns>
+                                            </asp:GridView>
+
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-footer">
+                    <asp:UpdatePanel ID="UpdatePanel3" runat="server">
+                        <ContentTemplate>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
             </div>
