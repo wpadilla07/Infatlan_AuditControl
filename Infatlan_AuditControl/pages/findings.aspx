@@ -104,7 +104,7 @@
                             <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Descargar archivo del hallazgo">?</span>
                         </div>
                         
-                        <div class="form-group" runat="server" visible="true" >
+                        <div class="form-group" runat="server" visible="false" >
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Comentarios </label>
                             <div class="col-sm-8">
                                 <asp:TextBox ID="TxHallazgoComentarios" runat="server" class="form-control" Rows="3" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>
@@ -283,6 +283,7 @@
                                                 GridLines="None"
                                                 PageSize="50" OnPageIndexChanging="GVBusqueda_PageIndexChanging">
                                                 <Columns>
+                                                    <asp:BoundField DataField="numero" HeaderText="No." />
                                                     <asp:BoundField DataField="usuarioCreacion" HeaderText="Usuario" />
                                                     <asp:BoundField DataField="valorActual" HeaderText="Comentario" />
                                                     <asp:BoundField DataField="descripcion" HeaderText="Movimiento" />

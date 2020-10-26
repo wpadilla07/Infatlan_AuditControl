@@ -419,7 +419,7 @@
                     <asp:UpdatePanel ID="UpdatePanel7" runat="server">
                         <ContentTemplate>
                             <h4 class="modal-title" id="ModalLabelAutorizacion">Revisión de Hallazgo No.
-                        <asp:Label ID="LbAutorizacionHallazgo" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="LbAutorizacionHallazgo" runat="server" Text=""></asp:Label>
 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -429,7 +429,7 @@
                     </asp:UpdatePanel>
                 </div>
                 <div class="modal-body">
-                    <label class="control-label">¿Estas seguro de autorizar este cambio de estado?</label>
+                    <label class="control-label">¿Estas seguro de autorizar este cambio?</label>
                     <asp:UpdatePanel ID="UpdatePanel12" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
                             <div class="modal-body">
@@ -448,6 +448,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div id="DivComentarioResponsable" runat="server" visible="false">
                                     <div class="row">
                                         <div class="col-12">
@@ -456,6 +457,39 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div runat="server" id="DivAmpliacion" visible="false">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <asp:Label Text="Fecha límite:" runat="server" CssClass="col-lg-4" />
+                                            <b><asp:Label ID="LbFechaLimite" runat="server" Text="" CssClass="col-lg-8"></asp:Label></b>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <asp:Label Text="Fecha solicitada:" runat="server" CssClass="col-lg-4" />
+                                            <b><asp:Label ID="LbFechaSolicitada" runat="server" Text="" CssClass="col-lg-8"></asp:Label></b>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <asp:Label Text="Comentario:" runat="server" CssClass="col-lg-4" />
+                                            <b><asp:Label Text="" ID="LbComentario" runat="server" CssClass="col-lg-8" /></b>
+                                        </div>
+                                    </div>
+
+                                    <div runat="server" id="DivAmpliacionDoc" visible="false">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <asp:Label Text="Descargar:" runat="server" CssClass="col-lg-4" />
+                                                <asp:LinkButton Text="" ID="LBDocAmpliacion" runat="server" CssClass="col-lg-8" OnClick="LBDocumentoAmpliacion_Click" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
                         </ContentTemplate>
                     </asp:UpdatePanel>
@@ -482,6 +516,7 @@
                         <ContentTemplate>
                             <h4 class="modal-title">Revisión de Hallazgo No.
                                 <asp:Label ID="LbHallazgoAmpliacion" runat="server" Text=""></asp:Label>
+                                <asp:Label runat="server" ID="LbAmpliacion" Visible="false" Text=""></asp:Label>
 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -531,8 +566,8 @@
                 <div class="modal-footer">
                     <asp:UpdatePanel ID="UpdatePanel16" runat="server">
                         <ContentTemplate>
-                            <asp:Button ID="Button1" runat="server" Text="Rechazar" Style="border-radius: 4px;" class="btn btn-danger" OnClientClick="ShowProgress();" OnClick="BtnRechazarAutorizacion_Click" />
-                            <asp:Button ID="Button2" runat="server" Text="Aprobar" Style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnEnviarAutorizacion_Click" />
+                            <asp:Button ID="BtnRechazarAmpliacion" runat="server" Text="Rechazar" Style="border-radius: 4px;" class="btn btn-danger" OnClientClick="ShowProgress();" OnClick="BtnRechazarAmpliacion_Click" />
+                            <asp:Button ID="BtnAprobarAmpliacion" runat="server" Text="Aprobar" Style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnAprobarAmpliacion_Click" />
                         </ContentTemplate>
                         <Triggers>
                             <asp:PostBackTrigger ControlID="LBDocumentoAmpliacion"/>

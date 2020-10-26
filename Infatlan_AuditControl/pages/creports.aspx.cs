@@ -18,6 +18,8 @@ namespace Infatlan_AuditControl.pages
         protected void Page_Load(object sender, EventArgs e){
             if (!Page.IsPostBack){
                 if (Session["AUTH"] != null){
+                    TxFechaRespuesta.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
+
                     Session["DATARESPONSABLES"] = null;
                     switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                         case 4:

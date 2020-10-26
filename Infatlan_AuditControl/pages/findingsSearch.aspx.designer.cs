@@ -465,6 +465,60 @@ namespace Infatlan_AuditControl.pages
         protected global::System.Web.UI.WebControls.Label TxComentarioResp;
 
         /// <summary>
+        /// Control DivAmpliacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivAmpliacion;
+
+        /// <summary>
+        /// Control LbFechaLimite.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LbFechaLimite;
+
+        /// <summary>
+        /// Control LbFechaSolicitada.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LbFechaSolicitada;
+
+        /// <summary>
+        /// Control LbComentario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LbComentario;
+
+        /// <summary>
+        /// Control DivAmpliacionDoc.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivAmpliacionDoc;
+
+        /// <summary>
+        /// Control LBDocAmpliacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LBDocAmpliacion;
+
+        /// <summary>
         /// Control UpdatePanel14.
         /// </summary>
         /// <remarks>
@@ -508,6 +562,15 @@ namespace Infatlan_AuditControl.pages
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label LbHallazgoAmpliacion;
+
+        /// <summary>
+        /// Control LbAmpliacion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LbAmpliacion;
 
         /// <summary>
         /// Control UpdatePanel15.
@@ -573,21 +636,21 @@ namespace Infatlan_AuditControl.pages
         protected global::System.Web.UI.UpdatePanel UpdatePanel16;
 
         /// <summary>
-        /// Control Button1.
+        /// Control BtnRechazarAmpliacion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.Button BtnRechazarAmpliacion;
 
         /// <summary>
-        /// Control Button2.
+        /// Control BtnAprobarAmpliacion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button2;
+        protected global::System.Web.UI.WebControls.Button BtnAprobarAmpliacion;
     }
 }

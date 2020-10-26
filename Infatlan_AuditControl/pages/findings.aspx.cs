@@ -25,7 +25,6 @@ namespace Infatlan_AuditControl.pages
 
                     String vQuery = "[ACSP_ObtenerArchivos] 3, " + vIdHallazgo;
                     String vArchivo = vConexion.ejecutarSQLGetValueString(vQuery);
-                    
                     if (vArchivo == null || vArchivo.Equals("")){
                         BtnDescargarAnexo.Enabled = false;
                         BtnDescargarAnexo.Text = "No existe archivo";
@@ -55,8 +54,8 @@ namespace Infatlan_AuditControl.pages
                         case 4:
                             vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
                             DataTable vDatos = vConexion.obtenerDataTable(vQuery);
-
                             BtnAmpliacion.Visible = vDatos.Rows[0]["usuarioResponsable"].ToString() == Session["USUARIO"].ToString() ? true : false;
+                            
                             if (!TxHallazgoAccion.Text.Equals("")){
                                 TxHallazgoAccion.ReadOnly = true;
                                 TxHallazgoFechaResolucion.ReadOnly = true;
@@ -68,6 +67,8 @@ namespace Infatlan_AuditControl.pages
                                 BtnModificarHallazgo.Visible = false;
                                 TxHallazgoAccion.ReadOnly = true;
                             }
+
+                            TxHallazgoFechaResolucion.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
                             break;
                     }
                 }
@@ -91,6 +92,8 @@ namespace Infatlan_AuditControl.pages
             try{
                 String vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                String vConsulta = "[ACSP_Ampliaciones] 6," + vIdHallazgo;
+                DataTable vData = vConexion.obtenerDataTable(vConsulta);
 
                 foreach (DataRow item in vDatos.Rows){
 
@@ -105,6 +108,11 @@ namespace Infatlan_AuditControl.pages
                     if (!item["fechaResolucion"].ToString().Equals(""))
                         TxHallazgoFechaResolucion.Text = Convert.ToDateTime(item["fechaResolucion"].ToString()).ToString("yyyy-MM-dd");
                     if (item["idAmpliacion"].ToString() != "" || !item["tipoEstadoHallazgo"].ToString().Equals("2")){
+                        BtnAmpliacion.Enabled = false;
+                        BtnAmpliacion.CssClass = "btn btn-default";
+                    }
+
+                    if (vData.Rows.Count > 0 && Convert.ToInt32(vData.Rows[0][0].ToString()) > 2){
                         BtnAmpliacion.Enabled = false;
                         BtnAmpliacion.CssClass = "btn btn-default";
                     }
@@ -208,7 +216,8 @@ namespace Infatlan_AuditControl.pages
         protected void BtnAmpliacion_Click(object sender, EventArgs e){
             try{
                 TxMotivo.Text = string.Empty;
-                TxFechaAmpliacion.Text = string.Empty;
+                TxFechaAmpliacion.Attributes["min"] = TxHallazgoFechaResolucion.Text.ToString();
+
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModal();", true);
             }catch (Exception ex){
                 Mensaje(ex.Message, WarningType.Danger);
@@ -252,7 +261,12 @@ namespace Infatlan_AuditControl.pages
                 vQuery = "[ACSP_Ampliaciones] 1," + vIdHallazgo + "," + vIdArchivo + ",'" + TxMotivo.Text + "','" + TxFechaAmpliacion.Text + "','" + Session["USUARIO"].ToString() + "'";
                 int vId = vConexion.ejecutarSQLGetValue(vQuery);
 
+
+
                 if (vId > 0){
+                    String vConsul = "[ACSP_Logs] 6," + vInformeQuery + "," + vIdHallazgo + ",'comentarioAmpliacion','" + TxMotivo.Text + "','" + Session["USUARIO"].ToString() + "'";
+                    vConexion.ejecutarSql(vConsul);
+
                     vQuery = "[ACSP_Hallazgos] 10," + vIdHallazgo + "," + vId;
                     int vInfo = vConexion.ejecutarSql(vQuery);
                     if (vInfo == 1){
@@ -282,7 +296,6 @@ namespace Infatlan_AuditControl.pages
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "closeModal();", true);
                     }
                 }
-
             }catch (Exception ex){
                 MensajeLoad(ex.Message, WarningType.Danger);
             }
