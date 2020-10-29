@@ -133,6 +133,7 @@ namespace Infatlan_AuditControl.pages
                     DataTable vDatos = vConexion.obtenerDataTable(vQuery);
                     BtnRechazarAutorizacion.Visible = false;
                     if (vDatos.Rows.Count > 0){
+                        DivAmpliacion.Visible = false;
                         //BtnRechazarAutorizacion.Visible = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? false : true;
                         LbEstadoTemporal.Text = vDatos.Rows[0]["nombre"].ToString();
                         TxComentario.Text = vDatos.Rows[0]["tipoEstadoHallazgoTemporal"].ToString() == "7" ? vDatos.Rows[0]["comentarioAuditor"].ToString() : "";
@@ -146,7 +147,9 @@ namespace Infatlan_AuditControl.pages
                         vDatos = vConexion.obtenerDataTable(vQuery);
                         if (vDatos.Rows.Count > 0){
                             DivAmpliacion.Visible = true;
-                            LbEstadoTemporal.Text = "Aprobar Ampliacion";
+                            DivComentarioRechazo.Visible = true;
+                            LbEstadoTemporal.Text = vDatos.Rows[0]["estado"].ToString() == "2" ? "Rechazar Ampliacion" : "Aprobar Ampliación";
+                            LbAmpliacion.Text = vDatos.Rows[0]["idAmpliacion"].ToString();
                             LbFechaLimite.Text = Convert.ToDateTime(vDatos.Rows[0]["fechaResolucion"]).ToString("dd-MM-yyyy");
                             LbFechaSolicitada.Text = Convert.ToDateTime(vDatos.Rows[0]["fechaAmpliacion"]).ToString("dd-MM-yyyy");
                             LbComentario.Text = vDatos.Rows[0]["comentario"].ToString();
@@ -192,6 +195,7 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 if (e.CommandName == "AmpliarFecha"){
+                    LbAutorizacionHallazgo.Text = vIdHallazgo;
                     String vQuery = "[ACSP_ObtenerHallazgos] 12," + vIdHallazgo;
                     DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
@@ -490,9 +494,8 @@ namespace Infatlan_AuditControl.pages
                                 vCorreo.Usuario,
                                 "Se te ha asignado un hallazgo en el informe No." + vIdInforme,
                                 vCorreo.Copia
-                                );
-                        }
-                        catch { }
+                            );
+                        }catch { }
                         BuscarHallazgo();
                         Mensaje("Hallazgo modificado y asignado con exito", WarningType.Success);
                         DDLUsuariosAsignacionHallazgo.SelectedIndex = -1;
@@ -526,9 +529,12 @@ namespace Infatlan_AuditControl.pages
 
                 if (vConexion.ejecutarSql(vQuery).Equals(1)){
                     try{
-                        vQuery = "[ACSP_ObtenerUsuarios] 4," + Convert.ToString(Session["USUARIO"]);
-                        DataTable vDatosResponsables = vConexion.obtenerDataTable(vQuery);
+                        if (Session["TIPOUSUARIO"].ToString() == "2")
+                            vQuery = "[ACSP_ObtenerUsuarios] 4," + Convert.ToString(Session["USUARIO"]);
+                        else
+                            vQuery = "[ACSP_ObtenerUsuarios] 5," + Convert.ToString(Session["USUARIO"]);
 
+                        DataTable vDatosResponsables = vConexion.obtenerDataTable(vQuery);
                         Correo vCorreo = new Correo();
                         foreach (DataRow item in vDatosResponsables.Rows){
                             vCorreo.Usuario = vConexion.GetNombreUsuario(item["idUsuario"].ToString());
@@ -613,7 +619,16 @@ namespace Infatlan_AuditControl.pages
                             vConexion.ejecutarSql(vQuery);
                         }
 
-                        Mensaje("Hallazgo autorizado con exito", WarningType.Success);
+                        if (LbEstadoTemporal.Text == "Cerrado"){
+                            vQuery = "[ACSP_Logs] 7,6" +
+                                "," + DDLBuscarInforme.SelectedValue + 
+                                "," + LbAutorizacionHallazgo.Text +
+                                ",NULL,'Cierre de hallazgo'," + Session["USUARIO"].ToString();
+
+                            vConexion.ejecutarSql(vQuery);
+                        }
+
+                        MensajeLoad("Hallazgo autorizado con exito", WarningType.Success);
                         DDLModificarHallazgoEstado.SelectedIndex = -1;
                     }else
                         throw new Exception("Error al ingresar el hallazgo, contacte a sistemas.");
@@ -645,14 +660,14 @@ namespace Infatlan_AuditControl.pages
                             "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
                             vCorreo.Copia
                         );
-                        Mensaje("Hallazgo autorizado con exito", WarningType.Success);
+                        MensajeLoad("Hallazgo autorizado con exito", WarningType.Success);
                     } 
                 }
 
                 BuscarHallazgo();
                 CerrarModal("AutorizacionModal");
             }catch (Exception Ex) { 
-                Mensaje(Ex.Message, WarningType.Danger); 
+                MensajeLoad(Ex.Message, WarningType.Danger); 
                 CerrarModal("AutorizacionModal"); 
             }
         }
@@ -851,16 +866,25 @@ namespace Infatlan_AuditControl.pages
         }
 
         protected void LBDocumentoAmpliacion_Click(object sender, EventArgs e){
-
-        }
-
-        protected void BtnRechazarAmpliacion_Click(object sender, EventArgs e){
             try{
-                String vQuery = "";
-                //int vInfo = vConexion.ejecutarSql(vQuery);
-                Mensaje("Rechazo de solicitud de Ampliación enviada con exito", WarningType.Success);
-                BuscarHallazgo(LbHallazgoAmpliacion.Text);
-                CerrarModal("AmpliacionModal");
+                String vQuery = "[ACSP_ObtenerHallazgos] 13," + LbAmpliacion.Text;
+                DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                String vArchivo = vDatos.Rows[0]["archivo"].ToString();
+
+                if (vArchivo != ""){
+                    byte[] fileData = null;
+
+                    if (!vArchivo.Equals(""))
+                        fileData = Convert.FromBase64String(vArchivo);
+                    
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.AppendHeader("Content-Type", GetExtension(vDatos.Rows[0]["nombre"].ToString()));
+                    byte[] bytFile = fileData;
+                    Response.OutputStream.Write(bytFile, 0, bytFile.Length);
+                    Response.AddHeader("Content-disposition", "attachment;filename=" + LBDocumentoAmpliacion.Text);
+                    Response.End();
+                }else
+                    throw new Exception("No existe archivo");
             }catch (Exception ex){
                 Mensaje(ex.Message, WarningType.Danger);
             }
@@ -868,13 +892,90 @@ namespace Infatlan_AuditControl.pages
 
         protected void BtnAprobarAmpliacion_Click(object sender, EventArgs e){
             try{
-                String vQuery = "[ACSP_Ampliaciones] 3," + LbHallazgoAmpliacion.Text;
+                Correo vCorreo = new Correo();
+                String vQuery = "";
+                String vMensaje = DDLAccion.SelectedValue == "0" ? "Aprobado" : "Rechazado";
+
+                if (DDLAccion.SelectedValue == "0")
+                    vQuery = "[ACSP_Ampliaciones] 3," + LbHallazgoAmpliacion.Text + "," + LbAmpliacion.Text + ",1";
+                else if (DDLAccion.SelectedValue == "1"){
+                    if (TxRechazarComentario.Text == "" || TxRechazarComentario.Text == string.Empty)
+                        throw new Exception("Por favor ingrese un comentario.");
+                    
+
+                    vQuery = "[ACSP_Ampliaciones] 3," + LbHallazgoAmpliacion.Text + "," + LbAmpliacion.Text + ",2";
+
+                    String vConsulta = "[ACSP_Logs] 7, 7" +
+                        "," + DDLBuscarInforme.SelectedValue + 
+                        "," + LbAutorizacionHallazgo.Text + 
+                        ",NULL,'" + TxRechazarComentario.Text + "'" +
+                        ",'" + Session["USUARIO"].ToString() + "'";
+                    vConexion.ejecutarSql(vConsulta);
+
+                }
+
                 int vInfo = vConexion.ejecutarSql(vQuery);
+                if (vInfo == 2){
+                    vQuery = "[ACSP_ObtenerUsuarios] 11," + LbAutorizacionHallazgo.Text;
+                    DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                    foreach (DataRow item in vDatos.Rows){
+                        vCorreo.Usuario = vConexion.GetNombreUsuario(item["idUsuario"].ToString());
+                        vCorreo.Para = item["correo"].ToString();
+                        vCorreo.Copia = "";
+                    }
 
+                    SmtpService vSmtpService = new SmtpService();
+                    vSmtpService.EnviarMensaje(
+                        vCorreo.Para,
+                        typeBody.General,
+                        vCorreo.Usuario,
+                        "Se ha " + vMensaje + " una ampliación para el hallazgo no." + LbAutorizacionHallazgo.Text + @", por favor revisar.<br \><br \>" + 
+                        "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
+                        vCorreo.Copia
+                    );
+                }
 
-                Mensaje("Fecha de ampliación actualizada con exito", WarningType.Success);
-                BuscarHallazgo(LbHallazgoAmpliacion.Text);
+                if (vInformeQuery != null)
+                    BuscarHallazgo(vInformeQuery);
+                else
+                    BuscarHallazgo(DDLBuscarInforme.SelectedValue);
+                    
+                Mensaje("Cambio realizado con éxito.", WarningType.Success);
                 CerrarModal("AmpliacionModal");
+            }catch (Exception ex){
+                Mensaje(ex.Message, WarningType.Danger);
+            }
+        }
+
+        protected void LBDocAmpliacion_Click(object sender, EventArgs e){
+            try{
+                String vQuery = "[ACSP_ObtenerHallazgos] 13," + LbAmpliacion.Text;
+                DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                String vArchivo = vDatos.Rows[0]["archivo"].ToString();
+
+                if (vArchivo != ""){
+                    byte[] fileData = null;
+
+                    if (!vArchivo.Equals(""))
+                        fileData = Convert.FromBase64String(vArchivo);
+                    
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.AppendHeader("Content-Type", GetExtension(vDatos.Rows[0]["nombre"].ToString()));
+                    byte[] bytFile = fileData;
+                    Response.OutputStream.Write(bytFile, 0, bytFile.Length);
+                    Response.AddHeader("Content-disposition", "attachment;filename=" + LBDocAmpliacion.Text);
+                    Response.End();
+                }else
+                    throw new Exception("No existe archivo");
+            }catch (Exception ex){
+                Mensaje(ex.Message, WarningType.Danger);
+            }
+        }
+
+        protected void DDLAccion_SelectedIndexChanged(object sender, EventArgs e){
+            try{
+                DivComentRechazo.Visible = DDLAccion.SelectedValue == "0" ? false : true;
+                UpdatePanel15.Update();
             }catch (Exception ex){
                 Mensaje(ex.Message, WarningType.Danger);
             }

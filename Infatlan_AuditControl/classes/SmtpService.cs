@@ -63,7 +63,7 @@ namespace Infatlan_AuditControl.classes
                             ), Server.MapPath("/assets/images/logored.png")));
                         break;
                 }
-                client.Send(mail);
+                //client.Send(mail);
                 vRespuesta = true;
             }catch (System.Net.Mail.SmtpException Ex){
                 String vError = Ex.Message;

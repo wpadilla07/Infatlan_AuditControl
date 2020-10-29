@@ -21,7 +21,7 @@
         function openFinalizarHallazgoModal() {$('#FinalizarHallazgoModal').modal('show');}
         function openAmpliacionModal() { $('#AmpliacionModal').modal('show');}
     </script>
-
+    <link href="../assets/css/select2.min.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -175,21 +175,21 @@
     </div>
 
     <!-- MODAL MODIFICACIONES INFORME -->
-    <div class="modal fade" id="ModificacionesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ModificacionesModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 800px; top: 320px; left: 50%; transform: translate(-50%, -50%);">
                 <div class="modal-header">
                     <asp:UpdatePanel ID="UpdateModificacionesLabel" runat="server">
                         <ContentTemplate>
                             <h4 class="modal-title" id="ModalLabelModificaciones">Modificar - Hallazgo No.
-                                    <asp:Label ID="LbNumeroHallazgoModificaciones" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="LbNumeroHallazgoModificaciones" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="LbInforme" runat="server" Text="" Visible="false"></asp:Label>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </h4>
                         </ContentTemplate>
                     </asp:UpdatePanel>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <asp:UpdatePanel ID="UpdateModificacionesMain" runat="server" UpdateMode="Conditional">
@@ -201,16 +201,16 @@
                                 Asignacion de Usuario a Hallazgo</small>
                                 </h1>
                             </div>
-                            <div class="col-xs-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Usuario </label>
-                                    <div class="col-sm-10">
-                                        <asp:DropDownList ID="DDLUsuariosAsignacionHallazgo" class="form-control" runat="server"></asp:DropDownList>
-                                    </div>
-                                </div>
-                            </div>
                         </ContentTemplate>
                     </asp:UpdatePanel>
+                    <div class="col-xs-12">
+                        <div class="form-group row">
+                            <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Usuario </label>
+                            <div class="col-sm-10">
+                                <asp:DropDownList ID="DDLUsuariosAsignacionHallazgo" class="select2 form-control custom-select" style="width: 100%" runat="server"></asp:DropDownList>
+                            </div>
+                        </div>
+                    </div>
 
                     <asp:UpdatePanel ID="UpdateModificacionesMensaje" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
@@ -420,6 +420,7 @@
                         <ContentTemplate>
                             <h4 class="modal-title" id="ModalLabelAutorizacion">Revisión de Hallazgo No.
                                 <asp:Label ID="LbAutorizacionHallazgo" runat="server" Text=""></asp:Label>
+                                <asp:Label ID="LbIdAmpliacion" Visible="false" runat="server" Text=""></asp:Label>
 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -479,11 +480,20 @@
                                         </div>
                                     </div>
 
+                                    <div runat="server" visible="false" id="DivComentarioRechazo">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <asp:Label Text="Comentario Auditor:" runat="server" CssClass="col-lg-4" />
+                                                <b><asp:Label Text="" ID="LbComentarioAuditor" runat="server" CssClass="col-lg-8" /></b>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div runat="server" id="DivAmpliacionDoc" visible="false">
                                         <div class="row">
                                             <div class="col-12">
                                                 <asp:Label Text="Descargar:" runat="server" CssClass="col-lg-4" />
-                                                <asp:LinkButton Text="" ID="LBDocAmpliacion" runat="server" CssClass="col-lg-8" OnClick="LBDocumentoAmpliacion_Click" />
+                                                <asp:LinkButton Text="" ID="LBDocAmpliacion" runat="server" CssClass="col-lg-8" OnClick="LBDocAmpliacion_Click" />
                                             </div>
                                         </div>
                                     </div>
@@ -501,6 +511,9 @@
                             <asp:Button ID="BtnRechazarAutorizacion" runat="server" Text="Rechazar" Style="border-radius: 4px;" class="btn btn-danger" OnClientClick="ShowProgress();" OnClick="BtnRechazarAutorizacion_Click" />
                             <asp:Button ID="BtnEnviarAutorizacion" runat="server" Text="Aprobar" Style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnEnviarAutorizacion_Click" />
                         </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="LBDocAmpliacion" />
+                        </Triggers>
                     </asp:UpdatePanel>
                 </div>
             </div>
@@ -532,30 +545,52 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-12">
-                                        <asp:Label Text="Fecha límite:" runat="server" CssClass="col-lg-4"/>
-                                        <b><asp:Label ID="LbFechaActual" runat="server" Text="" CssClass="col-lg-8"></asp:Label></b>
+                                        <asp:Label Text="Fecha límite:" runat="server" CssClass="col-lg-3"/>
+                                        <b><asp:Label ID="LbFechaActual" runat="server" Text="" CssClass="col-lg-9"></asp:Label></b>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <asp:Label Text="Fecha solicitada:" runat="server" CssClass="col-lg-4"/>
-                                        <b><asp:Label ID="LbFecha" runat="server" Text="" CssClass="col-lg-8"></asp:Label></b>
+                                        <asp:Label Text="Fecha solicitada:" runat="server" CssClass="col-lg-3"/>
+                                        <b><asp:Label ID="LbFecha" runat="server" Text="" CssClass="col-lg-9"></asp:Label></b>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-12">
-                                        <asp:Label Text="Comentario:" runat="server" CssClass="col-lg-4"/>
-                                        <b><asp:Label Text="" ID="LbComentarioAmpliacion" runat="server" CssClass="col-lg-8"/></b>
+                                        <asp:Label Text="Comentario:" runat="server" CssClass="col-lg-3"/>
+                                        <b><asp:Label Text="" ID="LbComentarioAmpliacion" runat="server" CssClass="col-lg-9"/></b>
                                     </div>
                                 </div>
 
                                 <div runat="server" id="DivDocumento" visible="false">
                                     <div class="row">
                                         <div class="col-12">
-                                            <asp:Label Text="Descargar:" runat="server" CssClass="col-lg-4"/>
-                                            <%--<asp:LinkButton Text="" ID="LinkButton1" runat="server" OnClick="LBDocumentoAmpliacion_Click" />--%>
-                                            <asp:LinkButton Text="" ID="LBDocumentoAmpliacion" runat="server" CssClass="col-lg-8" OnClick="LBDocumentoAmpliacion_Click" />
+                                            <asp:Label Text="Descargar:" runat="server" CssClass="col-lg-3"/>
+                                            <asp:LinkButton Text="" ID="LBDocumentoAmpliacion" runat="server" CssClass="col-lg-9" OnClick="LBDocumentoAmpliacion_Click" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-12">
+                                        <asp:Label Text="Accion:" runat="server" CssClass="col-lg-3"/>
+                                        <div class="col-lg-9">
+                                            <asp:DropDownList ID="DDLAccion" AutoPostBack="true" OnSelectedIndexChanged="DDLAccion_SelectedIndexChanged" runat="server" CssClass="form-control">
+                                                <asp:ListItem Value="0" Text="Aprobar"></asp:ListItem>
+                                                <asp:ListItem Value="1" Text="Rechazar"></asp:ListItem>
+                                            </asp:DropDownList>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div runat="server" id="DivComentRechazo" visible="false">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <asp:Label Text="Comentario:" runat="server" CssClass="col-lg-3"/>
+                                            <div class="col-lg-9">                                        
+                                                <asp:TextBox runat="server" TextMode="MultiLine" CssClass="form-control" ID="TxRechazarComentario" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -566,8 +601,7 @@
                 <div class="modal-footer">
                     <asp:UpdatePanel ID="UpdatePanel16" runat="server">
                         <ContentTemplate>
-                            <asp:Button ID="BtnRechazarAmpliacion" runat="server" Text="Rechazar" Style="border-radius: 4px;" class="btn btn-danger" OnClientClick="ShowProgress();" OnClick="BtnRechazarAmpliacion_Click" />
-                            <asp:Button ID="BtnAprobarAmpliacion" runat="server" Text="Aprobar" Style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnAprobarAmpliacion_Click" />
+                            <asp:Button ID="BtnAprobarAmpliacion" runat="server" Text="Aceptar" Style="border-radius: 4px;" class="btn btn-success" OnClientClick="ShowProgress();" OnClick="BtnAprobarAmpliacion_Click" />
                         </ContentTemplate>
                         <Triggers>
                             <asp:PostBackTrigger ControlID="LBDocumentoAmpliacion"/>
@@ -580,4 +614,43 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="Scripts" runat="server">
     <script src="/assets/js/fstdropdown.js"></script>
+    <link href="../assets/css/select2.min.css" rel="stylesheet" />
+    <script src="../assets/js/select2.min.js"></script>
+    <style>
+        .select2-selection__rendered {line-height: 31px !important;}
+        .select2-container .select2-selection--single {height: 35px !important;}
+        .select2-selection__arrow {height: 34px !important;}
+    </style>
+    <script>
+        $(function () {
+            $(".select2").select2();
+            $(".ajax").select2({
+                ajax: {
+                    url: "https://api.github.com/search/repositories",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+                        params.page = params.page || 1;
+                        return {
+                            results: data.items,
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                },
+                minimumInputLength: 1,
+            });
+        });
+    </script>
 </asp:Content>

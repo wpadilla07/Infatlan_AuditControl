@@ -261,8 +261,6 @@ namespace Infatlan_AuditControl.pages
                 vQuery = "[ACSP_Ampliaciones] 1," + vIdHallazgo + "," + vIdArchivo + ",'" + TxMotivo.Text + "','" + TxFechaAmpliacion.Text + "','" + Session["USUARIO"].ToString() + "'";
                 int vId = vConexion.ejecutarSQLGetValue(vQuery);
 
-
-
                 if (vId > 0){
                     String vConsul = "[ACSP_Logs] 6," + vInformeQuery + "," + vIdHallazgo + ",'comentarioAmpliacion','" + TxMotivo.Text + "','" + Session["USUARIO"].ToString() + "'";
                     vConexion.ejecutarSql(vConsul);
@@ -309,9 +307,16 @@ namespace Infatlan_AuditControl.pages
             try{
                 String vQuery = "[ACSP_Logs] 4," + vInformeQuery + "," + vIdHallazgo;
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                if (vDatos.Rows.Count > 0){
+                    vDatos.Columns.Add("nombre");
+                    for (int i = 0; i < vDatos.Rows.Count; i++){
+                        vDatos.Rows[i]["nombre"] = vConexion.GetNombreUsuario(vDatos.Rows[i]["usuarioCreacion"].ToString());
+                    }
 
-                GVBusqueda.DataSource = vDatos;
-                GVBusqueda.DataBind();
+                    GVBusqueda.DataSource = vDatos;
+                    GVBusqueda.DataBind();
+
+                }
 
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModalComments();", true);
             }catch (Exception ex){

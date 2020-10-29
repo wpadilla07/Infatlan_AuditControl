@@ -284,7 +284,8 @@
                                                 PageSize="50" OnPageIndexChanging="GVBusqueda_PageIndexChanging">
                                                 <Columns>
                                                     <asp:BoundField DataField="numero" HeaderText="No." />
-                                                    <asp:BoundField DataField="usuarioCreacion" HeaderText="Usuario" />
+                                                    <%--<asp:BoundField DataField="usuarioCreacion" HeaderText="Usuario" />--%>
+                                                    <asp:BoundField DataField="nombre" HeaderText="Nombre" ItemStyle-Width="120" />
                                                     <asp:BoundField DataField="valorActual" HeaderText="Comentario" />
                                                     <asp:BoundField DataField="descripcion" HeaderText="Movimiento" />
                                                     <asp:BoundField DataField="fechaCreacion" HeaderText="Fecha" />

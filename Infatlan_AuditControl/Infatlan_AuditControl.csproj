@@ -303,6 +303,7 @@
     <Compile Include="classes\SmtpService.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="classes\tokenClass.cs" />
     <Compile Include="default.aspx.cs">
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

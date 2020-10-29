@@ -561,7 +561,7 @@ namespace Infatlan_AuditControl.pages
             try{
                 String vIdHallazgo = e.CommandArgument.ToString();
                 if (e.CommandName == "EntrarHallazgo"){
-                    Response.Redirect("/pages/findings.aspx?id=" + vIdHallazgo);
+                    Response.Redirect("/pages/findings.aspx?id=" + vIdHallazgo + "&i=" + LbNumeroInformeHallazgos.Text);
                 }
 
                 if (e.CommandName == "EditarHallazgo"){
