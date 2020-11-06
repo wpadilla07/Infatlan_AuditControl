@@ -93,9 +93,7 @@
                                         AutoGenerateColumns="false" OnRowCommand="GVResponsables_RowCommand">
                                         <Columns>
                                             <asp:TemplateField HeaderText="Select" HeaderStyle-Width="150px">
-                                                <HeaderTemplate>
-                                                    Acción
-                                                </HeaderTemplate>
+                                                <HeaderTemplate>Acción</HeaderTemplate>
                                                 <ItemTemplate>
                                                     <asp:Button ID="BtnResponsableDelete" runat="server" Text="borrar" style="border-radius: 4px;" class="btn btn-danger mr-2" CommandArgument='<%# Eval("usuarioResponsable") %>' CommandName="DeleteRow" />
                                                 </ItemTemplate>
@@ -166,6 +164,9 @@
                             <ContentTemplate>
                                 <asp:LinkButton ID="BtnCrearInforme" runat="server" style="border-radius: 4px;" class="btn btn-info" OnClick="BtnCrearInforme_Click">
                                         <i class="ace-icon fa fa-check bigger-110"></i>Crear Informe
+                                </asp:LinkButton>
+                                <asp:LinkButton ID="BtnModificarInforme" runat="server" style="border-radius: 4px;" class="btn btn-warning" OnClick="BtnCrearInforme_Click">
+                                        <i class="ace-icon fa fa-pencil bigger-110"></i>Modificar Informe
                                 </asp:LinkButton>
                                 <button style="border-radius: 4px;" class="btn" type="reset">
                                     <i class="ace-icon fa fa-undo bigger-110"></i>Reset

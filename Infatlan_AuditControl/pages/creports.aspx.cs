@@ -15,11 +15,18 @@ namespace Infatlan_AuditControl.pages
     {
         db vConexion = new db();
         DataTable vDatosResponsables = new DataTable();
+        String vInforme = string.Empty;
         protected void Page_Load(object sender, EventArgs e){
             if (!Page.IsPostBack){
                 if (Session["AUTH"] != null){
-                    TxFechaRespuesta.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
+                    vInforme = Request.QueryString["i"];
+                    if (vInforme != null){
+                        cargarDatos(vInforme);
+                    }
+                    BtnCrearInforme.Visible = vInforme != null ? false : true;
+                    BtnModificarInforme.Visible = vInforme != null ? true : false;
 
+                    TxFechaRespuesta.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
                     Session["DATARESPONSABLES"] = null;
                     switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                         case 4:
@@ -31,6 +38,29 @@ namespace Infatlan_AuditControl.pages
                 getUsuariosResponsables();
                 getTiposEnvio();
             }
+        }
+
+        private void cargarDatos(String vInforme) {
+            String vQuery = "[ACSP_ObtenerUsuariosInforme] 1," + vInforme;
+            DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+            vDatos.Columns.Add("usuarioResponsable");
+            for (int i = 0; i < vDatos.Rows.Count; i++){
+                vDatos.Rows[i]["usuarioResponsable"] = vConexion.GetNombreUsuario(vDatos.Rows[i]["idUsuario"].ToString());
+            }
+            if (vDatos.Rows.Count > 0){
+                Session["DATARESPONSABLES"] = vDatos;
+                GVResponsables.DataSource = vDatos;
+                GVResponsables.DataBind();
+            }
+
+            vQuery = "[ACSP_ObtenerInformes] 2," + vInforme;
+            vDatos = vConexion.obtenerDataTable(vQuery);
+
+            TxNombreInforme.Text = vDatos.Rows[0]["nombre"].ToString();
+            DateTime vFecha = Convert.ToDateTime(vDatos.Rows[0]["fechaRespuesta"].ToString());
+            TxFechaRespuesta.Text = vFecha.ToString("yyyy-MM-dd");
+            TxDescripcionInforme.Text = vDatos.Rows[0]["descripcion"].ToString();
+            CBEstadoCerrado.Checked = vDatos.Rows[0]["tipoEstado"].ToString() == "2" ? true : false;
         }
 
         public void Mensaje(string vMensaje, WarningType type){
@@ -93,9 +123,6 @@ namespace Infatlan_AuditControl.pages
                     throw new Exception("Por favor escriba el nombre del informe");
                 if (Convert.ToDateTime(TxFechaRespuesta.Text) <= DateTime.Now)
                     throw new Exception("Por favor seleccione una fecha mayor a hoy");
-                //if (TxDescripcionInforme.Text.Equals(""))
-                //    throw new Exception("Por favor escriba una descripción del informe");
-
                 if (Session["DATARESPONSABLES"] is null)
                     throw new Exception("Por favor ingrese un reponsable para el informe");
                 else
@@ -127,29 +154,7 @@ namespace Infatlan_AuditControl.pages
 
                     foreach (DataRow item in vDatosResponsables.Rows){
                         vQuery = "[ACSP_Informes] 3," + vIdInforme + ",0,'','','','" + item["usuarioResponsable"].ToString() + "'," + item["envio"].ToString().Split('-')[0].ToString();
-                        int vInfo = vConexion.ejecutarSql(vQuery);
-                        if (vInfo == 1){
-
-                            //vQuery = "[ACSP_ObtenerUsuarios] 5," + item["usuarioResponsable"].ToString();
-                            //DataTable vDatos = vConexion.obtenerDataTable(vQuery);
-
-                            //Correo vCorreo = new Correo();
-                            //foreach (DataRow item2 in vDatos.Rows){
-                            //    vCorreo.Usuario = vConexion.GetNombreUsuario(item2["idUsuario"].ToString());
-                            //    vCorreo.Para = item2["correo"].ToString();
-                            //    vCorreo.Copia = "";
-                            //}
-
-                            //SmtpService vSmtpService = new SmtpService();
-                            //vSmtpService.EnviarMensaje(
-                            //    vCorreo.Para,
-                            //    typeBody.General,
-                            //    vCorreo.Usuario,
-                            //    "Se ha creado el informe No." + vIdInforme + @", por favor estar pendiente de los cambios.<br \><br \>" +
-                            //    "Creado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
-                            //    vCorreo.Copia
-                            //    );
-                        }
+                        vConexion.ejecutarSql(vQuery);
                     }
 
                     LimpiarInformes();
@@ -179,7 +184,6 @@ namespace Infatlan_AuditControl.pages
                 if (DDLTipoResponsable.SelectedIndex == 0)
                     throw new Exception("Por favor selccione un tipo de envio");
 
-
                 if (Session["DATARESPONSABLES"] == null){
                     vDatosResponsables = new DataTable();
                     vDatosResponsables.Columns.Add("usuarioResponsable");
@@ -206,30 +210,27 @@ namespace Infatlan_AuditControl.pages
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
-        protected void GVResponsables_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            try
-            {
-                if (e.CommandName == "DeleteRow")
-                {
+        protected void GVResponsables_RowCommand(object sender, GridViewCommandEventArgs e){
+            try{
+                if (e.CommandName == "DeleteRow"){
                     string vIdResponsable = e.CommandArgument.ToString();
-                    if (Session["DATARESPONSABLES"] != null)
-                    {
+                    if (Session["DATARESPONSABLES"] != null){
                         vDatosResponsables = (DataTable)Session["DATARESPONSABLES"];
 
                         DataRow[] result = vDatosResponsables.Select("usuarioResponsable = '" + vIdResponsable + "'");
-                        foreach (DataRow row in result)
-                        {
+                        foreach (DataRow row in result){
                             if (row["usuarioResponsable"].ToString().Contains(vIdResponsable))
                                 vDatosResponsables.Rows.Remove(row);
                         }
                     }
                 }
+
                 GVResponsables.DataSource = vDatosResponsables;
                 GVResponsables.DataBind();
                 Session["DATARESPONSABLES"] = vDatosResponsables;
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
     }
 }

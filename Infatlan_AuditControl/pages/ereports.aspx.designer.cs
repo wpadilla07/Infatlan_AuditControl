@@ -132,6 +132,15 @@ namespace Infatlan_AuditControl.pages
         protected global::System.Web.UI.UpdatePanel UpdateHallazgosMain;
 
         /// <summary>
+        /// Control BtnEntrarInf.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button BtnEntrarInf;
+
+        /// <summary>
         /// Control GVHallazgosView.
         /// </summary>
         /// <remarks>

@@ -48,6 +48,11 @@ namespace Infatlan_AuditControl.pages
             try{
                 String vQuery = "[ACSP_ObtenerInformes] 5,0,'" + Convert.ToString(Session["USUARIO"]) + "'";
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                vDatos.Columns.Add("fechaRes");
+                for (int i = 0; i < vDatos.Rows.Count; i++){
+                    String vFecha = Convert.ToDateTime(vDatos.Rows[i]["fechaRespuesta"]).ToString("dd-MM-yyyy");
+                    vDatos.Rows[i]["fechaRes"] = vFecha;
+                }
 
                 GVBusqueda.DataSource = vDatos;
                 mostrarOcultar();
@@ -333,9 +338,10 @@ namespace Infatlan_AuditControl.pages
                             break;
                     }
 
-                    if (Convert.ToBoolean(vDatosHallazgo.Rows[0]["envioResponsables"].ToString()))
-                        GVHallazgosView.Columns[0].Visible = false;
-                    
+                    Boolean vEnviado = Convert.ToBoolean(vDatosHallazgo.Rows[0]["envioResponsables"].ToString());
+                    GVHallazgosView.Columns[0].Visible = vEnviado ? false : true;
+                    GVHallazgosView.Columns[7].Visible = vEnviado ? false : true;
+
                     GVHallazgosView.DataBind();
                     UpdateHallazgosMain.Update();
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModalHallazgos();", true);
@@ -588,8 +594,19 @@ namespace Infatlan_AuditControl.pages
                     UpdatePanel7.Update();
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openHallazgosModificacionCreacionModal();", true);
                 }
+
+                if (e.CommandName == "BorrarHallazgo"){
+                    String vQuery = "[ACSP_ObtenerHallazgos] 14," + vIdHallazgo;
+                    int vResultado = vConexion.ejecutarSql(vQuery);
+
+                    if (vResultado > 0){
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "closeModalHallazgos();", true);
+                        Mensaje("Hallazgo eliminado con éxito.", WarningType.Success);
+                    }
+                }
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
         int GetDDLIndex(DropDownList vDDL, String vValue){
@@ -743,6 +760,14 @@ namespace Infatlan_AuditControl.pages
                     throw new Exception("Error al modificar el hallazgo");
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); CerrarModal("HallazgosModificacionCreacionModal"); }
+        }
+
+        protected void BtnEntrarInf_Click(object sender, EventArgs e){
+            try{
+                Response.Redirect("creports.aspx?i=" + LbNumeroInformeHallazgos.Text);
+            }catch (Exception ex){
+                Mensaje(ex.Message, WarningType.Danger);
+            }
         }
     }
 }

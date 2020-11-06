@@ -14,30 +14,12 @@
     </script>
 
     <script type="text/javascript">
-        function openModalHallazgos() {
-            $('#HallazgosModal').modal('show');
-        }
-    </script>
-
-    <script type="text/javascript">
-        function openModalHallazgosCreacion() {
-            $('#HallazgosCreacionModal').modal('show');
-        }
-    </script>
-    <script type="text/javascript">
-        function openRevisionModal() {
-            $('#RevisionModal').modal('show');
-        }
-    </script>
-    <script type="text/javascript">
-        function openResponsablesModal() {
-            $('#ResponsablesModal').modal('show');
-        }
-    </script>
-    <script type="text/javascript">
-        function openHallazgosModificacionCreacionModal() {
-            $('#HallazgosModificacionCreacionModal').modal('show');
-        }
+        function openModalHallazgos() {$('#HallazgosModal').modal('show');}
+        function closeModalHallazgos() {$('#HallazgosModal').modal('hide');}
+        function openModalHallazgosCreacion() {$('#HallazgosCreacionModal').modal('show');}
+        function openRevisionModal() {$('#RevisionModal').modal('show');}
+        function openResponsablesModal() {$('#ResponsablesModal').modal('show');}
+        function openHallazgosModificacionCreacionModal() {$('#HallazgosModificacionCreacionModal').modal('show');}
     </script>
     <link href="/assets/css/fstdropdown.css" rel="stylesheet" />
     <link href="../assets/css/select2.min.css" rel="stylesheet" />
@@ -153,7 +135,7 @@
 
                                 <asp:BoundField DataField="idInforme" HeaderText="No." />
                                 <asp:BoundField DataField="nombre" HeaderText="Nombre" />
-                                <asp:BoundField DataField="fechaRespuesta" HeaderText="Respuesta" />
+                                <asp:BoundField DataField="fechaRes" HeaderText="Respuesta" />
                                 <asp:BoundField DataField="fechaCreacion" HeaderText="Creación" />
                                 <asp:BoundField DataField="usuarioCreacion" HeaderText="Creado" />
                                 <asp:BoundField DataField="tipoEstado" HeaderText="Estado" />
@@ -226,8 +208,8 @@
 
     <!-- MODAL PARA VER HALLAZGOS -->
     <div class="modal fade" id="HallazgosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content" style="width: 1000px; top: 320px; left: 50%; transform: translate(-50%, -50%);">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
                 <div class="modal-header">
                     <asp:UpdatePanel ID="UpdateHallazgosLabel" runat="server">
                         <ContentTemplate>
@@ -245,10 +227,11 @@
                         <ContentTemplate>
                             <div class="page-header">
                                 <h1>Hallazgos creados
-                            <small>
-                                <i class="ace-icon fa fa-angle-double-right"></i>
-                                Presione entrar para ir a cualquier hallazgo
-                            </small>
+                                    <small>
+                                        <i class="ace-icon fa fa-angle-double-right"></i>
+                                        Presione entrar para ir a cualquier hallazgo
+                                    </small>
+                                    <asp:Button Text="Modificar Informe" Style="border-radius:4px;" CssClass="btn btn-info" runat="server" ID="BtnEntrarInf" OnClick="BtnEntrarInf_Click"/>
                                 </h1>
                             </div>
                             <div class="form-group ">
@@ -262,10 +245,7 @@
                                             GridLines="None"
                                             AutoGenerateColumns="false" OnRowCommand="GVHallazgosView_RowCommand">
                                             <Columns>
-                                                <asp:TemplateField HeaderText="Select" >
-                                                    <HeaderTemplate>
-                                  
-                                                    </HeaderTemplate>
+                                                <asp:TemplateField>
                                                     <ItemTemplate>
                                                         <asp:LinkButton ID="BtnHallazgoEditar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-warning mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EditarHallazgo" >
                                                             <i class=" fa fa-edit "></i>
@@ -273,9 +253,6 @@
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="Select" HeaderStyle-Width="150px">
-                                                    <HeaderTemplate>
-                                                        Acción
-                                                    </HeaderTemplate>
                                                     <ItemTemplate>
                                                         <asp:Button ID="BtnHallazgoEntrar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-success mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EntrarHallazgo" />
                                                     </ItemTemplate>
@@ -285,6 +262,13 @@
                                                 <asp:BoundField DataField="idArea" HeaderText="Area" />
                                                 <asp:BoundField DataField="tipoRiesgo" HeaderText="Riesgo" />
                                                 <asp:BoundField DataField="detalle" HeaderText="Detalle" />
+                                                <asp:TemplateField >
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="BtnDelete" runat="server" style="border-radius: 4px;" class="btn btn-danger mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="BorrarHallazgo" >
+                                                            <i class=" fa fa-trash "></i>
+                                                        </asp:LinkButton>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
                                             </Columns>
                                         </asp:GridView>
                                     </div>

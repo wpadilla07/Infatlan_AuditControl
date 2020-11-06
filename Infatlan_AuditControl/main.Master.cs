@@ -92,10 +92,10 @@ namespace Infatlan_AuditControl
                             "</li>";
                     }
 
-                    LitInformes.Text = vLiteralFinal;
+                    //LitInformes.Text = vLiteralFinal;
+                    LitInformes.Text = "";
 
-                }
-                catch { }
+                }catch { }
             }
 
             void cargarHallazgos(){
@@ -123,10 +123,10 @@ namespace Infatlan_AuditControl
                             "</li>";
                     }
 
-                    LitHallazgos.Text = vLiteralFinal;
+                    //LitHallazgos.Text = vLiteralFinal;
+                    LitHallazgos.Text = "";
 
-                }
-                catch { }
+                }catch { }
             }
         }
     }
