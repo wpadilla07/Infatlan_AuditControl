@@ -18,39 +18,34 @@ namespace Infatlan_AuditControl.pages
         String vInformeQuery = String.Empty;
         String vIdHallazgo = String.Empty;
         protected void Page_Load(object sender, EventArgs e){
-            String vToken = Request.QueryString["id"];
-            if (vToken != null){
-                try{
-                    String vQuery = "[RSP_Documentacion] 12,'" + vToken + "'";
-                    DataTable vDatos = vConexion.obtenerDataTable(vQuery);
-                    if (vDatos.Rows.Count > 0){
-                        tokenClass vTokenClass = new tokenClass();
-                        CryptoToken.CryptoToken vTokenCrypto = new CryptoToken.CryptoToken();
-                        vTokenClass = JsonConvert.DeserializeObject<tokenClass>(vTokenCrypto.Decrypt(vToken, ConfigurationManager.AppSettings["TOKEN_DOC"].ToString()));
-                        Session["DOCUMENTOS_ARCHIVO_ID"] = Request.QueryString["d"];
+            //String vToken = Request.QueryString["id"];
+            //if (vToken != null){
+            //    try{
+            //        String vQuery = "[RSP_Documentacion] 12,'" + vToken + "'";
+            //        DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+            //        if (vDatos.Rows.Count > 0){
+            //            tokenClass vTokenClass = new tokenClass();
+            //            CryptoToken.CryptoToken vTokenCrypto = new CryptoToken.CryptoToken();
+            //            vTokenClass = JsonConvert.DeserializeObject<tokenClass>(vTokenCrypto.Decrypt(vToken, ConfigurationManager.AppSettings["TOKEN_DOC"].ToString()));
+            //            Session["DOCUMENTOS_ARCHIVO_ID"] = Request.QueryString["d"];
 
 
-                        Session["AUTHCLASS"] = vDatos;
-                        Session["USUARIO"] = vDatos.Rows[0]["idEmpleado"].ToString();
-                        Session["AUTH"] = true;
-                        vQuery = "[RSP_Documentacion] 13,'" + vToken + "'";
-                        vConexion.ejecutarSql(vQuery);
-                        Response.Redirect("archivo.aspx", false);
-                    }else 
-                        throw new Exception();
+            //            Session["AUTHCLASS"] = vDatos;
+            //            Session["USUARIO"] = vDatos.Rows[0]["idEmpleado"].ToString();
+            //            Session["AUTH"] = true;
+            //            vQuery = "[RSP_Documentacion] 13,'" + vToken + "'";
+            //            vConexion.ejecutarSql(vQuery);
+            //            Response.Redirect("archivo.aspx", false);
+            //        }else 
+            //            throw new Exception();
 
-                }catch(Exception ex){
-                    Session["AUTH"] = false;
-                    Response.Redirect("/login.aspx");
-                }
-            }
+            //    }catch(Exception ex){
+            //        Session["AUTH"] = false;
+            //        Response.Redirect("/login.aspx");
+            //    }
+            //}
 
                                  
-
-
-
-
-
 
 
 

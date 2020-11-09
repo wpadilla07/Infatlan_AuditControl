@@ -58,6 +58,7 @@
                 </div>
                 <asp:UpdatePanel ID="UpdateForma" runat="server">
                     <ContentTemplate>
+                        <asp:Label Text="" ID="LbIdInforme" Visible="false" runat="server" />
                         <div class="form-group">
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Tipo </label>
                             <div class="col-sm-8">
@@ -165,7 +166,7 @@
                                 <asp:LinkButton ID="BtnCrearInforme" runat="server" style="border-radius: 4px;" class="btn btn-info" OnClick="BtnCrearInforme_Click">
                                         <i class="ace-icon fa fa-check bigger-110"></i>Crear Informe
                                 </asp:LinkButton>
-                                <asp:LinkButton ID="BtnModificarInforme" runat="server" style="border-radius: 4px;" class="btn btn-warning" OnClick="BtnCrearInforme_Click">
+                                <asp:LinkButton ID="BtnModificarInforme" runat="server" style="border-radius: 4px;" class="btn btn-warning" OnClick="BtnModificarInforme_Click">
                                         <i class="ace-icon fa fa-pencil bigger-110"></i>Modificar Informe
                                 </asp:LinkButton>
                                 <button style="border-radius: 4px;" class="btn" type="reset">

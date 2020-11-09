@@ -20,14 +20,14 @@ namespace Infatlan_AuditControl.pages
             if (!Page.IsPostBack){
                 if (Session["AUTH"] != null){
                     vInforme = Request.QueryString["i"];
+                    BtnCrearInforme.Visible = vInforme != null ? false : true;
+                    BtnModificarInforme.Visible = vInforme != null ? true : false;
+                    LbIdInforme.Text = Request.QueryString["i"];
+                    TxFechaRespuesta.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
+                    Session["DATARESPONSABLES"] = null;
                     if (vInforme != null){
                         cargarDatos(vInforme);
                     }
-                    BtnCrearInforme.Visible = vInforme != null ? false : true;
-                    BtnModificarInforme.Visible = vInforme != null ? true : false;
-
-                    TxFechaRespuesta.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
-                    Session["DATARESPONSABLES"] = null;
                     switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                         case 4:
                         case 5:
@@ -41,11 +41,11 @@ namespace Infatlan_AuditControl.pages
         }
 
         private void cargarDatos(String vInforme) {
-            String vQuery = "[ACSP_ObtenerUsuariosInforme] 1," + vInforme;
+            String vQuery = "[ACSP_ObtenerUsuariosInforme] 3," + vInforme;
             DataTable vDatos = vConexion.obtenerDataTable(vQuery);
             vDatos.Columns.Add("usuarioResponsable");
             for (int i = 0; i < vDatos.Rows.Count; i++){
-                vDatos.Rows[i]["usuarioResponsable"] = vConexion.GetNombreUsuario(vDatos.Rows[i]["idUsuario"].ToString());
+                vDatos.Rows[i]["usuarioResponsable"] = vDatos.Rows[i]["idUsuario"].ToString();
             }
             if (vDatos.Rows.Count > 0){
                 Session["DATARESPONSABLES"] = vDatos;
@@ -199,7 +199,10 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 if (!vFlagInsert)
-                    vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
+                    if (LbIdInforme.Text != "")
+                        vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, "",DDLTipoResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text, DDLUserResponsable.SelectedValue);
+                    else
+                        vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
                 else
                     throw new Exception("Este usuario ya ha sido agregado");
 
@@ -230,6 +233,47 @@ namespace Infatlan_AuditControl.pages
                 Session["DATARESPONSABLES"] = vDatosResponsables;
             }catch (Exception Ex) { 
                 Mensaje(Ex.Message, WarningType.Danger); 
+            }
+        }
+
+        protected void BtnModificarInforme_Click(object sender, EventArgs e){
+            try{
+                if (DDLUserResponsable.SelectedIndex.Equals(0))
+                    throw new Exception("Por favor seleccione un responsable.");
+                if (TxNombreInforme.Text.Equals(""))
+                    throw new Exception("Por favor escriba el nombre del informe");
+                if (Convert.ToDateTime(TxFechaRespuesta.Text) <= DateTime.Now)
+                    throw new Exception("Por favor seleccione una fecha mayor a hoy");
+                if (Session["DATARESPONSABLES"] is null)
+                    throw new Exception("Por favor ingrese un reponsable para el informe");
+                else
+                    vDatosResponsables = (DataTable)Session["DATARESPONSABLES"];
+
+                String vEstado = CBEstadoCerrado.Checked ? "2" : "1";
+                String vQuery = "[ACSP_Informes] 8" +
+                    "," + LbIdInforme.Text + 
+                    "," + vEstado + 
+                    ",0" +
+                    ",'" + TxNombreInforme.Text.Replace("'", "") + "'" +
+                    ",'" + TxDescripcionInforme.Text.Replace("'","") + "'" +
+                    ",'',0" +
+                    ",'" + TxFechaRespuesta.Text + "'";
+
+                int vIdInforme = vConexion.ejecutarSql(vQuery);
+                if (vIdInforme > 0){
+                    vQuery = "[ACSP_Informes] 9," + LbIdInforme.Text;
+                    vConexion.ejecutarSql(vQuery);
+                    foreach (DataRow item in vDatosResponsables.Rows){
+                        vQuery = "[ACSP_Informes] 3," + LbIdInforme.Text + ",0,'','','','" + item["usuarioResponsable"].ToString() + "'," + item["envio"].ToString().Split('-')[0].ToString();
+                        vConexion.ejecutarSql(vQuery);
+                    }
+
+                    LimpiarInformes();
+                    Response.Redirect("/pages/ereports.aspx?id=" + vIdInforme);
+                }else
+                    throw new Exception("Error al modificar el informe por favor consulte con sistemas");
+            }catch (Exception Ex) { 
+                LbMensajeCrearInforme.Text = Ex.Message; 
             }
         }
     }

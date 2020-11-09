@@ -313,7 +313,6 @@ namespace Infatlan_AuditControl.pages
 
                     vQuery = "[ACSP_ObtenerInformes] 6, " + vIdInforme + ",'" + Session["USUARIO"].ToString() + "'";
                     DataTable vDatosHallazgo = vConexion.obtenerDataTable(vQuery);
-                    int asdas = Convert.ToInt32(Session["TIPOUSUARIO"]);
 
                     switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                         case 1:
@@ -341,7 +340,7 @@ namespace Infatlan_AuditControl.pages
                     Boolean vEnviado = Convert.ToBoolean(vDatosHallazgo.Rows[0]["envioResponsables"].ToString());
                     GVHallazgosView.Columns[0].Visible = vEnviado ? false : true;
                     GVHallazgosView.Columns[7].Visible = vEnviado ? false : true;
-
+                    BtnEntrarInf.Visible = vEnviado ? false : true;
                     GVHallazgosView.DataBind();
                     UpdateHallazgosMain.Update();
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModalHallazgos();", true);
