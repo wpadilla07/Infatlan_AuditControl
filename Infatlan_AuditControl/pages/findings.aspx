@@ -15,6 +15,7 @@
         function openModal() { $('#ModificacionesModal').modal('show'); }
         function closeModal() { $('#ModificacionesModal').modal('hide'); }
         function openModalComments() { $('#ComentariosModal').modal('show'); }
+        function openCerrarHallazgoModal() { $('#CerrarHallazgoModal').modal('show'); }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="server">
@@ -53,6 +54,9 @@
                 <!-- PAGE CONTENT BEGINS -->
                 <asp:UpdatePanel ID="UpdateForma" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
+                        <asp:Label Text="" ID="LbInforme" runat="server" Visible="false" />
+                        <asp:Label Text="" ID="LbHallazgo" runat="server" Visible="false"/>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Detalle </label>
                             <div class="col-sm-8">
@@ -100,12 +104,15 @@
                                 <asp:LinkButton ID="BtnAmpliacion" runat="server" Visible="false" class="btn btn-success" OnClick="BtnAmpliacion_Click" >
                                         <i class="ace-icon fa fa-calendar-plus-o bigger-110"></i>Ampliación
                                 </asp:LinkButton>
+
+                                <asp:LinkButton ID="BtnCerrar" runat="server" Visible="false" class="btn btn-danger" OnClick="BtnCerrar_Click" >
+                                        <i class="ace-icon fa fa-close bigger-110"></i>Cerrar Hallazgo
+                                </asp:LinkButton>
                             </div>
-                            <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Descargar archivo del hallazgo">?</span>
                         </div>
                         
                         <div class="form-group" runat="server" visible="false" >
-                            <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Comentarios </label>
+                            <label class="col-sm-2 control-label no-padding-right">Comentarios </label>
                             <div class="col-sm-8">
                                 <asp:TextBox ID="TxHallazgoComentarios" runat="server" class="form-control" Rows="3" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>
                             </div>
@@ -304,6 +311,76 @@
                         <ContentTemplate>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%--MODAL MODIFICACIONES HALLAZGO FINALIZACION--%>
+    <div class="modal fade" id="CerrarHallazgoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <asp:UpdatePanel ID="UpdatePanel8" runat="server">
+                        <ContentTemplate>
+                            <h4 class="modal-title" id="ModalLabelFinalizarHallazgo">Modificar - Hallazgo No.
+                                    <asp:Label ID="LbCerrarHallazgo" runat="server" Text=""></asp:Label>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </h4>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-body">
+                    <div class="page-header">
+                        <h1>Finalizar Hallazgo
+                            <small><i class="ace-icon fa fa-angle-double-right"></i>Estas finalizando el hallazgo </small>
+                        </h1>
+                    </div>
+                    <asp:UpdatePanel ID="UpdatePanel4" runat="server">
+                        <ContentTemplate>
+                            <div class="modal-body">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label no-padding-right">Plan de Acción</label>
+                                    <div class="col-sm-10">
+                                        <asp:TextBox ID="TxPlanAccion" runat="server" class="form-control" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label no-padding-right">Fecha de Resolución</label>
+                                    <div class="col-sm-10">
+                                        <asp:TextBox ID="TxFechaResolucionCierre" runat="server" class="form-control" TextMode="Date"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label no-padding-right">Comentario</label>
+                                    <div class="col-sm-10">
+                                        <asp:TextBox ID="TxComentarioCierre" runat="server" class="form-control" TextMode="MultiLine" Rows="2"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 control-label no-padding-right">Documento</label>
+                                    <div class="col-sm-6">
+                                        <asp:FileUpload ID="FUHallazgos" runat="server" class="form-control" />
+                                    </div>
+                                    <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir archivos relacionados a la finalización del hallazgo">?</span>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-footer">
+                    <asp:UpdatePanel ID="UpdatePanel11" runat="server">
+                        <ContentTemplate>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <asp:Button ID="BtnCerrarHallazgo" runat="server" Text="Finalizar Hallazgo" Style="border-radius: 4px;" class="btn btn-success" OnClick="BtnCerrarHallazgo_Click" />
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:PostBackTrigger ControlID="BtnCerrarHallazgo" />
+                        </Triggers>
                     </asp:UpdatePanel>
                 </div>
             </div>

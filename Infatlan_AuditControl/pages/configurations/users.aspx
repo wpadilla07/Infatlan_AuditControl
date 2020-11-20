@@ -87,7 +87,8 @@
                                                         <asp:ListItem Value="3">Auditor</asp:ListItem>
                                                         <asp:ListItem Value="4">Responsables</asp:ListItem>
                                                         <asp:ListItem Value="5">Consultas</asp:ListItem>
-                                                        <asp:ListItem Value="6">Reporte</asp:ListItem>
+                                                        <asp:ListItem Value="6">Junta Directiva</asp:ListItem>
+                                                        <asp:ListItem Value="7">Reporte</asp:ListItem>
                                                     </asp:DropDownList>
                                                 </div>
                                             </div>

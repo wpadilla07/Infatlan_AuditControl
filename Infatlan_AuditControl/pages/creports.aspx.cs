@@ -79,6 +79,7 @@ namespace Infatlan_AuditControl.pages
                 vDatosFinal.Columns.Add("apellido");
                 vDatosFinal.Columns.Add("correo");
                 vDatosFinal.Columns.Add("empresa");
+                vDatosFinal.Columns.Add("perfil");
 
                 for (int i = 0; i < vDatosDB.Rows.Count; i++){
                     DataTable vDatosAD = vLdap.GetDatosUsuario(ConfigurationManager.AppSettings["ADHOST"], vDatosDB.Rows[i]["idUsuario"].ToString());
@@ -89,11 +90,12 @@ namespace Infatlan_AuditControl.pages
                         vDatosAD.Rows[0]["mail"].ToString());
 
                     vDatosFinal.Rows[i]["empresa"] = vDatosDB.Rows[i]["empresa"].ToString();
+                    vDatosFinal.Rows[i]["perfil"] = vDatosDB.Rows[i]["perfil"].ToString();
                 }
 
                 DDLUserResponsable.Items.Add(new ListItem { Value="0", Text="Seleccione un usuario" });
                 foreach (DataRow item in vDatosFinal.Rows){
-                    DDLUserResponsable.Items.Add(new ListItem { Value = item["usuario"].ToString(), Text = item["nombre"].ToString() + " " + item["apellido"].ToString() +  " - " + item["empresa"].ToString() });
+                    DDLUserResponsable.Items.Add(new ListItem { Value = item["usuario"].ToString(), Text = item["nombre"].ToString() + " " + item["apellido"].ToString() +  " - " + item["empresa"].ToString() + " - " + item["perfil"].ToString() });
                 }
                 DDLUserResponsable.DataBind();
             }
@@ -193,16 +195,26 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 Boolean vFlagInsert = false;
+                String vQuery = "[ACSP_ObtenerUsuarios] 5," + DDLUserResponsable.SelectedValue;
+                DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+
                 for (int i = 0; i < vDatosResponsables.Rows.Count; i++){
+                    //if (vDatos.Rows[0]["tipoUsuario"].ToString() == "5" && DDLTipoResponsable.SelectedValue == "1")
+                    //    throw new Exception("El usuario que desea agregar no puede ser Responsable.");
+
                     if (vDatosResponsables.Rows[i]["usuarioResponsable"].ToString().Equals(DDLUserResponsable.SelectedValue))
                         vFlagInsert = true;
                 }
 
                 if (!vFlagInsert)
                     if (LbIdInforme.Text != "")
-                        vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, "",DDLTipoResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text, DDLUserResponsable.SelectedValue);
-                    else
+                        vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, "", DDLTipoResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text, DDLUserResponsable.SelectedValue);
+                    else {
+                        //if (vDatos.Rows[0]["tipoUsuario"].ToString() == "5" && DDLTipoResponsable.SelectedValue == "1")
+                        //    throw new Exception("El usuario que desea agregar no puede ser Responsable.");
+                        
                         vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
+                    }
                 else
                     throw new Exception("Este usuario ya ha sido agregado");
 
@@ -238,7 +250,7 @@ namespace Infatlan_AuditControl.pages
 
         protected void BtnModificarInforme_Click(object sender, EventArgs e){
             try{
-                if (DDLUserResponsable.SelectedIndex.Equals(0))
+                if (DDLUserResponsable.SelectedIndex.Equals(0) && LbIdInforme.Text == "")
                     throw new Exception("Por favor seleccione un responsable.");
                 if (TxNombreInforme.Text.Equals(""))
                     throw new Exception("Por favor escriba el nombre del informe");

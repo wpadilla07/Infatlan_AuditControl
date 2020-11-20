@@ -45,12 +45,13 @@ namespace Infatlan_AuditControl.pages
             //    }
             //}
 
-                                 
 
 
 
             vIdHallazgo = Request.QueryString["id"];
             vInformeQuery = Request.QueryString["i"];
+            LbInforme.Text = Request.QueryString["i"];
+            LbHallazgo.Text = Request.QueryString["id"];
             if (!Page.IsPostBack){
                 if (vIdHallazgo != null){
                     Session["Hallazgo"] = vIdHallazgo;
@@ -64,46 +65,7 @@ namespace Infatlan_AuditControl.pages
                         BtnDescargarAnexo.CssClass = "btn btn-grey";
                     }
 
-                    switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
-                        case 1:
-                        case 2:
-                            BtnModificarHallazgo.Visible = false;
-                            TxHallazgoFechaResolucion.ReadOnly = true;
-                            TxHallazgoAccion.ReadOnly = true;
-                            break;
-                        case 3:
-                            TxHallazgoFechaResolucion.ReadOnly = true;
-                            BtnModificarHallazgo.Visible = false;
-                            TxHallazgoAccion.ReadOnly = true;
-                            break;
-                        case 5:
-                            BtnModificarHallazgo.Visible = false;
-                            if (!TxHallazgoAccion.Text.Equals("")){
-                                TxHallazgoAccion.ReadOnly = true;
-                                TxHallazgoFechaResolucion.ReadOnly = true;
-                                UpdateForma.Update();
-                            }
-                            break;
-                        case 4:
-                            vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
-                            DataTable vDatos = vConexion.obtenerDataTable(vQuery);
-                            BtnAmpliacion.Visible = vDatos.Rows[0]["usuarioResponsable"].ToString() == Session["USUARIO"].ToString() ? true : false;
-                            
-                            if (!TxHallazgoAccion.Text.Equals("")){
-                                TxHallazgoAccion.ReadOnly = true;
-                                TxHallazgoFechaResolucion.ReadOnly = true;
-                                BtnModificarHallazgo.Visible = false;
-                            }
-
-                            if (vDatos.Rows[0]["asignado"].ToString() != "" && vDatos.Rows[0]["asignado"].ToString() == Session["USUARIO"].ToString()){
-                                TxHallazgoFechaResolucion.ReadOnly = true;
-                                BtnModificarHallazgo.Visible = false;
-                                TxHallazgoAccion.ReadOnly = true;
-                            }
-
-                            TxHallazgoFechaResolucion.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
-                            break;
-                    }
+                    mostrarOcultar();
                 }
             }
         }
@@ -119,6 +81,93 @@ namespace Infatlan_AuditControl.pages
         public void CerrarModal(String vModal)
         {
             ScriptManager.RegisterStartupScript(this.Page, this.Page.GetType(), "Pop", "$('#" + vModal + "').modal('hide');", true);
+        }
+
+        private void mostrarOcultar() { 
+            String vConsulta = "[ACSP_ObtenerUsuariosInforme] 4," + vInformeQuery + ",'" + Session["USUARIO"].ToString() + "'";
+            DataTable vData = vConexion.obtenerDataTable(vConsulta);
+            String vQuery = "[ACSP_ObtenerHallazgos] 1," + vIdHallazgo;
+            DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+
+            switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
+                case 1:
+                case 2:
+                    BtnModificarHallazgo.Visible = false;
+                    TxHallazgoFechaResolucion.ReadOnly = true;
+                    TxHallazgoAccion.ReadOnly = true;
+                    break;
+                case 3:
+                    TxHallazgoFechaResolucion.ReadOnly = true;
+                    BtnModificarHallazgo.Visible = false;
+                    TxHallazgoAccion.ReadOnly = true;
+                    break;
+                case 4:
+                    BtnAmpliacion.Visible = vDatos.Rows[0]["usuarioResponsable"].ToString() == Session["USUARIO"].ToString() ? true : false;
+                    BtnCerrar.Visible = true;
+
+                    if (!TxHallazgoAccion.Text.Equals("")){
+                        TxHallazgoAccion.ReadOnly = true;
+                        TxHallazgoFechaResolucion.ReadOnly = true;
+                        BtnModificarHallazgo.Visible = false;
+                        BtnCerrar.Visible = false;
+                    }
+
+                    if (vDatos.Rows[0]["asignado"].ToString() != "" && vDatos.Rows[0]["asignado"].ToString() == Session["USUARIO"].ToString()){
+                        TxHallazgoFechaResolucion.ReadOnly = true;
+                        BtnModificarHallazgo.Visible = false;
+                        TxHallazgoAccion.ReadOnly = true;
+                    }
+
+                    if (vData.Rows.Count > 0){
+                        if (vData.Rows[0]["tipoEnvio"].ToString() == "2"){
+                            TxHallazgoFechaResolucion.ReadOnly = true;
+                            BtnModificarHallazgo.Visible = false;
+                            TxHallazgoAccion.ReadOnly = true;
+                            BtnCerrar.Visible = false;
+                            BtnAmpliacion.Visible = false;
+                        }
+                    }
+                    TxHallazgoFechaResolucion.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
+                    break;
+                case 5:
+                    BtnModificarHallazgo.Visible = false;
+                    TxHallazgoAccion.ReadOnly = true;
+                    if (!TxHallazgoAccion.Text.Equals("")){
+                        TxHallazgoAccion.ReadOnly = true;
+                        TxHallazgoFechaResolucion.ReadOnly = true;
+                        UpdateForma.Update();
+                    }
+
+                    if (vData.Rows.Count > 0){
+                        if (vData.Rows[0]["tipoEnvio"].ToString() == "1"){
+                            TxHallazgoAccion.ReadOnly = false;
+                            BtnModificarHallazgo.Visible = true;
+                            BtnAmpliacion.Visible = vDatos.Rows[0]["usuarioResponsable"].ToString() == Session["USUARIO"].ToString() ? true : false;
+                            BtnCerrar.Visible = true;
+
+                            if (!TxHallazgoAccion.Text.Equals("")){
+                                TxHallazgoAccion.ReadOnly = true;
+                                TxHallazgoFechaResolucion.ReadOnly = true;
+                                BtnModificarHallazgo.Visible = false;
+                                BtnCerrar.Visible = false;
+                            }
+
+                            if (vDatos.Rows[0]["asignado"].ToString() != "" && vDatos.Rows[0]["asignado"].ToString() == Session["USUARIO"].ToString()){
+                                TxHallazgoFechaResolucion.ReadOnly = true;
+                                BtnModificarHallazgo.Visible = false;
+                                TxHallazgoAccion.ReadOnly = true;
+                            }
+                            TxHallazgoFechaResolucion.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
+                        }
+                    }
+
+                    break;
+                case 6:
+                    BtnModificarHallazgo.Visible = false;
+                    TxHallazgoFechaResolucion.ReadOnly = true;
+                    TxHallazgoAccion.ReadOnly = true;
+                    break;
+            }
         }
         
         void getHallazgo(String vIdHallazgo){
@@ -354,6 +403,103 @@ namespace Infatlan_AuditControl.pages
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModalComments();", true);
             }catch (Exception ex){
                 Mensaje(ex.Message, WarningType.Danger);
+            }
+        }
+
+        protected void BtnCerrar_Click(object sender, EventArgs e){
+            try{
+                TxPlanAccion.Text = string.Empty;
+                TxComentarioCierre.Text = string.Empty;
+                TxFechaResolucionCierre.Text = string.Empty;
+                TxFechaResolucionCierre.Attributes["max"] = DateTime.Now.ToString("yyyy-MM-dd");
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openCerrarHallazgoModal();", true);
+            }catch (Exception ex){
+                Mensaje(ex.Message, WarningType.Danger);
+            }
+        }
+
+        protected void BtnCerrarHallazgo_Click(object sender, EventArgs e){
+            try{
+                if (TxPlanAccion.Text.Equals(""))
+                    throw new Exception("Por favor ingrese el plan de acción.");
+                if (TxFechaResolucionCierre.Text.Equals(""))
+                    throw new Exception("Por favor ingrese la fecha de resolución.");
+                if (TxComentarioCierre.Text.Equals(""))
+                    throw new Exception("Por favor ingrese un comentario.");
+
+                String vQuery = "[ACSP_Logs] 3," + LbInforme.Text + "," + LbHallazgo.Text + ",'comentarios','" + TxComentarioCierre.Text + "','" + Session["USUARIO"].ToString() + "'";
+                vConexion.ejecutarSql(vQuery);
+
+                vQuery = "[ACSP_Hallazgos] 13," + LbHallazgo.Text + 
+                    ",0,'','" + TxComentarioCierre.Text + 
+                    "',0,0,'" + TxPlanAccion.Text + "'" +
+                    "'" + TxFechaResolucionCierre.Text + "'";
+                if (vConexion.ejecutarSql(vQuery).Equals(1)){
+                    String vArchivo = "NULL";
+
+                    if (FUHallazgos.HasFile){
+                        String vNombreDeposito = String.Empty;
+                        HttpPostedFile bufferDeposito1T = FUHallazgos.PostedFile;
+                        byte[] vFileDeposito1 = null;
+                        if (bufferDeposito1T != null){
+                            vNombreDeposito = FUHallazgos.FileName;
+                            Stream vStream = bufferDeposito1T.InputStream;
+                            BinaryReader vReader = new BinaryReader(vStream);
+                            vFileDeposito1 = vReader.ReadBytes((int)vStream.Length);
+                        }
+                        String vDeposito = Convert.ToBase64String(vFileDeposito1);
+
+                        vQuery = "[ACSP_Archivos] 1,'" + vNombreDeposito + "','" + vDeposito + "',1";
+                        int? vInfo = vConexion.ejecutarSQLGetValue(vQuery);
+                        if (vInfo != null){
+                            vArchivo = Convert.ToString(vInfo);
+                            vQuery = "[ACSP_Archivos] 2,'',''," + LbHallazgo.Text + "," + vInfo;
+                            vConexion.ejecutarSql(vQuery);
+                        }
+                    }
+                    //Actualiza idArchivoCierre del hallazgo
+                    vQuery = "[ACSP_Archivos] 3,'',''," + LbHallazgo.Text + "," + vArchivo;
+                    vConexion.ejecutarSql(vQuery);
+
+                    vQuery = "[ACSP_ObtenerHallazgos] 6,'" + LbHallazgo.Text + "'";
+                    DataTable vDatosHallazgo = vConexion.obtenerDataTable(vQuery);
+                    String vUsuarioCreacion = String.Empty;
+                    foreach (DataRow item in vDatosHallazgo.Rows){
+                        vUsuarioCreacion = item["usuarioCreacion"].ToString();
+                    }
+
+                    vQuery = "[ACSP_ObtenerUsuarios] 5," + vUsuarioCreacion;
+                    DataTable vDatosResponsables = vConexion.obtenerDataTable(vQuery);
+
+                    Correo vCorreo = new Correo();
+                    foreach (DataRow item in vDatosResponsables.Rows){
+                        vCorreo.Usuario = vConexion.GetNombreUsuario(item["idUsuario"].ToString());
+                        vCorreo.Para = item["correo"].ToString();
+                        vCorreo.Copia = "";
+                    }
+
+                    SmtpService vSmtpService = new SmtpService();
+                    vSmtpService.EnviarMensaje(
+                        vCorreo.Para,
+                        typeBody.General,
+                        vCorreo.Usuario,
+                        "Se ha actualizado el hallazgo No." + LbHallazgo.Text + @" para cierre, por favor revisar <br \><br \>" +
+                        "Creado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
+                        vCorreo.Copia
+                        );
+
+                    MensajeLoad("Hallazgo actualizado con exito", WarningType.Success);
+                    CerrarModal("CerrarHallazgoModal");
+
+                    TxHallazgoAccion.Text = TxPlanAccion.Text;
+                    TxHallazgoFechaResolucion.Text = Convert.ToDateTime(TxFechaResolucionCierre.Text).ToString("yyyy-MM-dd");
+                    TxPlanAccion.Text = "";
+                    TxComentarioCierre.Text = "";
+                    mostrarOcultar();
+                }
+            }catch (Exception Ex){
+                MensajeLoad(Ex.Message, WarningType.Danger);
             }
         }
     }

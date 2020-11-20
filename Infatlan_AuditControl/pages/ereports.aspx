@@ -111,14 +111,14 @@
                             GridLines="None"
                             PageSize="10" OnPageIndexChanging="GVBusqueda_PageIndexChanging" OnRowCommand="GVBusqueda_RowCommand">
                             <Columns>
-                                <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
+                                <asp:TemplateField HeaderStyle-Width="60px">
                                     <ItemTemplate>
                                         <asp:LinkButton ID="BtnEntrar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-success" CommandArgument='<%# Eval("idInforme") %>' CommandName="EntrarInforme">
                                             <i class="fa fa-search"></i>
                                         </asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
+                                <asp:TemplateField HeaderStyle-Width="60px">
                                     <ItemTemplate>
                                         <asp:UpdatePanel ID="UpdateForma" runat="server">
                                             <ContentTemplate>
@@ -206,96 +206,6 @@
         </div>
     </div>
 
-    <!-- MODAL PARA VER HALLAZGOS -->
-    <div class="modal fade" id="HallazgosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <asp:UpdatePanel ID="UpdateHallazgosLabel" runat="server">
-                        <ContentTemplate>
-                            <h4 class="modal-title" id="ModalLabelUsuario">Hallazgos - Informe No.
-                                    <asp:Label ID="LbNumeroInformeHallazgos" runat="server" Text=""></asp:Label>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </h4>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-                <div class="modal-body">
-                    <asp:UpdatePanel ID="UpdateHallazgosMain" runat="server" UpdateMode="Conditional">
-                        <ContentTemplate>
-                            <div class="page-header">
-                                <h1>Hallazgos creados
-                                    <small>
-                                        <i class="ace-icon fa fa-angle-double-right"></i>
-                                        Presione entrar para ir a cualquier hallazgo
-                                    </small>
-                                    <asp:Button Text="Modificar Informe" Style="border-radius:4px;" CssClass="btn btn-info" runat="server" ID="BtnEntrarInf" OnClick="BtnEntrarInf_Click"/>
-                                </h1>
-                            </div>
-                            <div class="form-group ">
-                                <div class="col-md-12">
-                                    <div class="table-responsive" style="width: 100%">
-                                        <asp:GridView ID="GVHallazgosView" runat="server"
-                                            CssClass="mydatagrid"
-                                            PagerStyle-CssClass="pager"
-                                            HeaderStyle-CssClass="header"
-                                            RowStyle-CssClass="rows"
-                                            GridLines="None"
-                                            AutoGenerateColumns="false" OnRowCommand="GVHallazgosView_RowCommand">
-                                            <Columns>
-                                                <asp:TemplateField>
-                                                    <ItemTemplate>
-                                                        <asp:LinkButton ID="BtnHallazgoEditar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-warning mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EditarHallazgo" >
-                                                            <i class=" fa fa-edit "></i>
-                                                        </asp:LinkButton>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField HeaderText="Select" HeaderStyle-Width="150px">
-                                                    <ItemTemplate>
-                                                        <asp:Button ID="BtnHallazgoEntrar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-success mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EntrarHallazgo" />
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:BoundField DataField="idHallazgo" HeaderText="No.Hallazgo" />
-                                                <asp:BoundField DataField="fechaCreacion" HeaderText="Creación" />
-                                                <asp:BoundField DataField="idArea" HeaderText="Area" />
-                                                <asp:BoundField DataField="tipoRiesgo" HeaderText="Riesgo" />
-                                                <asp:BoundField DataField="detalle" HeaderText="Detalle" />
-                                                <asp:TemplateField >
-                                                    <ItemTemplate>
-                                                        <asp:LinkButton ID="BtnDelete" runat="server" style="border-radius: 4px;" class="btn btn-danger mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="BorrarHallazgo" >
-                                                            <i class=" fa fa-trash "></i>
-                                                        </asp:LinkButton>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                            </Columns>
-                                        </asp:GridView>
-                                    </div>
-                                </div>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-
-                    <asp:UpdatePanel ID="UpdateHallazgosMensaje" runat="server" UpdateMode="Conditional">
-                        <ContentTemplate>
-                            <div class="form-group row">
-                                <asp:Label ID="LbCerrarMensajeHallazgos" runat="server" Text="" Class="col-sm-12" Style="color: indianred; text-align: center;"></asp:Label>
-                            </div>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-                <div class="modal-footer">
-                    <asp:UpdatePanel ID="UpdateHallazgosBotones" runat="server">
-                        <ContentTemplate>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- MODAL CREACIÓN DE HALLAZGOS -->
     <div class="modal fade" id="HallazgosCreacionModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -338,7 +248,7 @@
                             </div>
                         </div>
                     </div>
-                    <asp:UpdatePanel ID="UpdateHallazgosCreacionMain2" runat="server" UpdateMode="Conditional">
+                    <asp:UpdatePanel ID="UpdateHallazgosCreacionMain2" runat="server">
                         <ContentTemplate>
                             <div class="row">
                                 <div class="col-xs-12">
@@ -407,7 +317,6 @@
                             </div>
                         </ContentTemplate>
                     </asp:UpdatePanel>
-
                     <asp:UpdatePanel ID="UpdateHallazgosCreacionMensaje" runat="server">
                         <ContentTemplate>
                             <div class="form-group row">
@@ -425,6 +334,96 @@
                         <Triggers>
                             <asp:PostBackTrigger ControlID="BtnHallazgosCreacionInforme" />
                         </Triggers>
+                    </asp:UpdatePanel>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PARA VER HALLAZGOS -->
+    <div class="modal fade" id="HallazgosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <asp:UpdatePanel ID="UpdateHallazgosLabel" runat="server">
+                        <ContentTemplate>
+                            <h4 class="modal-title" id="ModalLabelUsuario">Hallazgos - Informe No.
+                                    <asp:Label ID="LbNumeroInformeHallazgos" runat="server" Text=""></asp:Label>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </h4>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-body">
+                    <asp:UpdatePanel ID="UpdateHallazgosMain" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <div class="page-header">
+                                <h1>Hallazgos creados
+                                    <small>
+                                        <i class="ace-icon fa fa-angle-double-right"></i>
+                                        Presione entrar para ir a cualquier hallazgo
+                                    </small>
+                                </h1>
+                            </div>
+                            <div class="form-group ">
+                                <div class="col-md-12">
+                                    <div class="table-responsive" style="width: 100%">
+                                        <asp:GridView ID="GVHallazgosView" runat="server"
+                                            CssClass="mydatagrid"
+                                            PagerStyle-CssClass="pager"
+                                            HeaderStyle-CssClass="header"
+                                            RowStyle-CssClass="rows"
+                                            GridLines="None"
+                                            AutoGenerateColumns="false" OnRowCommand="GVHallazgosView_RowCommand">
+                                            <Columns>
+                                                <asp:TemplateField>
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="BtnHallazgoEditar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-warning mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EditarHallazgo" >
+                                                            <i class=" fa fa-edit "></i>
+                                                        </asp:LinkButton>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderStyle-Width="150px">
+                                                    <ItemTemplate>
+                                                        <asp:Button ID="BtnHallazgoEntrar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-success mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EntrarHallazgo" />
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:BoundField DataField="idHallazgo" HeaderText="No.Hallazgo" />
+                                                <asp:BoundField DataField="fechaCreacion" HeaderText="Creación" />
+                                                <asp:BoundField DataField="idArea" HeaderText="Area" />
+                                                <asp:BoundField DataField="tipoRiesgo" HeaderText="Riesgo" />
+                                                <asp:BoundField DataField="detalle" HeaderText="Detalle" />
+                                                <asp:TemplateField >
+                                                    <ItemTemplate>
+                                                        <asp:LinkButton ID="BtnDelete" runat="server" style="border-radius: 4px;" class="btn btn-danger mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="BorrarHallazgo" >
+                                                            <i class=" fa fa-trash "></i>
+                                                        </asp:LinkButton>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                            </Columns>
+                                        </asp:GridView>
+                                    </div>
+                                </div>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+
+                    <asp:UpdatePanel ID="UpdateHallazgosMensaje" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <div class="form-group row">
+                                <asp:Label ID="LbCerrarMensajeHallazgos" runat="server" Text="" Class="col-sm-12" Style="color: indianred; text-align: center;"></asp:Label>
+                            </div>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+                <div class="modal-footer">
+                    <asp:UpdatePanel ID="UpdateHallazgosBotones" runat="server">
+                        <ContentTemplate>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <asp:Button ID="BtnEntrarInf" Text="Modificar Informe" Style="border-radius:4px;" CssClass="btn btn-info" runat="server" OnClick="BtnEntrarInf_Click"/>
+                        </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
             </div>

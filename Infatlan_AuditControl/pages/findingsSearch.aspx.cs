@@ -92,15 +92,21 @@ namespace Infatlan_AuditControl.pages
         public void getInformes(){
             try{
                 DDLBuscarInforme.Items.Clear();
-                String vQuery = "[ACSP_ObtenerInformes] 5,0,'" + Convert.ToString(Session["USUARIO"]) + "'";
-                DataTable vDatosDB = vConexion.obtenerDataTable(vQuery);
+                String vQuery = "";
+                if (Session["TIPOUSUARIO"].ToString() == "6"){
+                    vQuery = "[ACSP_ObtenerInformes] 1";
+                }else 
+                    vQuery = "[ACSP_ObtenerInformes] 5,0,'" + Convert.ToString(Session["USUARIO"]) + "'";
 
+                DataTable vDatosDB = vConexion.obtenerDataTable(vQuery);
                 DDLBuscarInforme.Items.Add(new ListItem { Value = "0", Text = "Seleccione un informe" });
                 foreach (DataRow item in vDatosDB.Rows){
                     DDLBuscarInforme.Items.Add(new ListItem { Value = item["idInforme"].ToString(), Text = item["idInforme"].ToString() + " - " + item["nombre"].ToString() });
                 }
+
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
         protected void GVBusqueda_RowCommand(object sender, GridViewCommandEventArgs e){
@@ -358,14 +364,30 @@ namespace Infatlan_AuditControl.pages
                     GVBusqueda.DataSource = vDatosConvertidos;
                     mostrarOcultar();
                     Session["DATOSHALLAZGOS"] = vDatosConvertidos;
+                }else{
+                    vQuery = "[ACSP_ObtenerInformes] 2," + DDLBuscarInforme.SelectedValue;
+                    vDatos = vConexion.obtenerDataTable(vQuery);
+                    if (vDatos.Rows[0]["tipoEstado"].ToString() == "2")
+                        throw new Exception("El informe ya está resuelto.");
+                    else
+                        throw new Exception("No existen hallazgos asignados");
                 }
+            }catch (Exception Ex) {
+                if (Ex.Message == "El informe ya está resuelto.")
+                    Mensaje(Ex.Message, WarningType.Warning); 
                 else
-                    throw new Exception("No existen hallazgos asignados");
+                    Mensaje(Ex.Message, WarningType.Danger); 
+
+
+                GVBusqueda.DataSource = null; 
+                GVBusqueda.DataBind(); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); GVBusqueda.DataSource = null; GVBusqueda.DataBind(); }
         }
 
-        private void mostrarOcultar(){ 
+        private void mostrarOcultar(){
+            String vConsulta = "[ACSP_ObtenerUsuariosInforme] 4," + DDLBuscarInforme.SelectedValue + ",'" + Session["USUARIO"].ToString() + "'";
+            DataTable vDatos = vConexion.obtenerDataTable(vConsulta);
+
             switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                 case 1:
                 case 2:
@@ -381,14 +403,47 @@ namespace Infatlan_AuditControl.pages
                     GVBusqueda.Columns[0].Visible = false;
                     GVBusqueda.Columns[1].Visible = false;
                     GVBusqueda.Columns[11].Visible = false;
+                    
+                    if (vDatos.Rows.Count > 0){
+                        if (vDatos.Rows[0]["tipoEnvio"].ToString() == "2"){
+                            GVBusqueda.Columns[2].Visible = false;
+                            GVBusqueda.Columns[10].Visible = false;
+                        }else {
+                            GVBusqueda.Columns[2].Visible = true;
+                            GVBusqueda.Columns[10].Visible = true;
+                        }
+                    }else {
+                        GVBusqueda.Columns[2].Visible = true;
+                        GVBusqueda.Columns[10].Visible = true;
+                    }
                     break;
                 case 5:
                     GVBusqueda.Columns[0].Visible = false;
                     GVBusqueda.Columns[1].Visible = false;
+                    GVBusqueda.Columns[11].Visible = false;
+
+                    if (vDatos.Rows.Count > 0){
+                        if (vDatos.Rows[0]["tipoEnvio"].ToString() == "2"){
+                            GVBusqueda.Columns[2].Visible = false;
+                            GVBusqueda.Columns[10].Visible = false;
+                        }else {
+                            GVBusqueda.Columns[2].Visible = true;
+                            GVBusqueda.Columns[10].Visible = true;
+                        }
+                    }else {
+                        GVBusqueda.Columns[2].Visible = true;
+                        GVBusqueda.Columns[10].Visible = true;
+                    }
+                    break;
+                case 6:
+                    GVBusqueda.Columns[0].Visible = false;
+                    GVBusqueda.Columns[1].Visible = false;
                     GVBusqueda.Columns[2].Visible = false;
+                    GVBusqueda.Columns[10].Visible = false;
                     GVBusqueda.Columns[11].Visible = false;
                     break;
             }
+
             GVBusqueda.DataBind();
             foreach (GridViewRow row in GVBusqueda.Rows){
                 String vQuery = "[ACSP_ObtenerHallazgos] 7, " + row.Cells[3].Text;
@@ -554,14 +609,14 @@ namespace Infatlan_AuditControl.pages
                             vCorreo.Para = item["correo"].ToString();
                             vCorreo.Copia = "";
                         }
-                        String vUser = vDatosResponsables.Rows[0]["idUsuario"].ToString();
-                        tokenClass vClassToken = new tokenClass(){
-                            usuario = Convert.ToInt32(vUser)
-                        };
-                        String vTokenString = vToken.Encrypt(JsonConvert.SerializeObject(vClassToken), ConfigurationManager.AppSettings["TOKEN_DOC"].ToString());
-                        //REVISAR CONSULTA
-                        vQuery = "[ACSP_Token] 1,'" + vUser + "','" + vTokenString + "','" + Session["USUARIO"] + "'";
-                        vConexion.ejecutarSql(vQuery);
+                        //String vUser = vDatosResponsables.Rows[0]["idUsuario"].ToString();
+                        //tokenClass vClassToken = new tokenClass(){
+                        //    usuario = Convert.ToInt32(vUser)
+                        //};
+                        //String vTokenString = vToken.Encrypt(JsonConvert.SerializeObject(vClassToken), ConfigurationManager.AppSettings["TOKEN_DOC"].ToString());
+                        ////REVISAR CONSULTA
+                        //vQuery = "[ACSP_Token] 1,'" + vUser + "','" + vTokenString + "','" + Session["USUARIO"] + "'";
+                        //vConexion.ejecutarSql(vQuery);
 
                         SmtpService vSmtpService = new SmtpService();
                         vSmtpService.EnviarMensaje(

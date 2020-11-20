@@ -40,7 +40,10 @@ namespace Infatlan_AuditControl
                         case 5:
                             LbPerfil.Text = "Consultas";
                             LI1.Visible = false;
-                            LIInformes.Visible = false;
+                            LICrearInforme.Visible = false;
+                            break;
+                        case 6:
+                            LbPerfil.Text = "Junta Directiva";
                             break;
                     }
 

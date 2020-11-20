@@ -75,6 +75,11 @@ namespace Infatlan_AuditControl.pages
                     GVBusqueda.Columns[9].Visible = false;
                     GVBusqueda.Columns[10].Visible = false;
                     break;
+                case 6:
+                    GVBusqueda.Columns[8].Visible = false;
+                    GVBusqueda.Columns[9].Visible = false;
+                    GVBusqueda.Columns[10].Visible = false;
+                    break;
             }
             GVBusqueda.DataBind();
 
@@ -152,6 +157,7 @@ namespace Infatlan_AuditControl.pages
                 vBusqueda = vIdInforme;
 
                 DataTable vDatos = (DataTable)Session["BUSQUEDAINFORMES"];
+
                 TxBuscarIdInforme.Text = String.Empty;
                 TxBuscarNombre.Text = String.Empty;
 
@@ -175,6 +181,7 @@ namespace Infatlan_AuditControl.pages
                     vDatosFiltrados.Columns.Add("nombre");
                     vDatosFiltrados.Columns.Add("fechaCreacion");
                     vDatosFiltrados.Columns.Add("fechaRespuesta");
+                    vDatosFiltrados.Columns.Add("fechaRes");
                     vDatosFiltrados.Columns.Add("usuarioCreacion");
                     vDatosFiltrados.Columns.Add("tipoEstado");
                     vDatosFiltrados.Columns.Add("tipoUsuario");
@@ -185,6 +192,7 @@ namespace Infatlan_AuditControl.pages
                             item["nombre"].ToString(),
                             item["fechaCreacion"].ToString(),
                             item["fechaRespuesta"].ToString(),
+                            item["fechaRes"].ToString(),
                             item["usuarioCreacion"].ToString(),
                             item["tipoEstado"].ToString(),
                             Convert.ToInt32(Session["TIPOUSUARIO"])
@@ -356,7 +364,7 @@ namespace Infatlan_AuditControl.pages
                     TxFechaCumplimiento.Text = DateTime.Parse(vFecha).ToString("yyyy-MM-dd");
                     TxFechaCumplimiento.ReadOnly = true;
                     UpdateHallazgosCreacionMain.Update();
-                    UpdateHallazgosCreacionMain2.Update();
+                    //UpdateHallazgosCreacionMain2.Update();
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModalHallazgosCreacion();", true);
                 }
                 
@@ -520,25 +528,6 @@ namespace Infatlan_AuditControl.pages
                             }
                         }
                     } 
-                    //vQuery = "[ACSP_ObtenerUsuarios] 5," + DDLHallazgoResponsable.SelectedValue;
-                    //DataTable vDatosResponsables = vConexion.obtenerDataTable(vQuery);
-
-                    //Correo vCorreo = new Correo();
-                    //foreach (DataRow item in vDatosResponsables.Rows){
-                    //    vCorreo.Usuario = vConexion.GetNombreUsuario(item["idUsuario"].ToString());
-                    //    vCorreo.Para = item["correo"].ToString();
-                    //    vCorreo.Copia = "";
-                    //}
-
-                    //SmtpService vSmtpService = new SmtpService();
-                    //vSmtpService.EnviarMensaje(
-                    //    vCorreo.Para,
-                    //    typeBody.General,
-                    //    vCorreo.Usuario,
-                    //    "Se ha creado el hallazgo No." + vIdHallazgo + @", por favor revisar <br \><br \>" +
-                    //    "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
-                    //    vCorreo.Copia
-                    //    );
 
                     Response.Redirect("/pages/ereports.aspx?ex=1&id=" + LbNumeroInformeHallazgosCreacion.Text);
                 }else
@@ -661,53 +650,55 @@ namespace Infatlan_AuditControl.pages
 
         protected void BtnEnviarResponsables_Click(object sender, EventArgs e){
             try{
-                String vQuery = "[ACSP_ObtenerUsuariosInforme] 1," + LbResponsablesInforme.Text;
-                DataTable vDatosResponsables = vConexion.obtenerDataTable(vQuery);
-
-                int vContador = 0;
-                foreach (DataRow item in vDatosResponsables.Rows){
-                    if (item["tipoEnvio"].ToString().Equals("1"))
-                        vContador++;
+                String vQuery = "[ACSP_ObtenerUsuariosInforme] 3," + LbResponsablesInforme.Text;
+                DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                vDatos.Columns.Add("nombre");
+                for (int i = 0; i < vDatos.Rows.Count; i++){
+                    vDatos.Rows[i]["nombre"] = vConexion.GetNombreUsuario(vDatos.Rows[i]["idUsuario"].ToString());
                 }
 
-                Correo[] vCorreo = new Correo[vContador];
-                vContador = 0;
-                foreach (DataRow item in vDatosResponsables.Rows){
-                    if (item["tipoEnvio"].ToString().Equals("1")){
-                        vCorreo[vContador] = new Correo();
-                        vCorreo[vContador].Usuario = vConexion.GetNombreUsuario(item["idUsuario"].ToString());
-                        vCorreo[vContador].Para = item["correo"].ToString();
-                        vCorreo[vContador].Copia = "";
-                        vContador++;
-                    }
-                }
+                for (int i = 0; i < vDatos.Rows.Count; i++){
+                    String vMensaje = "";
+                    if (vDatos.Rows[i]["tipoEnvio"].ToString() == "1")
+                        vMensaje = "Se ha creado el informe (No." + LbResponsablesInforme.Text + ") " + vConexion.GetNombreInforme(LbResponsablesInforme.Text).ToUpper() + @" y ha sido asignado a ti<br \><br \>" + "Enviado por: " + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"]));
+                    else if (vDatos.Rows[i]["tipoEnvio"].ToString() == "2")
+                        vMensaje = "Se ha creado el informe (No." + LbResponsablesInforme.Text + ") " + vConexion.GetNombreInforme(LbResponsablesInforme.Text).ToUpper() + @"<br \><br \>" + "Enviado por: " + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"]));
 
-                foreach (Correo item in vCorreo){
-                    SmtpService vSmtpService = new SmtpService();
-                    if (vSmtpService.EnviarMensaje(
-                        item.Para,
-                        typeBody.General,
-                        item.Usuario,
-                        "Se ha creado el informe (No." + LbResponsablesInforme.Text + ") " + vConexion.GetNombreInforme(LbResponsablesInforme.Text).ToUpper() + @" y ha sido asigando a ti<br \><br \>" +
-                        "Enviado por: " + vConexion.GetNombreUsuario( Convert.ToString(Session["USUARIO"])),
-                        item.Copia
-                        ))
-                    {
+                    if (EnviarCorreo(i, vMensaje, vDatos)){
                         vQuery = "[ACSP_Informes] 6," + LbResponsablesInforme.Text + ",1";
                         vConexion.ejecutarSql(vQuery);
                     }
-
-                    if (vIdInforme != null)
-                        buscarInforme(vIdInforme);
-                    else
-                        getInformes();
                 }
+                if (vIdInforme != null)
+                    buscarInforme(vIdInforme);
+                else
+                    getInformes();
 
                 CerrarModal("ResponsablesModal");
                 getInformes();
                 Mensaje("Mensaje enviado con exito", WarningType.Success);
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
+                CerrarModal("ResponsablesModal"); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); CerrarModal("ResponsablesModal"); }
+        }
+
+        private Boolean EnviarCorreo(int i, String vMensaje, DataTable vDatos) {
+            Boolean vResult = false;
+            try{
+                SmtpService vSmtpService = new SmtpService();
+                vSmtpService.EnviarMensaje(
+                        vDatos.Rows[i]["correo"].ToString(),
+                        typeBody.General,
+                        vDatos.Rows[i]["nombre"].ToString(),
+                        vMensaje,
+                        ""
+                        );
+                vResult = true;
+            }catch (Exception ex){
+                Mensaje(ex.Message, WarningType.Danger);
+            }
+            return vResult;
         }
 
         protected void BtnModificarHallazgos_Click(object sender, EventArgs e){
@@ -763,7 +754,10 @@ namespace Infatlan_AuditControl.pages
 
         protected void BtnEntrarInf_Click(object sender, EventArgs e){
             try{
-                Response.Redirect("creports.aspx?i=" + LbNumeroInformeHallazgos.Text);
+                if (LbNumeroInformeHallazgos.Text == "")
+                    BtnHallazgosCreacionInforme_Click(sender, e);
+                else
+                    Response.Redirect("creports.aspx?i=" + LbNumeroInformeHallazgos.Text);
             }catch (Exception ex){
                 Mensaje(ex.Message, WarningType.Danger);
             }

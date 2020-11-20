@@ -86,7 +86,7 @@ namespace Infatlan_AuditControl.classes
                 mail.IsBodyHtml = true;
                 mail.Body = Body;
 
-                client.Send(mail);
+                //client.Send(mail);
             }catch (System.Net.Mail.SmtpException Ex){
                 String vError = Ex.Message;
                 throw;
