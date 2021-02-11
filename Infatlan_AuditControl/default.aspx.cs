@@ -16,30 +16,37 @@ namespace Infatlan_AuditControl
         {
             if (!Page.IsPostBack)
             {
+
+                if (Convert.ToBoolean(Session["AUTH"])){
+                    ObtenerDashboard();
+                }else {
+                    Response.Redirect("/login.aspx");
+                }
                 //classes.SmtpService vSmtp = new SmtpService();
                 //vSmtp.EnviarMensaje("dehenriquez@bancatlan.hn", "Hola esto es una prueba", "test");
-                ObtenerDashboard();
             }
         }
 
-        void ObtenerDashboard()
-        {
-            try
-            {
-                String vQuery = "[ACSP_Dashboard] 1";
+        void ObtenerDashboard(){
+            try{
+                String vQuery = "[ACSP_Dashboard] 1,'" + Session["USUARIO"].ToString() + "'";
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
-                foreach (DataRow item in vDatos.Rows)
-                {
+                foreach (DataRow item in vDatos.Rows){
                     LitTotalInformes.Text = item["TotalInformes"].ToString();
                     LitTotalHallazgos.Text = item["TotalHallazgos"].ToString();
-                    LitTotalUsuarios.Text = item["TotalUsuarios"].ToString();
-                    LitTotalComentarios.Text = item["TotalComentarios"].ToString();
                     LitTotalInformesFinalizados.Text = item["TotalInformesFinalizados"].ToString();
                     LitTotalHallazgosFinalizados.Text = item["TotalHallazgosFinalizados"].ToString();
+                    LitTotalInformesPendientes.Text = item["TotalInformesPendientes"].ToString();
+
+                    LitIngresados.Text = item["TotalIngresados"].ToString();
+                    LitValidacion.Text = item["TotalValidacion"].ToString();
+                    LitEnProceso.Text = item["TotalEnProceso"].ToString();
                 }
+
+            }catch (Exception ex){
+                throw new Exception(ex.Message);
             }
-            catch { }
         }
     }
 }

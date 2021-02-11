@@ -37,7 +37,7 @@
             </h1>
         </div>
 
-        <div class="alert alert-block alert-success">
+        <%--<div class="alert alert-block alert-success">
             <button type="button" class="close" data-dismiss="alert">
                 <i class="ace-icon fa fa-times"></i>
             </button>
@@ -48,10 +48,10 @@
             <strong class="green">AuditControl
                 <small>(v1.0)</small>
             </strong>de Auditoria Interna - versión Beta - En desarrollo 
-        </div>
+        </div>--%>
 
         <div class="col-sm-12 infobox-container">
-            <div class="infobox infobox-green">
+            <div class="infobox infobox-blue">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-tasks"></i>
                 </div>
@@ -59,11 +59,39 @@
                 <div class="infobox-data">
                     <span class="infobox-data-number">
                         <asp:Literal ID="LitTotalInformes" runat="server"></asp:Literal></span>
-                    <div class="infobox-content">Informes</div>
+                    <div class="infobox-content">Total Informes</div>
+                </div>
+            </div>
+
+            <div class="infobox infobox-orange">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-tasks"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">
+                        <asp:Literal ID="LitTotalInformesPendientes" runat="server"></asp:Literal></span>
+                    <div class="infobox-content">En Proceso</div>
                 </div>
 
             </div>
 
+            <div class="infobox infobox-green">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-tasks"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">
+                        <asp:Literal ID="LitTotalInformesFinalizados" runat="server"></asp:Literal>
+                    </span>
+                    <div class="infobox-content">Resuelto</div>
+                </div>
+            </div>
+            <div class="space-6"></div>
+        </div>
+        
+        <div class="col-sm-12 infobox-container">
             <div class="infobox infobox-blue">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-tags"></i>
@@ -71,53 +99,13 @@
 
                 <div class="infobox-data">
                     <span class="infobox-data-number"><asp:Literal ID="LitTotalHallazgos" runat="server"></asp:Literal></span>
-                    <div class="infobox-content">Hallazgos</div>
+                    <div class="infobox-content">Total Hallazgos</div>
                 </div>
-
-
             </div>
 
-            <div class="infobox infobox-pink">
+            <div class="infobox infobox-green">
                 <div class="infobox-icon">
-                    <i class="ace-icon fa fa-users"></i>
-                </div>
-
-                <div class="infobox-data">
-                    <span class="infobox-data-number"><asp:Literal ID="LitTotalUsuarios" runat="server"></asp:Literal></span>
-                    <div class="infobox-content">Usuarios</div>
-                </div>
-               
-            </div>
-
-            <div class="infobox infobox-red" id="DivComentarios" runat="server" visible="false">
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-comments"></i>
-                </div>
-
-                <div class="infobox-data">
-                    <span class="infobox-data-number"><asp:Literal ID="LitTotalComentarios" runat="server"></asp:Literal></span>
-                    <div class="infobox-content">Comentarios</div>
-                </div>
-            </div>
-
-            <div class="infobox infobox-orange2">
-                <div class="infobox-chart">
-                    <span class="sparkline" data-values="196,128,202,177,154,94,100,170,224"></span>
-                </div>
-
-                <div class="infobox-data">
-                    <span class="infobox-data-number"><asp:Literal ID="LitTotalInformesFinalizados" runat="server"></asp:Literal></span>
-                    <div class="infobox-content">Informes Finalizados</div>
-                </div>
-
-
-            </div>
-
-            <div class="infobox infobox-blue2">
-                <div class="infobox-progress">
-                    <div class="easy-pie-chart percentage" data-percent="10" data-size="46">
-                        <span class="percent">0</span>
-                    </div>
+                    <i class="ace-icon fa fa-tags"></i>
                 </div>
 
                 <div class="infobox-data">
@@ -128,10 +116,54 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="infobox infobox-red">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-tags"></i>
+                </div>
 
+                <div class="infobox-data">
+                    <span class="infobox-data-number"><asp:Literal ID="Literal5" runat="server"></asp:Literal></span>
+                    <div class="infobox-content">Vencidos</div>
+                </div>
+            </div>
+            
             <div class="space-6"></div>
+        </div>
 
+        <div class="col-sm-12 infobox-container">
+            <div class="infobox infobox-orange">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-tags"></i>
+                </div>
 
+                <div class="infobox-data">
+                    <span class="infobox-data-number"><asp:Literal ID="LitIngresados" runat="server"></asp:Literal></span>
+                    <div class="infobox-content">Ingresados</div>
+                </div>
+            </div>
+
+            <div class="infobox infobox-orange">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-tags"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number"><asp:Literal ID="LitValidacion" runat="server"></asp:Literal></span>
+                    <div class="infobox-content">Validación</div>
+                </div>
+            </div>
+
+            <div class="infobox infobox-orange">
+                <div class="infobox-icon">
+                    <i class="ace-icon fa fa-tags"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number"><asp:Literal ID="LitEnProceso" runat="server"></asp:Literal></span>
+                    <div class="infobox-content">En Proceso</div>
+                </div>
+            </div>
         </div>
     </div>
 

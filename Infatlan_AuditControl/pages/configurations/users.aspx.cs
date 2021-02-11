@@ -46,6 +46,15 @@ namespace Infatlan_AuditControl.pages.configurations
                 GVBusqueda.DataSource = vDatosUsuarios;
                 GVBusqueda.DataBind();
                 Session["DATOSUSUARIOS"] = vDatosUsuarios;
+
+                vQuery = "[ACSP_Usuarios] 3,0";
+                vDatosUsuarios = vConexion.obtenerDataTable(vQuery);
+
+                DDLCargoModificar.Items.Add(new ListItem { Value = "0", Text = "Seleccione un cargo" });
+                foreach (DataRow item in vDatosUsuarios.Rows){
+                    DDLCargoModificar.Items.Add(new ListItem { Value = item["tipoUsuario"].ToString(), Text = item["descripcion"].ToString() });
+                }
+                DDLCargoModificar.DataBind();
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
@@ -56,10 +65,13 @@ namespace Infatlan_AuditControl.pages.configurations
                 DataTable vDatosDB = vConexion.obtenerDataTable(vQuery);
 
                 DDLUsuarioJefatura.Items.Add(new ListItem { Value = "0", Text = "Seleccione un usuario" });
+                DDLJefes.Items.Add(new ListItem { Value = "0", Text = "Seleccione un usuario" });
                 foreach (DataRow item in vDatosDB.Rows){
                     DDLUsuarioJefatura.Items.Add(new ListItem { Value = item["idUsuario"].ToString(), Text = vConexion.GetNombreUsuario(item["idUsuario"].ToString()) });
+                    DDLJefes.Items.Add(new ListItem { Value = item["idUsuario"].ToString(), Text = vConexion.GetNombreUsuario(item["idUsuario"].ToString()) });
                 }
                 DDLUsuarioJefatura.DataBind();
+                DDLJefes.DataBind();
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
@@ -118,6 +130,9 @@ namespace Infatlan_AuditControl.pages.configurations
                 }
                 if (TxUsuario.Text.Equals(""))
                     throw new Exception("Por favor escriba un usuario y presione el boton buscar");
+                if (TxPuesto.Text.Equals(""))
+                    throw new Exception("Por favor ingrese el puesto del usuario.");
+
 
                 String vJefeAuditoria = String.Empty;
                 if (!DDLUsuarioJefatura.SelectedValue.Equals("0"))
@@ -129,7 +144,8 @@ namespace Infatlan_AuditControl.pages.configurations
                     "," + DDLCargo.SelectedValue + 
                     ",'" + TxCorreo.Text + "'" + 
                     ",0,'" + vJefeAuditoria + "'" + 
-                    "," + vEmpresa;
+                    "," + vEmpresa + ",'" + TxPuesto.Text + "'" +
+                    ",'" + TxNombres.Text + "','" + TxApellidos.Text + "'";
 
                 try{
                     if (vConexion.ejecutarSql(vQuery).Equals(1)){
@@ -151,7 +167,18 @@ namespace Infatlan_AuditControl.pages.configurations
             TxNombres.Text = String.Empty;
             TxUsuario.Text = String.Empty;
             DDLCargo.SelectedIndex = -1;
+            TxPuesto.Text = String.Empty;
 
+        }
+
+        void LimpiarModal() {
+            LbErrorUsuario.Text = string.Empty;
+            TxModPuesto.Text = string.Empty;
+            DivJefe.Visible = false;
+            DDLEstado.SelectedIndex = -1;
+            DDLCargoModificar.SelectedIndex = -1;
+            DDLJefes.SelectedIndex = -1;
+            UpdateUsuarioMensaje.Update();
         }
 
         protected void GVBusqueda_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -165,35 +192,55 @@ namespace Infatlan_AuditControl.pages.configurations
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
-        protected void GVBusqueda_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            try
-            {
+        protected void GVBusqueda_RowCommand(object sender, GridViewCommandEventArgs e){
+            try{
+                LimpiarModal();
                 string vIdUsuario = e.CommandArgument.ToString();
-                if (e.CommandName == "ModificarUsuario")
-                {
+                if (e.CommandName == "ModificarUsuario"){
+                    String vQuery = "[ACSP_ObtenerUsuarios] 5,'" + vIdUsuario + "'";
+                    DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+
                     LbUsuarioModificar.Text = vIdUsuario;
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "UsuariosModal();", true);
+
+                    DDLCargoModificar.SelectedValue = vDatos.Rows[0]["tipoUsuario"].ToString();
+                    DDLEstado.SelectedValue = Convert.ToBoolean(vDatos.Rows[0]["Estado"]).ToString();
+                    TxModPuesto.Text = vDatos.Rows[0]["puesto"].ToString();
+
+                    if (vDatos.Rows[0]["tipoUsuario"].ToString() == "3") {
+                        DivJefe.Visible =  true;
+                        DDLJefes.SelectedValue = vDatos.Rows[0]["jefeAuditoria"].ToString() != "" ? vDatos.Rows[0]["jefeAuditoria"].ToString() : "0";
+                    }else { 
+                        DivJefe.Visible = false;
+                        DDLJefes.SelectedValue = "0";
+                    }
+                    UpdateUsuariosMain.Update();
                 }
                 
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
-        protected void BtnModificarUsuario_Click(object sender, EventArgs e)
-        {
-            try
-            {
+        protected void BtnModificarUsuario_Click(object sender, EventArgs e){
+            try{
                 if (DDLCargoModificar.SelectedIndex.Equals(0))
                     throw new Exception("Selecciona un cargo para modificar");
 
                 if (DDLEstado.SelectedIndex.Equals(0))
                     throw new Exception("Selecciona un estado para modificar");
 
-                String vQuery = "[ACSP_Usuarios] 2, '" + LbUsuarioModificar.Text + "'," + DDLCargoModificar.SelectedValue + ",''," + DDLEstado.SelectedValue;
-                if (vConexion.ejecutarSql(vQuery).Equals(1))
-                {
+                String vJefe = DDLCargoModificar.SelectedValue == "3" ? DDLJefes.SelectedValue : "";
+                String vQuery = "[ACSP_Usuarios] 2" +
+                    ",'" + LbUsuarioModificar.Text + "'" +
+                    "," + DDLCargoModificar.SelectedValue + "" +
+                    ",''" +
+                    "," + DDLEstado.SelectedValue + "" +
+                    ",'" + vJefe + "'" +
+                    ",0" +
+                    ",'" + TxModPuesto.Text + "'";
 
+                if (vConexion.ejecutarSql(vQuery).Equals(1)){
                     DDLCargoModificar.SelectedIndex = -1;
                     DDLEstado.SelectedIndex = -1;
                     UpdateUsuariosMain.Update();
@@ -202,8 +249,10 @@ namespace Infatlan_AuditControl.pages.configurations
                     CerrarModal("UsuariosModal");
                     Mensaje("Usuario modificado con Exito!", WarningType.Success);
                 }
+            }catch (Exception Ex) { 
+                LbErrorUsuario.Text = Ex.Message; 
+                UpdateUsuarioMensaje.Update(); 
             }
-            catch (Exception Ex) { LbErrorUsuario.Text = Ex.Message; UpdateUsuarioMensaje.Update(); }
         }
 
         protected void DDLCargo_SelectedIndexChanged(object sender, EventArgs e){
@@ -216,6 +265,14 @@ namespace Infatlan_AuditControl.pages.configurations
                     DIVUsuarioJefatura.Visible = false;
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
+        }
+
+        protected void DDLCargoModificar_SelectedIndexChanged(object sender, EventArgs e){
+            try{
+                DivJefe.Visible = DDLCargoModificar.SelectedValue == "3" ? true : false;
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
+            }
         }
     }
 }

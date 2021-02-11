@@ -131,7 +131,7 @@
                                 <asp:BoundField DataField="fechaCreacion" HeaderText="Fecha" />
                                 <asp:BoundField DataField="idArea" HeaderText="Area" />
                                 <asp:BoundField DataField="tipoRiesgo" HeaderText="Riesgo" />
-                                <asp:BoundField DataField="detalle" HeaderText="Detalle" />
+                                <asp:BoundField DataField="detalle" HeaderText="Detalle" Visible="false" />
                                 <asp:BoundField DataField="tipoEstadoHallazgo" HeaderText="Estado" />
                                 <asp:TemplateField HeaderStyle-Width="60px">
                                     <ItemTemplate>
@@ -196,9 +196,7 @@
                         <ContentTemplate>
                             <div class="page-header">
                                 <h1>Modificar Hallazgo
-                            <small>
-                                <i class="ace-icon fa fa-angle-double-right"></i>
-                                Asignacion de Usuario a Hallazgo</small>
+                                    <small><i class="ace-icon fa fa-angle-double-right"></i>Asignacion de Usuario a Hallazgo</small>
                                 </h1>
                             </div>
                         </ContentTemplate>

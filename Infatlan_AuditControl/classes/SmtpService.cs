@@ -51,7 +51,7 @@ namespace Infatlan_AuditControl.classes
                             UsuarioPara,
                             NombreAccion,
                             ConfigurationManager.AppSettings["Host"] + "/pages/findingsSearch.aspx",
-                            "Cualquier consultar o comentario ponte en contacto con auditoria o por favor entrar al portal."
+                            "Cualquier consulta o comentario ponte en contacto con el personal de auditoria interna o por favor entrar al portal."
                             ), Server.MapPath("/assets/images/logored.png")));
                         break;
                     case typeBody.General:
@@ -59,11 +59,11 @@ namespace Infatlan_AuditControl.classes
                             UsuarioPara,
                             NombreAccion,
                             ConfigurationManager.AppSettings["Host"] + "/pages/findingsSearch.aspx",
-                            "Cualquier consultar o comentario ponte en contacto con auditoria o por favor entrar al portal."
+                            "Cualquier consulta o comentario ponte en contacto con el personal de auditoria interna o por favor entrar al portal."
                             ), Server.MapPath("/assets/images/logored.png")));
                         break;
                 }
-                //client.Send(mail);
+                client.Send(mail);
                 vRespuesta = true;
             }catch (System.Net.Mail.SmtpException Ex){
                 String vError = Ex.Message;
@@ -86,7 +86,7 @@ namespace Infatlan_AuditControl.classes
                 mail.IsBodyHtml = true;
                 mail.Body = Body;
 
-                //client.Send(mail);
+                client.Send(mail);
             }catch (System.Net.Mail.SmtpException Ex){
                 String vError = Ex.Message;
                 throw;

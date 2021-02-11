@@ -29,14 +29,16 @@ namespace Infatlan_AuditControl.pages
                     if (vEx.Equals("2"))
                         ScriptManager.RegisterClientScriptBlock(this.Page, this.Page.GetType(), "Pop", "window.alert('" + "Hallazgo modificado con exito!" + "')", true);
                 }
-                //if (vIdInforme != null)
-                //    buscarInforme(vIdInforme);
             }
         }
 
         public void Mensaje(string vMensaje, WarningType type)
         {
             ScriptManager.RegisterStartupScript(this.Page, typeof(Page), "text", "infatlan.showNotification('top','center','" + vMensaje + "','" + type.ToString().ToLower() + "')", true);
+        }
+
+        public void MensajeLoad(string vMensaje, WarningType type){
+            ScriptManager.RegisterStartupScript(this.Page, typeof(Page), "text", " document.addEventListener(\"DOMContentLoaded\", function (event) { infatlan.showNotification('top','center','" + vMensaje + "','" + type.ToString().ToLower() + "'); });", true);
         }
 
         public void CerrarModal(String vModal)
@@ -63,22 +65,22 @@ namespace Infatlan_AuditControl.pages
         private void mostrarOcultar() {
             switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                 case 2:
-                    GVBusqueda.Columns[9].Visible = false;
+                    GVBusqueda.Columns[11].Visible = false;
                     break;
                 case 3:
-                    GVBusqueda.Columns[10].Visible = false;
+                    GVBusqueda.Columns[12].Visible = false;
                     break;
                 case 1:
                 case 4:
                 case 5:
-                    GVBusqueda.Columns[8].Visible = false;
-                    GVBusqueda.Columns[9].Visible = false;
                     GVBusqueda.Columns[10].Visible = false;
+                    GVBusqueda.Columns[11].Visible = false;
+                    GVBusqueda.Columns[12].Visible = false;
                     break;
                 case 6:
-                    GVBusqueda.Columns[8].Visible = false;
-                    GVBusqueda.Columns[9].Visible = false;
                     GVBusqueda.Columns[10].Visible = false;
+                    GVBusqueda.Columns[11].Visible = false;
+                    GVBusqueda.Columns[12].Visible = false;
                     break;
             }
             GVBusqueda.DataBind();
@@ -89,46 +91,46 @@ namespace Infatlan_AuditControl.pages
 
                 foreach (DataRow item in vDatosEnvio.Rows){
                     if (!row.Cells[6].Text.Equals(Convert.ToString(Session["USUARIO"]))){
-                        LinkButton vBtnJefatura = row.Cells[9].FindControl("BtnEnviarRevision") as LinkButton;
+                        LinkButton vBtnJefatura = row.Cells[11].FindControl("BtnEnviarRevision") as LinkButton;
                         vBtnJefatura.Enabled = false;
                         vBtnJefatura.CssClass = "btn btn-grey";
                     }
 
-                    DataTable vDatosJefatura = vConexion.obtenerDataTable("ACSP_Login '" + row.Cells[6].Text + "'");
+                    DataTable vDatosJefatura = vConexion.obtenerDataTable("ACSP_Login '" + row.Cells[8].Text + "'");
                     if (!vDatosJefatura.Rows[0]["jefeAuditoria"].Equals(Convert.ToString(Session["USUARIO"]))){
-                        LinkButton vBtnResponsables = row.Cells[10].FindControl("BtnEnviarResponsable") as LinkButton;
+                        LinkButton vBtnResponsables = row.Cells[12].FindControl("BtnEnviarResponsable") as LinkButton;
                         vBtnResponsables.Enabled = false;
                         vBtnResponsables.CssClass = "btn btn-grey";
                     }
 
                     if (Convert.ToBoolean(item["envioJefatura"].ToString())){
-                        LinkButton vBtnJefatura = row.Cells[9].FindControl("BtnEnviarRevision") as LinkButton;
+                        LinkButton vBtnJefatura = row.Cells[11].FindControl("BtnEnviarRevision") as LinkButton;
                         vBtnJefatura.Enabled = false;
                         vBtnJefatura.CssClass = "btn btn-grey";
                     }
 
                     if (Convert.ToBoolean(item["envioResponsables"].ToString())){
-                        LinkButton vBtnResponsables = row.Cells[10].FindControl("BtnEnviarResponsable") as LinkButton;
+                        LinkButton vBtnResponsables = row.Cells[12].FindControl("BtnEnviarResponsable") as LinkButton;
                         vBtnResponsables.Enabled = false;
                         vBtnResponsables.CssClass = "btn btn-grey";
 
-                        LinkButton vBtnRevision = row.Cells[10].FindControl("BtnEnviarRevision") as LinkButton;
+                        LinkButton vBtnRevision = row.Cells[12].FindControl("BtnEnviarRevision") as LinkButton;
                         vBtnRevision.Enabled = false;
                         vBtnRevision.CssClass = "btn btn-grey";
 
-                        LinkButton vBtnAgregar = row.Cells[10].FindControl("BtnAsignar") as LinkButton;
+                        LinkButton vBtnAgregar = row.Cells[12].FindControl("BtnAsignar") as LinkButton;
                         vBtnAgregar.Enabled = false;
                         vBtnAgregar.CssClass = "btn btn-grey";
                     }
                     // nueva validacion
                     if (row.Cells[7].Text.Equals("Resuelto")){
-                        LinkButton vBtnAsignar = row.Cells[9].FindControl("BtnAsignar") as LinkButton;
+                        LinkButton vBtnAsignar = row.Cells[11].FindControl("BtnAsignar") as LinkButton;
                         vBtnAsignar.Enabled = false;
                         vBtnAsignar.CssClass = "btn btn-grey";
                     }
 
-                    if (!Convert.ToBoolean(item["envioJefatura"].ToString()) && row.Cells[6].Text == Convert.ToString(Session["USUARIO"]) && !Convert.ToBoolean(item["envioResponsables"].ToString())){
-                        LinkButton vBtnJefatura = row.Cells[9].FindControl("BtnEnviarResponsable") as LinkButton;
+                    if (!Convert.ToBoolean(item["envioJefatura"].ToString()) && row.Cells[8].Text == Convert.ToString(Session["USUARIO"]) && !Convert.ToBoolean(item["envioResponsables"].ToString())){
+                        LinkButton vBtnJefatura = row.Cells[11].FindControl("BtnEnviarResponsable") as LinkButton;
                         vBtnJefatura.Enabled = true;
                         vBtnJefatura.CssClass = "btn btn-info";
                     }
@@ -151,61 +153,19 @@ namespace Infatlan_AuditControl.pages
             }
         }
 
-        void buscarInforme(String vIdInforme){
+        void buscarInforme(String vIdInforme, Boolean vRevision){
             try{
-                String vBusqueda = String.Empty;
-                vBusqueda = vIdInforme;
-
                 DataTable vDatos = (DataTable)Session["BUSQUEDAINFORMES"];
-
                 TxBuscarIdInforme.Text = String.Empty;
                 TxBuscarNombre.Text = String.Empty;
 
-                if (vBusqueda.Equals("")){
+                if (vRevision){
                     GVBusqueda.DataSource = vDatos;
-                    GVBusqueda.DataBind();
-                }else{
-                    EnumerableRowCollection<DataRow> filtered = vDatos.AsEnumerable()
-                        .Where(r => r.Field<String>("nombre").ToUpper().Contains(vBusqueda.ToUpper()));
-
-                    Boolean isNumeric = int.TryParse(vBusqueda, out int n);
-                    if (isNumeric){
-                        if (filtered.Count() == 0){
-                            filtered = vDatos.AsEnumerable().Where(r =>
-                                Convert.ToInt32(r["idInforme"]) == Convert.ToInt32(vBusqueda));
-                        }
-                    }
-
-                    DataTable vDatosFiltrados = new DataTable();
-                    vDatosFiltrados.Columns.Add("idInforme");
-                    vDatosFiltrados.Columns.Add("nombre");
-                    vDatosFiltrados.Columns.Add("fechaCreacion");
-                    vDatosFiltrados.Columns.Add("fechaRespuesta");
-                    vDatosFiltrados.Columns.Add("fechaRes");
-                    vDatosFiltrados.Columns.Add("usuarioCreacion");
-                    vDatosFiltrados.Columns.Add("tipoEstado");
-                    vDatosFiltrados.Columns.Add("tipoUsuario");
-
-                    foreach (DataRow item in filtered){
-                        vDatosFiltrados.Rows.Add(
-                            item["idInforme"].ToString(),
-                            item["nombre"].ToString(),
-                            item["fechaCreacion"].ToString(),
-                            item["fechaRespuesta"].ToString(),
-                            item["fechaRes"].ToString(),
-                            item["usuarioCreacion"].ToString(),
-                            item["tipoEstado"].ToString(),
-                            Convert.ToInt32(Session["TIPOUSUARIO"])
-                            );
-                    }
-                    
-                    GVBusqueda.DataSource = vDatosFiltrados;
                     mostrarOcultar();
-                    Session["DATAEMPLEADOS"] = vDatosFiltrados;
-                    UpdateForma.Update();
                 }
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
         void getArea(){
@@ -287,6 +247,7 @@ namespace Infatlan_AuditControl.pages
                     vDatosConvertidos.Columns.Add("idArea");
                     vDatosConvertidos.Columns.Add("tipoRiesgo");
                     vDatosConvertidos.Columns.Add("detalle");
+                    vDatosConvertidos.Columns.Add("usuarioResponsable");
 
                     foreach (DataRow item in vDatos.Rows){
                         String vArea = String.Empty;
@@ -312,8 +273,9 @@ namespace Infatlan_AuditControl.pages
                             item["fechaCreacion"].ToString(),
                             vArea,
                             vRiesgo,
-                            item["detalle"].ToString().Substring(0,(item["detalle"].ToString().Length > 20 ? 20 : item["detalle"].ToString().Length)) + "..."
-                            ) ;
+                            item["detalle"].ToString().Substring(0,(item["detalle"].ToString().Length > 20 ? 20 : item["detalle"].ToString().Length)) + "...",
+                            vConexion.GetNombreUsuario(item["usuarioResponsable"].ToString())
+                            );
 
 
                     }
@@ -347,7 +309,7 @@ namespace Infatlan_AuditControl.pages
 
                     Boolean vEnviado = Convert.ToBoolean(vDatosHallazgo.Rows[0]["envioResponsables"].ToString());
                     GVHallazgosView.Columns[0].Visible = vEnviado ? false : true;
-                    GVHallazgosView.Columns[7].Visible = vEnviado ? false : true;
+                    GVHallazgosView.Columns[8].Visible = vEnviado ? false : true;
                     BtnEntrarInf.Visible = vEnviado ? false : true;
                     GVHallazgosView.DataBind();
                     UpdateHallazgosMain.Update();
@@ -360,7 +322,7 @@ namespace Infatlan_AuditControl.pages
                     getResponsables(vIdInforme);
                     GridViewRow gvr = (GridViewRow)(((LinkButton)e.CommandSource).NamingContainer);
                     int RowIndex = gvr.RowIndex;
-                    String vFecha = GVBusqueda.Rows[RowIndex].Cells[4].Text;
+                    String vFecha = GVBusqueda.Rows[RowIndex].Cells[5].Text;
                     TxFechaCumplimiento.Text = DateTime.Parse(vFecha).ToString("yyyy-MM-dd");
                     TxFechaCumplimiento.ReadOnly = true;
                     UpdateHallazgosCreacionMain.Update();
@@ -447,6 +409,7 @@ namespace Infatlan_AuditControl.pages
                     vDatosFiltrados.Columns.Add("idInforme");
                     vDatosFiltrados.Columns.Add("nombre");
                     vDatosFiltrados.Columns.Add("fechaRespuesta");
+                    vDatosFiltrados.Columns.Add("fechaRes");
                     vDatosFiltrados.Columns.Add("fechaCreacion");
                     vDatosFiltrados.Columns.Add("usuarioCreacion");
                     vDatosFiltrados.Columns.Add("tipoEstado");
@@ -456,6 +419,7 @@ namespace Infatlan_AuditControl.pages
                             item["idInforme"].ToString(),
                             item["nombre"].ToString(),
                             item["fechaRespuesta"].ToString(),
+                            item["fechaRes"].ToString(),
                             item["fechaCreacion"].ToString(),
                             item["usuarioCreacion"].ToString(),
                             item["tipoEstado"].ToString()
@@ -465,7 +429,6 @@ namespace Infatlan_AuditControl.pages
                     GVBusqueda.DataSource = vDatosFiltrados;
                     mostrarOcultar();
                     Session["DATAEMPLEADOS"] = vDatosFiltrados;
-                    UpdateForma.Update();
                 }
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
@@ -535,8 +498,8 @@ namespace Infatlan_AuditControl.pages
                 
                 CerrarModal("HallazgosCreacionModal");
             }catch (Exception Ex) { 
-                CerrarModal("HallazgosCreacionModal"); 
-                Mensaje(Ex.Message, WarningType.Danger); 
+                CerrarModal("HallazgosCreacionModal");
+                MensajeLoad(Ex.Message, WarningType.Danger); 
             }
         }
 
@@ -638,7 +601,7 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 if (vIdInforme != null)
-                    buscarInforme(vIdInforme);
+                    buscarInforme(vIdInforme, true);
                 else
                     getInformes();
 
@@ -670,7 +633,7 @@ namespace Infatlan_AuditControl.pages
                     }
                 }
                 if (vIdInforme != null)
-                    buscarInforme(vIdInforme);
+                    buscarInforme(vIdInforme, true);
                 else
                     getInformes();
 

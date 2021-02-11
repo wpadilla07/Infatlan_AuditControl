@@ -27,18 +27,6 @@ namespace Infatlan_AuditControl
                 Boolean vLogin = true;
 
                 if (vLogin){
-                    //DataTable vDatosUsuarioLdap = vLdap.GetDatosUsuario(ConfigurationManager.AppSettings["ADHOST"], TxUsername.Text);
-                    //DataTable vDatosUsuarioLdap = new DataTable();
-                    //vDatosUsuarioLdap.Columns.Add("givenName");
-                    //vDatosUsuarioLdap.Columns.Add("sn");
-                    //vDatosUsuarioLdap.Columns.Add("mail");
-
-                    //vDatosUsuarioLdap.Rows.Add(
-                    //    "dehenriquez",
-                    //    "Henriquez",
-                    //    "dehenriquez@bancatlan.hn"
-                    //);
-
                     DataTable vDatos = new DataTable();
                     vDatos = vConexion.obtenerDataTable("ACSP_Login '" + TxUsername.Text + "'" );
 
@@ -58,14 +46,6 @@ namespace Infatlan_AuditControl
             }catch (Exception Ex){
                 LbMensaje.Text = "Usuario o contraseña incorrecta.";
                 String vErrorLog = Ex.Message;
-            }
-        }
-
-        protected void TxPassword_TextChanged(object sender, EventArgs e){
-            try{
-                BtnLogin_Click(sender, e);
-            }catch (Exception ex){
-
             }
         }
     }

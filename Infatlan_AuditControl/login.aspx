@@ -32,7 +32,7 @@
                             <div id="login-box" class="login-box visible widget-box no-border">
                                 <div class="widget-body">
                                     <div class="widget-main">
-                                        <form id="form1" runat="server">
+                                        <form id="form1" runat="server" defaultbutton="BtnLogin">
                                             <h4 class="header blue lighter bigger" style="text-align: center">
                                                 <i class="ace-icon fa fa-lock blue"></i>
                                                 Auditoria Interna
@@ -48,7 +48,7 @@
                                                 </label>
                                                 <label class="block clearfix">
                                                     <span class="block input-icon input-icon-right">
-                                                        <asp:TextBox ID="TxPassword" TextMode="Password" class="form-control form-control-lg border-left-0" placeholder="Password" runat="server" AutoPostBack="true" OnTextChanged="TxPassword_TextChanged"></asp:TextBox>
+                                                        <asp:TextBox ID="TxPassword" TextMode="Password" class="form-control form-control-lg border-left-0" placeholder="Password" runat="server"></asp:TextBox>
                                                         <i class="ace-icon fa fa-lock"></i>
                                                     </span>
                                                 </label>

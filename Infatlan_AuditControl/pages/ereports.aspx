@@ -134,9 +134,11 @@
                                 </asp:TemplateField>
 
                                 <asp:BoundField DataField="idInforme" HeaderText="No." />
+                                <asp:BoundField DataField="vai" HeaderText="VAI" HeaderStyle-Width="100px" />
                                 <asp:BoundField DataField="nombre" HeaderText="Nombre" />
                                 <asp:BoundField DataField="fechaRes" HeaderText="Respuesta" />
                                 <asp:BoundField DataField="fechaCreacion" HeaderText="Creación" />
+                                <asp:BoundField DataField="fechaEmision" HeaderText="Emisión" />
                                 <asp:BoundField DataField="usuarioCreacion" HeaderText="Creado" />
                                 <asp:BoundField DataField="tipoEstado" HeaderText="Estado" />
                                 <asp:TemplateField HeaderText="Select" HeaderStyle-Width="60px">
@@ -206,7 +208,7 @@
         </div>
     </div>
 
-    <!-- MODAL CREACIÓN DE HALLAZGOS -->
+    <%--MODAL CREACIÓN DE HALLAZGOS--%>
     <div class="modal fade" id="HallazgosCreacionModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 1000px; top: 350px; left: 50%; transform: translate(-50%, -50%);">
@@ -340,7 +342,7 @@
         </div>
     </div>
 
-    <!-- MODAL PARA VER HALLAZGOS -->
+    <%--MODAL PARA VER HALLAZGOS--%>
     <div class="modal fade" id="HallazgosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -385,16 +387,17 @@
                                                         </asp:LinkButton>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField HeaderStyle-Width="150px">
+                                                <asp:TemplateField>
                                                     <ItemTemplate>
                                                         <asp:Button ID="BtnHallazgoEntrar" runat="server" Text="Entrar" style="border-radius: 4px;" class="btn btn-success mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="EntrarHallazgo" />
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:BoundField DataField="idHallazgo" HeaderText="No.Hallazgo" />
+                                                <asp:BoundField DataField="idHallazgo" HeaderText="No." />
                                                 <asp:BoundField DataField="fechaCreacion" HeaderText="Creación" />
                                                 <asp:BoundField DataField="idArea" HeaderText="Area" />
                                                 <asp:BoundField DataField="tipoRiesgo" HeaderText="Riesgo" />
                                                 <asp:BoundField DataField="detalle" HeaderText="Detalle" />
+                                                <asp:BoundField DataField="usuarioResponsable" HeaderText="Responsable" />
                                                 <asp:TemplateField >
                                                     <ItemTemplate>
                                                         <asp:LinkButton ID="BtnDelete" runat="server" style="border-radius: 4px;" class="btn btn-danger mr-2" CommandArgument='<%# Eval("idHallazgo") %>' CommandName="BorrarHallazgo" >
@@ -494,7 +497,7 @@
         </div>
     </div>
 
-    <!-- MODAL MODIFICACION DE HALLAZGOS -->
+    <%--MODAL MODIFICACION DE HALLAZGOS--%>
     <div class="modal fade" id="HallazgosModificacionCreacionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 1000px; top: 320px; left: 50%; transform: translate(-50%, -50%);">

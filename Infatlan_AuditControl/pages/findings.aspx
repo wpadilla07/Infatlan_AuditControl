@@ -70,6 +70,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Nivel de Riesgo </label>
+                            <div class="col-sm-8">
+                                <asp:TextBox ID="TxHallazgoNivelRiesgo" runat="server" class="form-control" ReadOnly="true"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Recomendaciones </label>
                             <div class="col-sm-8">
                                 <asp:TextBox ID="TxHallazgoRecomendaciones" runat="server" class="form-control" TextMode="MultiLine" ReadOnly="true"></asp:TextBox>

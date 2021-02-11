@@ -83,14 +83,24 @@ namespace Infatlan_AuditControl.pages
 
                 for (int i = 0; i < vDatosDB.Rows.Count; i++){
                     DataTable vDatosAD = vLdap.GetDatosUsuario(ConfigurationManager.AppSettings["ADHOST"], vDatosDB.Rows[i]["idUsuario"].ToString());
-                    vDatosFinal.Rows.Add(
-                        vDatosDB.Rows[i]["idUsuario"].ToString(),
-                        vDatosAD.Rows[0]["givenName"].ToString(),
-                        vDatosAD.Rows[0]["sn"].ToString(),
-                        vDatosAD.Rows[0]["mail"].ToString());
+                    if (vDatosAD.Rows.Count > 0){
+                        vDatosFinal.Rows.Add(
+                            vDatosDB.Rows[i]["idUsuario"].ToString(),
+                            vDatosAD.Rows[0]["givenName"].ToString(),
+                            vDatosAD.Rows[0]["sn"].ToString(),
+                            vDatosAD.Rows[0]["mail"].ToString());
+                            vDatosFinal.Rows[i]["empresa"] = vDatosDB.Rows[i]["empresa"].ToString();
+                            vDatosFinal.Rows[i]["perfil"] = vDatosDB.Rows[i]["perfil"].ToString();
+                    }else {
+                        vDatosFinal.Rows.Add(
+                                vDatosDB.Rows[i]["idUsuario"].ToString(),
+                                "",
+                                "",
+                                vDatosDB.Rows[i]["correo"].ToString());
+                        vDatosFinal.Rows[i]["empresa"] = vDatosDB.Rows[i]["empresa"].ToString();
+                        vDatosFinal.Rows[i]["perfil"] = vDatosDB.Rows[i]["perfil"].ToString();
 
-                    vDatosFinal.Rows[i]["empresa"] = vDatosDB.Rows[i]["empresa"].ToString();
-                    vDatosFinal.Rows[i]["perfil"] = vDatosDB.Rows[i]["perfil"].ToString();
+                    }
                 }
 
                 DDLUserResponsable.Items.Add(new ListItem { Value="0", Text="Seleccione un usuario" });
@@ -199,30 +209,25 @@ namespace Infatlan_AuditControl.pages
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
                 for (int i = 0; i < vDatosResponsables.Rows.Count; i++){
-                    //if (vDatos.Rows[0]["tipoUsuario"].ToString() == "5" && DDLTipoResponsable.SelectedValue == "1")
-                    //    throw new Exception("El usuario que desea agregar no puede ser Responsable.");
-
                     if (vDatosResponsables.Rows[i]["usuarioResponsable"].ToString().Equals(DDLUserResponsable.SelectedValue))
                         vFlagInsert = true;
                 }
 
                 if (!vFlagInsert)
                     if (LbIdInforme.Text != "")
-                        vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, "", DDLTipoResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text, DDLUserResponsable.SelectedValue);
-                    else {
-                        //if (vDatos.Rows[0]["tipoUsuario"].ToString() == "5" && DDLTipoResponsable.SelectedValue == "1")
-                        //    throw new Exception("El usuario que desea agregar no puede ser Responsable.");
-                        
+                        //vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, "", DDLTipoResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text, 0, DDLUserResponsable.SelectedValue);
                         vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
-                    }
+                    else 
+                        vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
                 else
                     throw new Exception("Este usuario ya ha sido agregado");
 
                 GVResponsables.DataSource = vDatosResponsables;
                 GVResponsables.DataBind();
                 Session["DATARESPONSABLES"] = vDatosResponsables;
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
         protected void GVResponsables_RowCommand(object sender, GridViewCommandEventArgs e){

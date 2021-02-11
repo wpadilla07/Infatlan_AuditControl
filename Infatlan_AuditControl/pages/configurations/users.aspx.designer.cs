@@ -159,6 +159,15 @@ namespace Infatlan_AuditControl.pages.configurations
         protected global::System.Web.UI.WebControls.TextBox TxApellidos;
 
         /// <summary>
+        /// Control TxPuesto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxPuesto;
+
+        /// <summary>
         /// Control UpdateBotones.
         /// </summary>
         /// <remarks>
@@ -247,6 +256,33 @@ namespace Infatlan_AuditControl.pages.configurations
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList DDLEstado;
+
+        /// <summary>
+        /// Control DivJefe.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivJefe;
+
+        /// <summary>
+        /// Control DDLJefes.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DDLJefes;
+
+        /// <summary>
+        /// Control TxModPuesto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxModPuesto;
 
         /// <summary>
         /// Control UpdateUsuarioMensaje.

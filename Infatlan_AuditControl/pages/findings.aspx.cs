@@ -184,6 +184,7 @@ namespace Infatlan_AuditControl.pages
 
                     TxHallazgoDetalle.Text = item["detalle"].ToString();
                     TxHallazgoRiesgo.Text = item["riesgo"].ToString();
+                    TxHallazgoNivelRiesgo.Text = item["riesgoTipo"].ToString();
                     TxHallazgoRecomendaciones.Text = item["recomendaciones"].ToString();
                     TxHallazgoAccion.Text = item["accion"].ToString();
                     TxHallazgoComentarios.Text = item["comentarios"].ToString();
@@ -260,6 +261,7 @@ namespace Infatlan_AuditControl.pages
         void LimpiarHallazgo(){
             TxHallazgoDetalle.Text = String.Empty;
             TxHallazgoRiesgo.Text = String.Empty;
+            TxHallazgoNivelRiesgo.Text = String.Empty;
             TxHallazgoRecomendaciones.Text = String.Empty;
             TxHallazgoAccion.Text = String.Empty;
             TxHallazgoComentarios.Text = String.Empty;

@@ -68,11 +68,16 @@ namespace Infatlan_AuditControl.pages
 
                 for (int i = 0; i < vDatosDB.Rows.Count; i++){
                     DataTable vDatosAD = vLdap.GetDatosUsuario(ConfigurationManager.AppSettings["ADHOST"], vDatosDB.Rows[i]["idUsuario"].ToString());
-                    vDatosFinal.Rows.Add(
-                        vDatosDB.Rows[i]["idUsuario"].ToString(),
-                        vDatosAD.Rows[0]["givenName"].ToString(),
-                        vDatosAD.Rows[0]["sn"].ToString(),
-                        vDatosAD.Rows[0]["mail"].ToString());
+
+                    if (vDatosAD.Rows.Count > 0){
+                        vDatosFinal.Rows.Add(
+                            vDatosDB.Rows[i]["idUsuario"].ToString(),
+                            vDatosAD.Rows[0]["givenName"].ToString(),
+                            vDatosAD.Rows[0]["sn"].ToString(),
+                            vDatosAD.Rows[0]["mail"].ToString());
+                    }else {
+                        vDatosFinal.Rows.Add(vDatosDB.Rows[i]["idUsuario"].ToString(),"","","");
+                    }
 
                     vDatosFinal.Rows[i]["empresa"] = vDatosDB.Rows[i]["empresa"].ToString();
                 }
@@ -388,6 +393,28 @@ namespace Infatlan_AuditControl.pages
             String vConsulta = "[ACSP_ObtenerUsuariosInforme] 4," + DDLBuscarInforme.SelectedValue + ",'" + Session["USUARIO"].ToString() + "'";
             DataTable vDatos = vConexion.obtenerDataTable(vConsulta);
 
+            if (vDatos.Rows.Count > 0){
+                if (vDatos.Rows[0]["tipoEnvio"].ToString() == "2"){
+                    GVBusqueda.Columns[0].Visible = false;
+                    GVBusqueda.Columns[1].Visible = false;
+                    GVBusqueda.Columns[2].Visible = false;
+                    GVBusqueda.Columns[10].Visible = false;
+                    GVBusqueda.Columns[11].Visible = false;
+                }else {
+                    GVBusqueda.Columns[0].Visible = true;
+                    GVBusqueda.Columns[1].Visible = true;
+                    GVBusqueda.Columns[2].Visible = true;
+                    GVBusqueda.Columns[10].Visible = true;
+                    GVBusqueda.Columns[11].Visible = true;
+                }
+            }else {
+                GVBusqueda.Columns[0].Visible = true;
+                GVBusqueda.Columns[1].Visible = true;
+                GVBusqueda.Columns[2].Visible = true;
+                GVBusqueda.Columns[10].Visible = true;
+                GVBusqueda.Columns[11].Visible = true;
+            }
+
             switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                 case 1:
                 case 2:
@@ -403,37 +430,11 @@ namespace Infatlan_AuditControl.pages
                     GVBusqueda.Columns[0].Visible = false;
                     GVBusqueda.Columns[1].Visible = false;
                     GVBusqueda.Columns[11].Visible = false;
-                    
-                    if (vDatos.Rows.Count > 0){
-                        if (vDatos.Rows[0]["tipoEnvio"].ToString() == "2"){
-                            GVBusqueda.Columns[2].Visible = false;
-                            GVBusqueda.Columns[10].Visible = false;
-                        }else {
-                            GVBusqueda.Columns[2].Visible = true;
-                            GVBusqueda.Columns[10].Visible = true;
-                        }
-                    }else {
-                        GVBusqueda.Columns[2].Visible = true;
-                        GVBusqueda.Columns[10].Visible = true;
-                    }
                     break;
                 case 5:
                     GVBusqueda.Columns[0].Visible = false;
                     GVBusqueda.Columns[1].Visible = false;
                     GVBusqueda.Columns[11].Visible = false;
-
-                    if (vDatos.Rows.Count > 0){
-                        if (vDatos.Rows[0]["tipoEnvio"].ToString() == "2"){
-                            GVBusqueda.Columns[2].Visible = false;
-                            GVBusqueda.Columns[10].Visible = false;
-                        }else {
-                            GVBusqueda.Columns[2].Visible = true;
-                            GVBusqueda.Columns[10].Visible = true;
-                        }
-                    }else {
-                        GVBusqueda.Columns[2].Visible = true;
-                        GVBusqueda.Columns[10].Visible = true;
-                    }
                     break;
                 case 6:
                     GVBusqueda.Columns[0].Visible = false;
@@ -630,7 +631,7 @@ namespace Infatlan_AuditControl.pages
                     }
                     catch { }
 
-                    MensajeLoad("Hallazgo modificado con exito", WarningType.Success);
+                    Mensaje("Hallazgo modificado con exito", WarningType.Success);
                     DDLModificarHallazgoEstado.SelectedIndex = -1;
                     CerrarModal("ModificacionesEstadoModal");
                 }else
@@ -705,7 +706,7 @@ namespace Infatlan_AuditControl.pages
                         }
 
                         DDLModificarHallazgoEstado.SelectedIndex = -1;
-                        MensajeLoad("Hallazgo autorizado con exito", WarningType.Success);
+                        Mensaje("Hallazgo autorizado con exito", WarningType.Success);
                     }else
                         throw new Exception("Error al ingresar el hallazgo, contacte a sistemas.");
                 }else{
@@ -736,7 +737,7 @@ namespace Infatlan_AuditControl.pages
                             "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
                             vCorreo.Copia
                         );
-                        MensajeLoad("Hallazgo autorizado con exito", WarningType.Success);
+                        Mensaje("Hallazgo autorizado con exito", WarningType.Success);
                     } 
                 }
 
@@ -816,7 +817,12 @@ namespace Infatlan_AuditControl.pages
                     else
                         BuscarHallazgo(DDLBuscarInforme.SelectedValue);//TxBuscarIdInforme.Text);
 
-                    MensajeLoad("Hallazgo actualizado con exito", WarningType.Success);
+
+                    if (FUHallazgos.HasFile)
+                        MensajeLoad("Hallazgo actualizado con exito", WarningType.Success);
+                    else
+                        Mensaje("Hallazgo actualizado con exito", WarningType.Success);
+
                     CerrarModal("FinalizarHallazgoModal");
 
                     TxFinalizarHallazgoComentario.Text = "";

@@ -54,7 +54,7 @@
     </div>
     <div class="page-content">
         <div class="page-header">
-            <h1>Crear Informes
+            <h1>Usuarios
                 <small>
                     <i class="ace-icon fa fa-angle-double-right"></i>
                     Ingresa todos los campos a continuación
@@ -187,6 +187,16 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 control-label no-padding-right">Puesto</label>
+                                                <div class="col-sm-9">
+                                                    <asp:TextBox ID="TxPuesto" placeholder="Ej. Coordinador" class="form-control" runat="server" TextMode="SingleLine" autocomplete="off"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
                         </div>
@@ -239,6 +249,7 @@
 
                                     <asp:BoundField DataField="idUsuario" HeaderText="Usuario" />
                                     <asp:BoundField DataField="correo" HeaderText="Correo" />
+                                    <asp:BoundField DataField="puesto" HeaderText="Puesto" />
                                     <asp:BoundField DataField="tipoUsuario" HeaderText="Tipo Usuario" />
                                     <asp:BoundField DataField="estado" HeaderText="Estado" />
                                 </Columns>
@@ -261,10 +272,11 @@
             </div>
         </div>
     </div>
-    <!-- MODAL PARA VER HALLAZGOS -->
+
+    <!-- MODAL PARA EDITAR USUARIOS -->
     <div class="modal fade" id="UsuariosModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content" style="width: 640px; top: 320px; left: 50%; transform: translate(-50%, -50%);">
+            <div class="modal-content" style="width: 640px">
                 <div class="modal-header">
                     <asp:UpdatePanel ID="UpdateHallazgosLabel" runat="server">
                         <ContentTemplate>
@@ -286,15 +298,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 control-label no-padding-right" for="DDLUserResponsable">Cargo </label>
                                         <div class="col-sm-9">
-                                            <asp:DropDownList ID="DDLCargoModificar" class="form-control" runat="server">
-                                                <asp:ListItem Value="0">Selecione una Opción</asp:ListItem>
-                                                <asp:ListItem Value="1">Administrador</asp:ListItem>
-                                                <asp:ListItem Value="2">Auditor Jefatura</asp:ListItem>
-                                                <asp:ListItem Value="3">Auditor</asp:ListItem>
-                                                <asp:ListItem Value="4">Responsables</asp:ListItem>
-                                                <asp:ListItem Value="5">Consultas</asp:ListItem>
-                                                <asp:ListItem Value="6">Reporte</asp:ListItem>
-                                            </asp:DropDownList>
+                                            <asp:DropDownList ID="DDLCargoModificar" class="form-control" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DDLCargoModificar_SelectedIndexChanged"></asp:DropDownList>
                                         </div>
                                     </div>
                                 </div>
@@ -307,6 +311,22 @@
                                                 <asp:ListItem Value="True">Activado</asp:ListItem>
                                                 <asp:ListItem Value="False">Desactivado</asp:ListItem>
                                             </asp:DropDownList>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12" runat="server" id="DivJefe" visible="false">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 control-label no-padding-right" for="DDLJefes">Jefe </label>
+                                        <div class="col-sm-9">
+                                            <asp:DropDownList ID="DDLJefes" class="form-control" runat="server"></asp:DropDownList>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12" runat="server">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 control-label no-padding-right">Puesto</label>
+                                        <div class="col-sm-9">
+                                            <asp:TextBox runat="server" ID="TxModPuesto" CssClass="form-control"/>
                                         </div>
                                     </div>
                                 </div>
