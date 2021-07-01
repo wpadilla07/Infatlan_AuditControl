@@ -42,10 +42,30 @@ namespace Infatlan_AuditControl
                     LitIngresados.Text = item["TotalIngresados"].ToString();
                     LitValidacion.Text = item["TotalValidacion"].ToString();
                     LitEnProceso.Text = item["TotalEnProceso"].ToString();
+                    LitHallazgosVencidos.Text = item["TotalVencidos"].ToString();
                 }
+
+                vQuery = "[ACSP_Dashboard] 2,'" + Session["USUARIO"].ToString() + "'";
+                vDatos = vConexion.obtenerDataTable(vQuery);
+                if (vDatos.Rows.Count > 0){
+                    Session["DASHBOARD_HALLAZGOS"] = vDatos;
+                    GVHallazgos.DataSource = vDatos;
+                    GVHallazgos.DataBind();
+                }
+
 
             }catch (Exception ex){
                 throw new Exception(ex.Message);
+            }
+        }
+
+        protected void GVHallazgos_PageIndexChanging(object sender, GridViewPageEventArgs e){
+            try{
+                GVHallazgos.PageIndex = e.NewPageIndex;
+                GVHallazgos.DataSource = (DataTable)Session["DASHBOARD_HALLAZGOS"];
+                GVHallazgos.DataBind();
+            }catch (Exception Ex) { 
+                throw new Exception( Ex.Message); 
             }
         }
     }

@@ -60,13 +60,13 @@ namespace Infatlan_AuditControl
         protected global::System.Web.UI.WebControls.Literal LitTotalHallazgosFinalizados;
 
         /// <summary>
-        /// Control Literal5.
+        /// Control LitHallazgosVencidos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal Literal5;
+        protected global::System.Web.UI.WebControls.Literal LitHallazgosVencidos;
 
         /// <summary>
         /// Control LitIngresados.
@@ -94,5 +94,14 @@ namespace Infatlan_AuditControl
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal LitEnProceso;
+
+        /// <summary>
+        /// Control GVHallazgos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GVHallazgos;
     }
 }

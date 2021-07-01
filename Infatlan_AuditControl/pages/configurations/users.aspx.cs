@@ -22,6 +22,9 @@ namespace Infatlan_AuditControl.pages.configurations
                         case 5:
                             Response.Redirect("/default.aspx");
                             break;
+                        case 6:
+                            Response.Redirect("/default.aspx");
+                            break;
                     }
                 }
                 ObtenerUsuarios();
@@ -64,6 +67,8 @@ namespace Infatlan_AuditControl.pages.configurations
                 String vQuery = "[ACSP_ObtenerUsuarios] 6,2";
                 DataTable vDatosDB = vConexion.obtenerDataTable(vQuery);
 
+                DDLUsuarioJefatura.Items.Clear();
+                DDLJefes.Items.Clear();
                 DDLUsuarioJefatura.Items.Add(new ListItem { Value = "0", Text = "Seleccione un usuario" });
                 DDLJefes.Items.Add(new ListItem { Value = "0", Text = "Seleccione un usuario" });
                 foreach (DataRow item in vDatosDB.Rows){
@@ -91,29 +96,32 @@ namespace Infatlan_AuditControl.pages.configurations
             }
         }
 
-        protected void BtnBuscarUsuario_Click(object sender, EventArgs e)
-        {
-            try
-            {
+        protected void BtnBuscarUsuario_Click(object sender, EventArgs e){
+            try{
                 if (TxUsuario.Text == String.Empty)
                     throw new Exception("Ingrese un usuario para proceder con la busqueda.");
 
                 LdapService vLdap = new LdapService();
                 DataTable vDatos = vLdap.GetDatosUsuario(ConfigurationManager.AppSettings["ADHOST"], TxUsuario.Text);
 
-                if (vDatos.Rows.Count > 0)
-                {
+
+                MostrarOcultar(true);
+                if (vDatos.Rows.Count > 0){
                     TxCorreo.Text = vDatos.Rows[0]["mail"].ToString();
                     TxNombres.Text = vDatos.Rows[0]["givenName"].ToString();
                     TxApellidos.Text = vDatos.Rows[0]["sn"].ToString();
-                }
-                else
-                {
+                    TxPuesto.ReadOnly = false;
+                    TxCorreo2.ReadOnly = false;
+                }else if(DDLCargo.SelectedValue == "6") {
                     TxCorreo.Text = String.Empty;
                     TxNombres.Text = string.Empty;
                     TxApellidos.Text = String.Empty;
-                    throw new Exception("No existe el usuario buscado");
-                }
+                    TxPuesto.Text = String.Empty;
+                    TxCorreo2.Text = String.Empty;
+
+                    MostrarOcultar(false);
+                }else
+                    throw new Exception("El usuario no existe en el dominio ADBANCAT");
 
             }
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
@@ -144,11 +152,15 @@ namespace Infatlan_AuditControl.pages.configurations
                     "," + DDLCargo.SelectedValue + 
                     ",'" + TxCorreo.Text + "'" + 
                     ",0,'" + vJefeAuditoria + "'" + 
-                    "," + vEmpresa + ",'" + TxPuesto.Text + "'" +
-                    ",'" + TxNombres.Text + "','" + TxApellidos.Text + "'";
+                    "," + vEmpresa + "" +
+                    ",'" + TxPuesto.Text + "'" +
+                    ",'" + TxNombres.Text + "'" +
+                    ",'" + TxApellidos.Text + "'" +
+                    ",'" + TxCorreo2.Text + "'";
 
                 try{
                     if (vConexion.ejecutarSql(vQuery).Equals(1)){
+                        GetUsuariosJefaturas();
                         ObtenerUsuarios();
                         LimpiarForma();
                         Mensaje("Usuario creado con Exito!", WarningType.Success);
@@ -160,15 +172,26 @@ namespace Infatlan_AuditControl.pages.configurations
             catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
-        void LimpiarForma()
-        {
+        void LimpiarForma(){
+            TxCorreo.ReadOnly = true;
+            TxNombres.ReadOnly = true;
+            TxApellidos.ReadOnly = true;
+            TxPuesto.Text = String.Empty;
+            TxCorreo2.Text = String.Empty;
+
             TxApellidos.Text = String.Empty;
             TxCorreo.Text = String.Empty;
             TxNombres.Text = String.Empty;
             TxUsuario.Text = String.Empty;
             DDLCargo.SelectedIndex = -1;
-            TxPuesto.Text = String.Empty;
+        }
 
+        void MostrarOcultar(Boolean vValue) {
+            TxNombres.ReadOnly = vValue;
+            TxApellidos.ReadOnly = vValue;
+            TxCorreo.ReadOnly = vValue;
+            TxPuesto.ReadOnly = vValue;
+            TxCorreo2.ReadOnly = vValue;
         }
 
         void LimpiarModal() {
@@ -257,14 +280,22 @@ namespace Infatlan_AuditControl.pages.configurations
 
         protected void DDLCargo_SelectedIndexChanged(object sender, EventArgs e){
             try{
-                if (DDLCargo.SelectedValue.Equals("3"))
-                    DIVUsuarioJefatura.Visible = true;
-                else if (DDLCargo.SelectedValue == "4")
-                    DivEmpresas.Visible = true;
-                else
-                    DIVUsuarioJefatura.Visible = false;
+                MostrarOcultar(true);
+                TxPuesto.Text = String.Empty;
+                TxCorreo2.Text = String.Empty;
+                TxApellidos.Text = String.Empty;
+                TxCorreo.Text = String.Empty;
+                TxNombres.Text = String.Empty;
+                TxUsuario.Text = String.Empty;
+
+                DIVUsuarioJefatura.Visible = DDLCargo.SelectedValue == "3" ? true : false;
+                DivEmpresas.Visible = DDLCargo.SelectedValue == "4" ? true : false;
+                TxUsuario.ReadOnly = DDLCargo.SelectedValue != "0" ? false : true;
+                DivCorreo2.Visible = DDLCargo.SelectedValue == "6" ? true : false;
+                
+            }catch (Exception Ex) { 
+                Mensaje(Ex.Message, WarningType.Danger); 
             }
-            catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
         protected void DDLCargoModificar_SelectedIndexChanged(object sender, EventArgs e){

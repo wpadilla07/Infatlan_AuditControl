@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/main.Master" AutoEventWireup="true" CodeBehind="default.aspx.cs" Inherits="Infatlan_AuditControl._default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link href="/assets/css/GridStyle.css" rel="stylesheet" />
+    <link href="/assets/css/pager.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="server">
     <div class="breadcrumbs ace-save-state" id="breadcrumbs">
@@ -123,7 +125,7 @@
                 </div>
 
                 <div class="infobox-data">
-                    <span class="infobox-data-number"><asp:Literal ID="Literal5" runat="server"></asp:Literal></span>
+                    <span class="infobox-data-number"><asp:Literal ID="LitHallazgosVencidos" runat="server"></asp:Literal></span>
                     <div class="infobox-content">Vencidos</div>
                 </div>
             </div>
@@ -163,6 +165,39 @@
                     <span class="infobox-data-number"><asp:Literal ID="LitEnProceso" runat="server"></asp:Literal></span>
                     <div class="infobox-content">En Proceso</div>
                 </div>
+            </div>
+        </div>
+        <div class="space-6"></div>
+    </div>
+
+    
+    <div class="page-content" style="margin-top:200px;">
+        <div class="page-header">
+            <h1>Hallazgos
+                <small>
+                    <i class="ace-icon fa fa-angle-double-right"></i>
+                    Hallazgos asignados
+                </small>
+            </h1>
+        </div>
+        <div class="row" style="margin-top:2px;">
+            <div class="col-xs-12">
+                <asp:GridView ID="GVHallazgos" runat="server"
+                    CssClass="mydatagrid"
+                    PagerStyle-CssClass="pager"
+                    HeaderStyle-CssClass="header"
+                    RowStyle-CssClass="rows"
+                    GridLines="None"
+                    AutoGenerateColumns="false" OnPageIndexChanging="GVHallazgos_PageIndexChanging">
+                    <Columns>
+                        <asp:BoundField DataField="idHallazgo" HeaderText="ID" />
+                        <asp:BoundField DataField="detalle" HeaderText="Detalle" HeaderStyle-Width="600px"/>
+                        <asp:BoundField DataField="accion" HeaderText="Accion" HeaderStyle-Width="500px"/>
+                        <asp:BoundField DataField="informe" HeaderText="Informe" />
+                        <asp:BoundField DataField="estadoHallazgo" HeaderText="Estado" />
+                    </Columns>
+                </asp:GridView>
+                        
             </div>
         </div>
     </div>

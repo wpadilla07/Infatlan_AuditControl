@@ -16,14 +16,16 @@ namespace Infatlan_AuditControl.classes
         HallazgoCreado,
         HallazgoAsignacion,
         Solicitud,
-        General
+        General,
+        JuntaDirectiva
     }
 
     public class SmtpService : Page{
 
         public SmtpService() { }
 
-        public Boolean EnviarMensaje(String To, typeBody Body, String UsuarioPara, String NombreAccion, String Copy){
+        public Boolean EnviarMensaje(String To, typeBody Body, String UsuarioPara, String NombreAccion, String Copy, String vArchivo = null, String vNombreArchivo = null)
+        {
             Boolean vRespuesta = false;
             try{
                 MailMessage mail = new MailMessage("Auditoria Interna<" + ConfigurationManager.AppSettings["SmtpFrom"] + ">", To);
@@ -31,8 +33,17 @@ namespace Infatlan_AuditControl.classes
                 client.Port = Convert.ToInt32(ConfigurationManager.AppSettings["SmtpPort"]);
                 client.UseDefaultCredentials = false;
                 client.Host = ConfigurationManager.AppSettings["SmtpServer"];
-                if(!Copy.Equals(""))
+
+                if (!String.IsNullOrEmpty(vArchivo)){
+                    byte[] fileData = Convert.FromBase64String(vArchivo);
+                    Stream stream = new MemoryStream(fileData);
+                    Attachment data = new Attachment(stream, vNombreArchivo);
+                    mail.Attachments.Add(data);
+                }
+
+                if (!Copy.Equals(""))
                     mail.CC.Add(Copy);
+
                 mail.Subject = "Auditoria - Sistema de informes";
                 mail.IsBodyHtml = true;
 
@@ -42,7 +53,7 @@ namespace Infatlan_AuditControl.classes
                             UsuarioPara,
                             "Se ha creado el informe: " + NombreAccion,
                             ConfigurationManager.AppSettings["Host"] + "/pages/findingsSearch.aspx",
-                            "Te informamos que se ha creado un informe, por favor entrar al portal."
+                            "Te informamos que se ha creado un informe, por favor entrar al portal haciendo"
                             ), Server.MapPath("/assets/images/logored.png")));
                         break;
                     
@@ -51,7 +62,7 @@ namespace Infatlan_AuditControl.classes
                             UsuarioPara,
                             NombreAccion,
                             ConfigurationManager.AppSettings["Host"] + "/pages/findingsSearch.aspx",
-                            "Cualquier consulta o comentario ponte en contacto con el personal de auditoria interna o por favor entrar al portal."
+                            "Cualquier consulta o comentario ponte en contacto con el personal de la Vicepresidencia de Auditoría Interna, o por favor entrar al portal haciendo"
                             ), Server.MapPath("/assets/images/logored.png")));
                         break;
                     case typeBody.General:
@@ -59,7 +70,15 @@ namespace Infatlan_AuditControl.classes
                             UsuarioPara,
                             NombreAccion,
                             ConfigurationManager.AppSettings["Host"] + "/pages/findingsSearch.aspx",
-                            "Cualquier consulta o comentario ponte en contacto con el personal de auditoria interna o por favor entrar al portal."
+                            "Cualquier consulta o comentario ponte en contacto con el personal de la Vicepresidencia de Auditoría Interna, o por favor entrar al portal haciendo"
+                            ), Server.MapPath("/assets/images/logored.png")));
+                        break;
+                    case typeBody.JuntaDirectiva:
+                        mail.AlternateViews.Add(CreateHtmlMessage(PopulateBody(
+                            UsuarioPara,
+                            NombreAccion,
+                            ConfigurationManager.AppSettings["Host"] + "/pages/findingsSearch.aspx",
+                            "Cualquier consulta o comentario ponte en contacto con el personal de la Vicepresidencia de Auditoría Interna, o por favor entrar al portal haciendo"
                             ), Server.MapPath("/assets/images/logored.png")));
                         break;
                 }

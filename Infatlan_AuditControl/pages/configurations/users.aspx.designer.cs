@@ -168,6 +168,24 @@ namespace Infatlan_AuditControl.pages.configurations
         protected global::System.Web.UI.WebControls.TextBox TxPuesto;
 
         /// <summary>
+        /// Control DivCorreo2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl DivCorreo2;
+
+        /// <summary>
+        /// Control TxCorreo2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TxCorreo2;
+
+        /// <summary>
         /// Control UpdateBotones.
         /// </summary>
         /// <remarks>

@@ -7,6 +7,7 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Configuration;
 
 namespace Infatlan_AuditControl.pages
 {
@@ -14,14 +15,15 @@ namespace Infatlan_AuditControl.pages
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
-            {
+            if (!Page.IsPostBack){
                 String vIdInforme = Request.QueryString["id"];
 
                 if (Convert.ToBoolean(Session["AUTH"]))
                 {
+                    String vPass = ConfigurationManager.AppSettings["ReportingPass"];
+                    String vUser = ConfigurationManager.AppSettings["ReportingUser"];
                     ServerReport serverReport = ReportViewer1.ServerReport;
-                    serverReport.ReportServerCredentials = new ReportServerCredentials(@"report_user", "kEbn2HUzd$Fs2T", "adbancat.hn");
+                    serverReport.ReportServerCredentials = new ReportServerCredentials(vUser, vPass, "adbancat.hn");
 
                     serverReport.ReportServerUrl =
                         new Uri("http://10.128.0.52/ReportServer");

@@ -99,7 +99,6 @@ namespace Infatlan_AuditControl.pages
                                 vDatosDB.Rows[i]["correo"].ToString());
                         vDatosFinal.Rows[i]["empresa"] = vDatosDB.Rows[i]["empresa"].ToString();
                         vDatosFinal.Rows[i]["perfil"] = vDatosDB.Rows[i]["perfil"].ToString();
-
                     }
                 }
 
@@ -160,7 +159,8 @@ namespace Infatlan_AuditControl.pages
                             vFileDeposito1 = vReader.ReadBytes((int)vStream.Length);
                         }
                         String vDeposito = Convert.ToBase64String(vFileDeposito1);
-                        vQuery = "[ACSP_Informes] 4," + vIdInforme + ",0,'','','','','','','" + vDeposito + "'";
+                        vQuery = "[ACSP_Informes] 4," + vIdInforme + ",0,'','" +
+                            vNombreDeposito + "','','','','','" + vDeposito + "'";
                         vConexion.ejecutarSql(vQuery);
                     }
 
@@ -205,7 +205,7 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 Boolean vFlagInsert = false;
-                String vQuery = "[ACSP_ObtenerUsuarios] 5," + DDLUserResponsable.SelectedValue;
+                String vQuery = "[ACSP_ObtenerUsuarios] 5,'" + DDLUserResponsable.SelectedValue + "'";
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
                 for (int i = 0; i < vDatosResponsables.Rows.Count; i++){
@@ -214,10 +214,15 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 if (!vFlagInsert)
-                    if (LbIdInforme.Text != "")
-                        //vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, "", DDLTipoResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text, 0, DDLUserResponsable.SelectedValue);
-                        vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
-                    else 
+                    if (LbIdInforme.Text != ""){
+                        if (BtnModificarInforme.Visible){
+                            if (vDatosResponsables.Columns.Count == 2)
+                                vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
+                            else
+                                vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, vDatos.Rows[0]["correo"].ToString(), DDLTipoResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text, vDatos.Rows[0]["tipoUsuario"].ToString(), "", DDLUserResponsable.SelectedValue);
+                        }else
+                            vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
+                    }else
                         vDatosResponsables.Rows.Add(DDLUserResponsable.SelectedValue, DDLTipoResponsable.SelectedItem.Text);
                 else
                     throw new Exception("Este usuario ya ha sido agregado");
@@ -278,6 +283,23 @@ namespace Infatlan_AuditControl.pages
 
                 int vIdInforme = vConexion.ejecutarSql(vQuery);
                 if (vIdInforme > 0){
+                    if (FUInforme.HasFile){
+                        String vNombreDeposito = String.Empty;
+                        HttpPostedFile bufferDeposito1T = FUInforme.PostedFile;
+                        byte[] vFileDeposito1 = null;
+                        if (bufferDeposito1T != null){
+                            vNombreDeposito = FUInforme.FileName;
+                            Stream vStream = bufferDeposito1T.InputStream;
+                            BinaryReader vReader = new BinaryReader(vStream);
+                            vFileDeposito1 = vReader.ReadBytes((int)vStream.Length);
+                        }
+                        String vDeposito = Convert.ToBase64String(vFileDeposito1);
+                        vQuery = "[ACSP_Informes] 4," + LbIdInforme.Text + ",0,'','" +
+                            vNombreDeposito + "','','','','','" + vDeposito + "'";
+                        vConexion.ejecutarSql(vQuery);
+                    }
+
+
                     vQuery = "[ACSP_Informes] 9," + LbIdInforme.Text;
                     vConexion.ejecutarSql(vQuery);
                     foreach (DataRow item in vDatosResponsables.Rows){

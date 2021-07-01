@@ -78,7 +78,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 control-label no-padding-right">Usuario</label>
+                                                <label class="col-sm-3 control-label no-padding-right">Cargo</label>
                                                 <div class="col-sm-9">
                                                     <asp:DropDownList ID="DDLCargo" runat="server" class="form-control" AutoPostBack="True" OnSelectedIndexChanged="DDLCargo_SelectedIndexChanged">
                                                         <asp:ListItem Value="0">Selecione una Opción</asp:ListItem>
@@ -135,7 +135,7 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 control-label no-padding-right">Usuario</label>
                                                 <div class="col-sm-6">
-                                                    <asp:TextBox ID="TxUsuario" placeholder="Ej. admin" class="form-control" runat="server" TextMode="SingleLine" autocomplete="off"></asp:TextBox>
+                                                    <asp:TextBox ID="TxUsuario" placeholder="Ej. admin" class="form-control" runat="server" TextMode="SingleLine" autocomplete="off" ReadOnly="true"></asp:TextBox>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <asp:Button ID="BtnBuscarUsuario" Style="width: 100%" class="btn btn-dark mr-2" runat="server" Text="Buscar" OnClick="BtnBuscarUsuario_Click" />
@@ -192,7 +192,15 @@
                                             <div class="form-group row">
                                                 <label class="col-sm-3 control-label no-padding-right">Puesto</label>
                                                 <div class="col-sm-9">
-                                                    <asp:TextBox ID="TxPuesto" placeholder="Ej. Coordinador" class="form-control" runat="server" TextMode="SingleLine" autocomplete="off"></asp:TextBox>
+                                                    <asp:TextBox ID="TxPuesto" placeholder="Ej. Coordinador" class="form-control" runat="server" TextMode="SingleLine" autocomplete="off" ReadOnly="true"></asp:TextBox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div runat="server" id="DivCorreo2" visible="false" class="col-md-6">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 control-label no-padding-right">Correo 2</label>
+                                                <div class="col-sm-9">
+                                                    <asp:TextBox ID="TxCorreo2" placeholder="Ej. admin@banctlan.hn" class="form-control" runat="server" TextMode="SingleLine" autocomplete="off" ReadOnly="true"></asp:TextBox>
                                                 </div>
                                             </div>
                                         </div>

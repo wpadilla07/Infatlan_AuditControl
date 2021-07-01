@@ -244,7 +244,7 @@ namespace Infatlan_AuditControl.pages
                         vCorreo.Para,
                         typeBody.General,
                         vCorreo.Usuario,
-                        "Se ha respondido al hallazgo (No." + vIdHallazgo + ") " + @"<br \><br \>" +
+                        "El hallazgo No. <b>" + vIdHallazgo + "</b> fue atendido." + @"<br\>" +
                         "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
                         vCorreo.Copia
                         );
@@ -277,6 +277,7 @@ namespace Infatlan_AuditControl.pages
                 String vIdArchivo = vIdHallazgo;
                 String vQuery = "[ACSP_ObtenerArchivos] 3, " + vIdArchivo;
                 String vArchivo = vConexion.ejecutarSQLGetValueString(vQuery);
+                DataTable vDatos = vConexion.obtenerDataTable(vQuery);
 
                 if (vArchivo != ""){
                     byte[] fileData = null;
@@ -288,7 +289,7 @@ namespace Infatlan_AuditControl.pages
                     Response.AppendHeader("Content-Type", "application/vnd.ms-excel");
                     byte[] bytFile = fileData;
                     Response.OutputStream.Write(bytFile, 0, bytFile.Length);
-                    Response.AddHeader("Content-disposition", "attachment;filename=ArchivoNo_" + vIdArchivo + ".xlsx");
+                    Response.AddHeader("Content-disposition", "attachment;filename=" + vDatos.Rows[0]["nombre"].ToString());
                     Response.Flush();
                     Response.End();
                 }else

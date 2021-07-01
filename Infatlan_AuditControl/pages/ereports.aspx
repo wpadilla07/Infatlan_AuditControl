@@ -23,6 +23,12 @@
     </script>
     <link href="/assets/css/fstdropdown.css" rel="stylesheet" />
     <link href="../assets/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        .hideCol {
+            display:none;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="Body" runat="server">
     <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
@@ -134,7 +140,6 @@
                                 </asp:TemplateField>
 
                                 <asp:BoundField DataField="idInforme" HeaderText="No." />
-                                <asp:BoundField DataField="vai" HeaderText="VAI" HeaderStyle-Width="100px" />
                                 <asp:BoundField DataField="nombre" HeaderText="Nombre" />
                                 <asp:BoundField DataField="fechaRes" HeaderText="Respuesta" />
                                 <asp:BoundField DataField="fechaCreacion" HeaderText="Creación" />

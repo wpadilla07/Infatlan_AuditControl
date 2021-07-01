@@ -129,7 +129,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 control-label no-padding-right" for="FUInforme">Adjuntar Informe</label>
                             <div class="col-sm-4">
-                                <asp:FileUpload ID="FUInforme" runat="server" class="form-control" accept="application/pdf" />
+                                <asp:FileUpload ID="FUInforme" runat="server" class="form-control"/>
                             </div>
                             <span class="help-button" data-rel="popover" data-trigger="hover" data-placement="left" data-content="More details." title="Subir archivos relacionados al hallazgo">?</span>
                         </div>
@@ -178,7 +178,8 @@
                                 </button>
                             </ContentTemplate>
                             <Triggers>
-                                <asp:PostBackTrigger ControlID="BtnCrearInforme" />
+                                <asp:PostBackTrigger ControlID="BtnCrearInforme"  />
+                                <asp:PostBackTrigger ControlID="BtnModificarInforme" />
                             </Triggers>
                         </asp:UpdatePanel>
                     </div>

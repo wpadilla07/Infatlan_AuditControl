@@ -57,30 +57,30 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 GVBusqueda.DataSource = vDatos;
-                mostrarOcultar();
                 Session["BUSQUEDAINFORMES"] = vDatos;
+                mostrarOcultar();
             }catch (Exception Ex) { Mensaje(Ex.Message, WarningType.Danger); }
         }
 
         private void mostrarOcultar() {
             switch (Convert.ToInt32(Session["TIPOUSUARIO"])){
                 case 2:
-                    GVBusqueda.Columns[11].Visible = false;
+                    GVBusqueda.Columns[10].Visible = false;
                     break;
                 case 3:
-                    GVBusqueda.Columns[12].Visible = false;
+                    GVBusqueda.Columns[11].Visible = false;
                     break;
                 case 1:
                 case 4:
                 case 5:
+                    GVBusqueda.Columns[9].Visible = false;
                     GVBusqueda.Columns[10].Visible = false;
                     GVBusqueda.Columns[11].Visible = false;
-                    GVBusqueda.Columns[12].Visible = false;
                     break;
                 case 6:
+                    GVBusqueda.Columns[9].Visible = false;
                     GVBusqueda.Columns[10].Visible = false;
                     GVBusqueda.Columns[11].Visible = false;
-                    GVBusqueda.Columns[12].Visible = false;
                     break;
             }
             GVBusqueda.DataBind();
@@ -90,46 +90,46 @@ namespace Infatlan_AuditControl.pages
                 DataTable vDatosEnvio = vConexion.obtenerDataTable(vQuery);
 
                 foreach (DataRow item in vDatosEnvio.Rows){
-                    if (!row.Cells[6].Text.Equals(Convert.ToString(Session["USUARIO"]))){
-                        LinkButton vBtnJefatura = row.Cells[11].FindControl("BtnEnviarRevision") as LinkButton;
+                    if (!row.Cells[7].Text.Equals(Convert.ToString(Session["USUARIO"]))){
+                        LinkButton vBtnJefatura = row.Cells[10].FindControl("BtnEnviarRevision") as LinkButton;
                         vBtnJefatura.Enabled = false;
                         vBtnJefatura.CssClass = "btn btn-grey";
                     }
 
-                    DataTable vDatosJefatura = vConexion.obtenerDataTable("ACSP_Login '" + row.Cells[8].Text + "'");
+                    DataTable vDatosJefatura = vConexion.obtenerDataTable("ACSP_Login '" + row.Cells[7].Text + "'");
                     if (!vDatosJefatura.Rows[0]["jefeAuditoria"].Equals(Convert.ToString(Session["USUARIO"]))){
-                        LinkButton vBtnResponsables = row.Cells[12].FindControl("BtnEnviarResponsable") as LinkButton;
+                        LinkButton vBtnResponsables = row.Cells[11].FindControl("BtnEnviarResponsable") as LinkButton;
                         vBtnResponsables.Enabled = false;
                         vBtnResponsables.CssClass = "btn btn-grey";
                     }
 
                     if (Convert.ToBoolean(item["envioJefatura"].ToString())){
-                        LinkButton vBtnJefatura = row.Cells[11].FindControl("BtnEnviarRevision") as LinkButton;
+                        LinkButton vBtnJefatura = row.Cells[10].FindControl("BtnEnviarRevision") as LinkButton;
                         vBtnJefatura.Enabled = false;
                         vBtnJefatura.CssClass = "btn btn-grey";
                     }
 
                     if (Convert.ToBoolean(item["envioResponsables"].ToString())){
-                        LinkButton vBtnResponsables = row.Cells[12].FindControl("BtnEnviarResponsable") as LinkButton;
+                        LinkButton vBtnResponsables = row.Cells[11].FindControl("BtnEnviarResponsable") as LinkButton;
                         vBtnResponsables.Enabled = false;
                         vBtnResponsables.CssClass = "btn btn-grey";
 
-                        LinkButton vBtnRevision = row.Cells[12].FindControl("BtnEnviarRevision") as LinkButton;
+                        LinkButton vBtnRevision = row.Cells[10].FindControl("BtnEnviarRevision") as LinkButton;
                         vBtnRevision.Enabled = false;
                         vBtnRevision.CssClass = "btn btn-grey";
 
-                        LinkButton vBtnAgregar = row.Cells[12].FindControl("BtnAsignar") as LinkButton;
+                        LinkButton vBtnAgregar = row.Cells[9].FindControl("BtnAsignar") as LinkButton;
                         vBtnAgregar.Enabled = false;
                         vBtnAgregar.CssClass = "btn btn-grey";
                     }
                     // nueva validacion
-                    if (row.Cells[7].Text.Equals("Resuelto")){
-                        LinkButton vBtnAsignar = row.Cells[11].FindControl("BtnAsignar") as LinkButton;
+                    if (row.Cells[9].Text.Equals("Resuelto")){
+                        LinkButton vBtnAsignar = row.Cells[9].FindControl("BtnAsignar") as LinkButton;
                         vBtnAsignar.Enabled = false;
                         vBtnAsignar.CssClass = "btn btn-grey";
                     }
 
-                    if (!Convert.ToBoolean(item["envioJefatura"].ToString()) && row.Cells[8].Text == Convert.ToString(Session["USUARIO"]) && !Convert.ToBoolean(item["envioResponsables"].ToString())){
+                    if (!Convert.ToBoolean(item["envioJefatura"].ToString()) && row.Cells[7].Text == Convert.ToString(Session["USUARIO"]) && !Convert.ToBoolean(item["envioResponsables"].ToString())){
                         LinkButton vBtnJefatura = row.Cells[11].FindControl("BtnEnviarResponsable") as LinkButton;
                         vBtnJefatura.Enabled = true;
                         vBtnJefatura.CssClass = "btn btn-info";
@@ -137,10 +137,12 @@ namespace Infatlan_AuditControl.pages
                 }
 
                 vQuery = "[ACSP_ObtenerInformes] 4, " + row.Cells[2].Text;
+                DataTable vData = vConexion.obtenerDataTable(vQuery);
+
                 String vArchivo = String.Empty;
 
                 try{
-                    vArchivo = vConexion.ejecutarSQLGetValueString(vQuery);
+                    vArchivo = vData.Rows[0]["archivo"].ToString();
                 }catch {
                     vArchivo = null;
                 }   
@@ -344,17 +346,18 @@ namespace Infatlan_AuditControl.pages
                 if (e.CommandName == "DescargarInforme"){
                     try{
                         String vQuery = "[ACSP_ObtenerInformes] 4, "+ vIdInforme;
-                        String vArchivo = vConexion.ejecutarSQLGetValueString(vQuery);
+                        DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                        String vArchivo = vDatos.Rows[0]["archivo"].ToString();
                         byte[] fileData = null;
 
                         if (!vArchivo.Equals(""))
                             fileData = Convert.FromBase64String(vArchivo);
 
                         Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                        Response.AppendHeader("Content-Type", "application/pdf");
+                        //Response.AppendHeader("Content-Type", GetExtension(vDatos.Rows[0]["nombreArchivo"].ToString()));
                         byte[] bytFile = fileData;
                         Response.OutputStream.Write(bytFile, 0, bytFile.Length);
-                        Response.AddHeader("Content-disposition", "attachment;filename=Informe_" + vIdInforme + ".pdf");
+                        Response.AddHeader("Content-disposition", "attachment;filename=" + vDatos.Rows[0]["nombreArchivo"].ToString());
                         Response.Flush();
                         Response.End();
                     }
@@ -366,6 +369,55 @@ namespace Infatlan_AuditControl.pages
                 
             }catch (Exception Ex) { 
                 Mensaje(Ex.Message, WarningType.Danger); 
+            }
+        }
+
+        private string GetExtension(string Extension){
+            switch (Extension){
+                case ".doc":
+                    return "application/ms-word";
+                case ".xls":
+                    return "application/vnd.ms-excel";
+                case ".ppt":
+                    return "application/mspowerpoint";
+                case "jpeg":
+                    return "image/jpeg";
+                case ".bmp":
+                    return "image/bmp";
+                case ".zip":
+                    return "application/zip";
+                case ".log":
+                    return "text/HTML";
+                case ".txt":
+                    return "text/plain";
+                case ".tiff":
+                case ".tif":
+                    return "image/tiff";
+                case ".asf":
+                    return "video/x-ms-asf";
+                case ".avi":
+                    return "video/avi";
+                case ".gif":
+                    return "image/gif";
+                case ".jpg":
+                case ".wav":
+                    return "audio/wav";
+                case ".pdf":
+                    return "application/pdf";
+                case ".fdf":
+                    return "application/vnd.fdf";
+                case ".dwg":
+                    return "image/vnd.dwg";
+                case ".msg":
+                    return "application/msoutlook";
+                case ".xml":
+                    return "application/xml";
+                case ".rar":
+                    return "application/rar";
+                case ".7-zip":
+                    return "application/7-zip";
+                default:
+                    return "application/octet-stream";
             }
         }
 
@@ -411,6 +463,7 @@ namespace Infatlan_AuditControl.pages
                     vDatosFiltrados.Columns.Add("fechaRespuesta");
                     vDatosFiltrados.Columns.Add("fechaRes");
                     vDatosFiltrados.Columns.Add("fechaCreacion");
+                    vDatosFiltrados.Columns.Add("fechaEmision");
                     vDatosFiltrados.Columns.Add("usuarioCreacion");
                     vDatosFiltrados.Columns.Add("tipoEstado");
 
@@ -421,6 +474,7 @@ namespace Infatlan_AuditControl.pages
                             item["fechaRespuesta"].ToString(),
                             item["fechaRes"].ToString(),
                             item["fechaCreacion"].ToString(),
+                            item["fechaEmision"].ToString(),
                             item["usuarioCreacion"].ToString(),
                             item["tipoEstado"].ToString()
                             );
@@ -613,25 +667,54 @@ namespace Infatlan_AuditControl.pages
 
         protected void BtnEnviarResponsables_Click(object sender, EventArgs e){
             try{
-                String vQuery = "[ACSP_ObtenerUsuariosInforme] 3," + LbResponsablesInforme.Text;
+                String vQuery = "[ACSP_Informes] 6," + LbResponsablesInforme.Text + ",1";
+                DataTable vData = vConexion.obtenerDataTable(vQuery);
+                String vArchivo = vData.Rows[0]["archivo"].ToString() != "" ? vData.Rows[0]["archivo"].ToString() : "";
+                String vNombreArchivo = vData.Rows[0]["nombreArchivo"].ToString() != "" ? vData.Rows[0]["nombreArchivo"].ToString() : "";
+
+
+                vQuery = "[ACSP_ObtenerUsuariosInforme] 3," + LbResponsablesInforme.Text;
                 DataTable vDatos = vConexion.obtenerDataTable(vQuery);
+                String vVai = vDatos.Rows.Count > 0 ? vDatos.Rows[0]["vai"].ToString() : "";
+
                 vDatos.Columns.Add("nombre");
                 for (int i = 0; i < vDatos.Rows.Count; i++){
                     vDatos.Rows[i]["nombre"] = vConexion.GetNombreUsuario(vDatos.Rows[i]["idUsuario"].ToString());
                 }
 
                 for (int i = 0; i < vDatos.Rows.Count; i++){
-                    String vMensaje = "";
-                    if (vDatos.Rows[i]["tipoEnvio"].ToString() == "1")
-                        vMensaje = "Se ha creado el informe (No." + LbResponsablesInforme.Text + ") " + vConexion.GetNombreInforme(LbResponsablesInforme.Text).ToUpper() + @" y ha sido asignado a ti<br \><br \>" + "Enviado por: " + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"]));
-                    else if (vDatos.Rows[i]["tipoEnvio"].ToString() == "2")
-                        vMensaje = "Se ha creado el informe (No." + LbResponsablesInforme.Text + ") " + vConexion.GetNombreInforme(LbResponsablesInforme.Text).ToUpper() + @"<br \><br \>" + "Enviado por: " + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"]));
+                    String vMensaje = "Buen día, por instrucciones recibidas por el Lic. Ariel Pavón García, se ha emitido el Informe <b>" + vConexion.GetNombreInforme(LbResponsablesInforme.Text).ToUpper() + "</b> con código <b>" + vVai + "</b>. " + @"<br \><br \>" + "Enviado por: " + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"]));
+                    EnviarCorreo(i, vMensaje, vDatos, vArchivo, vNombreArchivo);
+                }
 
-                    if (EnviarCorreo(i, vMensaje, vDatos)){
-                        vQuery = "[ACSP_Informes] 6," + LbResponsablesInforme.Text + ",1";
-                        vConexion.ejecutarSql(vQuery);
+                //JUNTA DIRECTIVA
+                vQuery = "[ACSP_ObtenerUsuariosInforme] 6";
+                vDatos = vConexion.obtenerDataTable(vQuery);
+                SmtpService vSmtpService = new SmtpService();
+                for (int i = 0; i < vDatos.Rows.Count; i++){
+                    vSmtpService.EnviarMensaje(
+                            vDatos.Rows[i]["correo"].ToString(),
+                            typeBody.General,
+                            vDatos.Rows[i]["nombre"].ToString(),
+                            "Buen día, por instrucciones recibidas por el Lic. Ariel Pavón García, se ha emitido el Informe <b>" + vConexion.GetNombreInforme(LbResponsablesInforme.Text).ToUpper() + "</b> con código <b>" + vVai + "</b>.",
+                            "",
+                            vArchivo,
+                            vNombreArchivo
+                            );
+
+                    if (vDatos.Rows[i]["correo2"].ToString() != ""){
+                        vSmtpService.EnviarMensaje(
+                            vDatos.Rows[i]["correo2"].ToString(),
+                            typeBody.General,
+                            vDatos.Rows[i]["nombre"].ToString(),
+                            "Buen día, por instrucciones recibidas por el Lic. Ariel Pavón García, se ha emitido el Informe <b>" + vConexion.GetNombreInforme(LbResponsablesInforme.Text).ToUpper() + "</b> con código <b>" + vVai + "</b>.",
+                            "",
+                            vArchivo,
+                            vNombreArchivo
+                            );
                     }
                 }
+
                 if (vIdInforme != null)
                     buscarInforme(vIdInforme, true);
                 else
@@ -646,7 +729,7 @@ namespace Infatlan_AuditControl.pages
             }
         }
 
-        private Boolean EnviarCorreo(int i, String vMensaje, DataTable vDatos) {
+        private Boolean EnviarCorreo(int i, String vMensaje, DataTable vDatos, String vArchivo, String vNombreArchivo) {
             Boolean vResult = false;
             try{
                 SmtpService vSmtpService = new SmtpService();
@@ -655,7 +738,9 @@ namespace Infatlan_AuditControl.pages
                         typeBody.General,
                         vDatos.Rows[i]["nombre"].ToString(),
                         vMensaje,
-                        ""
+                        "",
+                        vArchivo,
+                        vNombreArchivo
                         );
                 vResult = true;
             }catch (Exception ex){
@@ -682,26 +767,28 @@ namespace Infatlan_AuditControl.pages
                 if (vConexion.ejecutarSql(vQuery).Equals(1)){
                     String vArchivoNotificacion = String.Empty;
                     try{
-                        String vNombreDeposito = String.Empty;
-                        HttpPostedFile bufferDeposito1T = FUModificarHallazgos.PostedFile;
-                        byte[] vFileDeposito1 = null;
-                        if (bufferDeposito1T != null){
-                            vNombreDeposito = FUModificarHallazgos.FileName;
-                            Stream vStream = bufferDeposito1T.InputStream;
-                            BinaryReader vReader = new BinaryReader(vStream);
-                            vFileDeposito1 = vReader.ReadBytes((int)vStream.Length);
-                        }
+                        if (FUModificarHallazgos.HasFile){
+                            String vNombreDeposito = String.Empty;
+                            HttpPostedFile bufferDeposito1T = FUModificarHallazgos.PostedFile;
+                            byte[] vFileDeposito1 = null;
+                            if (bufferDeposito1T != null){
+                                vNombreDeposito = FUModificarHallazgos.FileName;
+                                Stream vStream = bufferDeposito1T.InputStream;
+                                BinaryReader vReader = new BinaryReader(vStream);
+                                vFileDeposito1 = vReader.ReadBytes((int)vStream.Length);
+                            }
 
-                        String vDeposito = Convert.ToBase64String(vFileDeposito1);
-                        vQuery = "[ACSP_Archivos] 1,'" + vNombreDeposito + "','" + vDeposito + "',0";
-                        int? vIdArchivo = vConexion.ejecutarSQLGetValue(vQuery);
-                        if (vIdArchivo != null){
-                            vQuery = "[ACSP_Archivos] 2,'',''," + LbModificarHallazgoLabel.Text + "," + vIdArchivo;
-                            int vCreado = vConexion.ejecutarSql(vQuery);
-                            if (vCreado.Equals(1))
-                                vArchivoNotificacion = "archivo almacenado";
-                            else
-                                vArchivoNotificacion = "no se pudo guardar el archivo";
+                            String vDeposito = Convert.ToBase64String(vFileDeposito1);
+                            vQuery = "[ACSP_Archivos] 1,'" + vNombreDeposito + "','" + vDeposito + "',0";
+                            int? vIdArchivo = vConexion.ejecutarSQLGetValue(vQuery);
+                            if (vIdArchivo != null){
+                                vQuery = "[ACSP_Archivos] 2,'',''," + LbModificarHallazgoLabel.Text + "," + vIdArchivo;
+                                int vCreado = vConexion.ejecutarSql(vQuery);
+                                if (vCreado.Equals(1))
+                                    vArchivoNotificacion = "archivo almacenado";
+                                else
+                                    vArchivoNotificacion = "no se pudo guardar el archivo";
+                            }
                         }
                     }
                     catch { }

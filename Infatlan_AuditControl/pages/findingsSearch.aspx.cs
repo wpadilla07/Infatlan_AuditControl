@@ -56,7 +56,7 @@ namespace Infatlan_AuditControl.pages
         void getResponsables(){
             try{
                 LdapService vLdap = new LdapService();
-                String vQuery = "[ACSP_ObtenerUsuarios] 8";
+                String vQuery = "[ACSP_ObtenerUsuarios] 12";
                 DataTable vDatosDB = vConexion.obtenerDataTable(vQuery);
 
                 DataTable vDatosFinal = new DataTable();
@@ -97,11 +97,7 @@ namespace Infatlan_AuditControl.pages
         public void getInformes(){
             try{
                 DDLBuscarInforme.Items.Clear();
-                String vQuery = "";
-                if (Session["TIPOUSUARIO"].ToString() == "6"){
-                    vQuery = "[ACSP_ObtenerInformes] 1";
-                }else 
-                    vQuery = "[ACSP_ObtenerInformes] 5,0,'" + Convert.ToString(Session["USUARIO"]) + "'";
+                String vQuery = "[ACSP_ObtenerInformes] 5,0,'" + Convert.ToString(Session["USUARIO"]) + "'";
 
                 DataTable vDatosDB = vConexion.obtenerDataTable(vQuery);
                 DDLBuscarInforme.Items.Add(new ListItem { Value = "0", Text = "Seleccione un informe" });
@@ -599,9 +595,9 @@ namespace Infatlan_AuditControl.pages
                 if (vConexion.ejecutarSql(vQuery).Equals(1)){
                     try{
                         if (Session["TIPOUSUARIO"].ToString() == "2")
-                            vQuery = "[ACSP_ObtenerUsuarios] 4," + Convert.ToString(Session["USUARIO"]);
-                        else
                             vQuery = "[ACSP_ObtenerUsuarios] 5," + Convert.ToString(Session["USUARIO"]);
+                        else
+                            vQuery = "[ACSP_ObtenerUsuarios] 4," + Convert.ToString(Session["USUARIO"]);
 
                         DataTable vDatosResponsables = vConexion.obtenerDataTable(vQuery);
                         Correo vCorreo = new Correo();
@@ -1000,21 +996,23 @@ namespace Infatlan_AuditControl.pages
                 if (vInfo == 2){
                     vQuery = "[ACSP_ObtenerUsuarios] 11," + LbAutorizacionHallazgo.Text;
                     DataTable vDatos = vConexion.obtenerDataTable(vQuery);
-                    foreach (DataRow item in vDatos.Rows){
-                        vCorreo.Usuario = vConexion.GetNombreUsuario(item["idUsuario"].ToString());
-                        vCorreo.Para = item["correo"].ToString();
-                        vCorreo.Copia = "";
-                    }
+                    if (vDatos.Rows.Count > 0){
+                        foreach (DataRow item in vDatos.Rows){
+                            vCorreo.Usuario = vConexion.GetNombreUsuario(item["idUsuario"].ToString());
+                            vCorreo.Para = item["correo"].ToString();
+                            vCorreo.Copia = "";
+                        }
 
-                    SmtpService vSmtpService = new SmtpService();
-                    vSmtpService.EnviarMensaje(
-                        vCorreo.Para,
-                        typeBody.General,
-                        vCorreo.Usuario,
-                        "Se ha " + vMensaje + " una ampliación para el hallazgo no." + LbAutorizacionHallazgo.Text + @", por favor revisar.<br \><br \>" + 
-                        "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
-                        vCorreo.Copia
-                    );
+                        SmtpService vSmtpService = new SmtpService();
+                        vSmtpService.EnviarMensaje(
+                            vCorreo.Para,
+                            typeBody.General,
+                            vCorreo.Usuario,
+                            "Se ha " + vMensaje + " una ampliación para el hallazgo no." + LbAutorizacionHallazgo.Text + @", por favor revisar.<br \><br \>" + 
+                            "Ingresado por:" + vConexion.GetNombreUsuario(Convert.ToString(Session["USUARIO"])),
+                            vCorreo.Copia
+                        );
+                    }
                 }
 
                 if (vInformeQuery != null)

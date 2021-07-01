@@ -44,6 +44,8 @@ namespace Infatlan_AuditControl
                             break;
                         case 6:
                             LbPerfil.Text = "Junta Directiva";
+                            LI1.Visible = false;
+                            LICrearInforme.Visible = false;
                             break;
                     }
 
